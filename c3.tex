@@ -1,10 +1,5 @@
 \chapter{Circuiti RC e RL (C3)}
 
-\section{Corrente impulsata}
-\subsubsection{Introduzione}
-
-\subsection{Procedimento}
-
 Oggetto di studio di questa esperienza è l'andamento della differenza di potenziale ai capi di resistenza e capacità o induttanza.
 A tal fine costruiamo un circuito con i seguenti elementi:
 [disegno]
@@ -16,6 +11,10 @@ A tal fine costruiamo un circuito con i seguenti elementi:
   \item Un oscilloscopio con due sonde
   \item Una resistenza di 667 Ohm (più errore)
 \end{itemize}
+
+\section{Corrente impulsata}
+\subsection{Procedimento}
+
 
 Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Una sonda posta prima del condensatore mostra sullo schermo dell'oscilloscopio il segnale.  
 Una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica di un condensatore.
@@ -39,16 +38,56 @@ $$V_R = \varepsilon e^{-t/\tau}$$
 
 \section{Corrente alternata}
 \subsection{Procedimento}
-$i\(t\)= i_{0}\sin{wt-\phi}$
+
+
+Vogliamo misurare la risposta in frequenza 
 \subsection{Raccolta dati}
+
 \subsubsection{Circuito RC}
+
 \begin{center}
- \includegraphics[scale=0.50]{grafici/C3/ddpcond.png}
+ \includegraphics[scale=0.70]{grafici/C3/ddpcond.png}
 \end{center}
+
+\begin{center}
+\begin{tabular}{*{2}{c}}
+Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) \\
+\midrule
+50 & 0.08 \\
+100 & 0.15 \\
+200 & 0.30 \\
+300 & 0.42 \\
+400 & 0.52 \\
+1000 & 0.83 \\
+1500 & 0.90 \\
+2000 & 0.93 \\
+4000 & 0.97 \\
+\end{tabular}
+\end{center}
+
+
 \subsubsection{Circuito RL}
+
 \begin{center}
- \includegraphics[scale=0.50]{grafici/C3/ddpindu.png}
+ \includegraphics[scale=0.70]{grafici/C3/ddpindu.png}
 \end{center}
+
+\begin{center}
+\begin{tabular}{*{2}{c}}
+Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) \\
+\midrule
+50 & 0.08 \\
+100 & 0.15 \\
+200 & 0.30 \\
+300 & 0.42 \\
+400 & 0.52 \\
+1000 & 0.83 \\
+1500 & 0.90 \\
+2000 & 0.93 \\
+4000 & 0.97 \\
+\end{tabular}
+\end{center}
+
 \section{Conclusioni}
 \subsubsection{Circuito RC}
 \subsubsection{Circuito RL}
