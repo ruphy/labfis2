@@ -19,10 +19,7 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Una sonda posta prima del condensatore mostra sullo schermo dell'oscilloscopio il segnale.  
 Una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica di un condensatore.
 
-Raccogliamo i dati (differenza di potenziale e tempo) dall'onda visualizzata sul display dell'oscilloscopio, tramite i cursori. Interpoliamo i dati raccolti con la curva caratteristica della carica/scarica di un condensatore.
-
-Il valore stimato dall'interpolazione è $\tau=RC$ dell'equazione
-$$V_R = \varepsilon e^{-t/\tau}$$
+Raccogliamo i dati (differenza di potenziale e tempo) dall'onda visualizzata sul display dell'oscilloscopio, tramite i cursori. Interpoliamo i dati per stimare il tempo caratteristico $\tau$ del circuito.
 
 \subsection{Dati}
 
@@ -80,13 +77,22 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 \subsection{Analisi}
 
 \subsubsection{Circuito RC}
+
+Il valore stimato dall'interpolazione è il $\tau=RC$ dell'equazione
+$$V_R = V_0 e^{-t/\tau}$$
+
 \subsubsection{Circuito RL}
+
+Il valore stimato dall'interpolazione è il $\tau=L/R$ dell'equazione
+$$V_R = V_0 (1-e^{-t/\tau})$$
+ove in $R$ abbiamo tenuto conto della resistenza interna dell'induttore, misurata essere 40 Ohm (più err multi).
+
+
 \subsection{Analisi delle incertezze}
 
 
 \section{Corrente alternata}
 \subsection{Procedimento}
-
 
 Vogliamo misurare la risposta in frequenza 
 \subsection{Raccolta dati}
