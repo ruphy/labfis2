@@ -6,10 +6,10 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 
 \begin{itemize}
   \item Generatore di onde
-  \item Un condensatore di capacità 367 nF più errore
-  \item Un'induttore di induttanza sconosciuta
+  \item Un condensatore di capacità 367 $nF$ più errore
+  \item Un'induttore di induttanza sconosciuta, e resistenza 40 $\Omega$.
   \item Un oscilloscopio con due sonde
-  \item Una resistenza di 667 Ohm (più errore)
+  \item Una resistenza di 667 $\Omega$ (più errore)
 \end{itemize}
 
 \section{Corrente impulsata}
@@ -17,23 +17,16 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 
 
 Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Una sonda posta prima del condensatore mostra sullo schermo dell'oscilloscopio il segnale.  
-Una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica di un condensatore.
+Una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica di un condensatore/induttore.
 
-Raccogliamo i dati (differenza di potenziale e tempo) dall'onda visualizzata sul display dell'oscilloscopio, tramite i cursori. Interpoliamo i dati raccolti con la curva caratteristica della carica/scarica di un condensatore.
 
-Il valore stimato dall'interpolazione è $\tau=RC$ dell'equazione
-$$V_R = \varepsilon e^{-t/\tau}$$
 
-\subsection{Dati}
+
+\subsection{Dati} 
 
 \subsubsection{Circuito RC}
 
-Per il circuito  RC in carica, abbiamo raccolto i seguenti dati. 
-
-\begin{center}
- \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
-\end{center}
-
+Raccogliamo i dati (differenza di potenziale e tempo) dall'onda visualizzata sul display dell'oscilloscopio, tramite i cursori. 
 
 Con un'onda quadra a 50 Hz, abbiamo raccolto questi dati:
 \begin{center}
@@ -53,13 +46,21 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 \end{tabular}
 \end{center}
 
+Interpoliamo i dati raccolti con la curva caratteristica della carica di un condensatore: 
+$$V_R = \varepsilon e^{-t/\tau}$$
+
+Il valore stimato dall'interpolazione è $\tau=RC$.
+
+
+\begin{center}
+ \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
+\end{center}
+
+
+
 
 \subsubsection{Circuito RL}
 Con un'onda quadra a 250 Hz, abbiamo raccolto questi dati:
-
-\begin{center}
- \includegraphics[scale=0.70]{grafici/C3/fitindu.png}
-\end{center}
 
 \begin{center}
 \begin{tabular}{*{2}{c}}
@@ -76,6 +77,13 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 45 & 16.40 \\
 \end{tabular}
 \end{center}
+Interpoliamo i dati raccolti con la curva caratteristica della carica/scarica di un condensatore.
+Il valore stimato dall'interpolazione è $\tau=RC$ dell'equazione
+$$V_R = \varepsilon \left( 1-e^{-t/\tau} \right)$$
+
+\begin{center}
+ \includegraphics[scale=0.70]{grafici/C3/fitindu.png}
+\end{center}
 
 \subsection{Analisi}
 
@@ -86,9 +94,32 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 
 \section{Corrente alternata}
 \subsection{Procedimento}
+Nella seconda parte dell'esperienza intendiamo misurare la risposta in frequenza (del circuito), o funzione di trasferimento. La funzione ditrasferimento è definita come:
+
+$H\left(\omega \right) = $  
 
 
-Vogliamo misurare la risposta in frequenza 
+Pertanto misuriamo la ddp ai capi di $R$ e $C$ o $L$ in modo analogo alle prima parte dell'esperienza, e con il metodo dei fasori, l'angolo $\phi$ di sfasamento.
+
+Per ricavare il rapporto $\frac{V_{R}}{V_{o}}$, dobbiamo risolvere alla forma di $V_R$. Trovandoci in regime di corrente alternata, la leggge di Ohm è nella forma: $ V_o = Zi_o$ con $Z = R + jX$, impedenza del circuito.
+Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si ha $Z_{tot} = \sum Z_i$
+
+\begin{itemize}
+\item circuito RC $\rightarrow$ $Z=R-\frac{j}{\omega C}$
+\item circuito RL $\rightarrow$ $Z=R+j\omega L$
+\end{itemize}  
+
+Allora: 
+
+
+$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $ 
+
+$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$
+
+$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$
+
+$\phi = \arctan \frac{X}{R} $ 
+
 \subsection{Raccolta dati}
 
 \subsubsection{Circuito RC}
