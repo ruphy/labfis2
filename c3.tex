@@ -101,7 +101,7 @@ Nella seconda parte dell'esperienza intendiamo misurare la risposta in frequenza
 $H\left(\omega \right) = $  
 
 
-Pertanto misuriamo la ddp ai capi di $R$ e $C$ o $L$ in modo analogo alle prima parte dell'esperienza, e la distanza tra due picchi delle onde visualizzate a schermo per determinare l'angolo $\phi$ di sfasamento.
+Pertanto misuriamo la ddp ai capi di $R$ e $C$ o $L$ in modo analogo alle prima parte dell'esperienza, e la distanza tra due picchi delle onde visualizzate a schermo per determinare l'angolo $\phi$ di sfasamento ($\delta \phi = 2 \pi \delta t \ni$).
 
 Per ricavare il rapporto $\frac{V_{R}}{V_{o}}$, dobbiamo ricavare $V_R$. Trovandoci in regime di corrente alternata, la leggge di Ohm è nella forma: $ V_o = Zi_o$ con $Z = R + jX$, impedenza del circuito.
 Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si ha $Z_{tot} = \sum Z_i$
@@ -114,11 +114,8 @@ Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si 
 Allora: 
 
 
-<<<<<<< HEAD
 $$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$
-=======
-$$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$ 
->>>>>>> b5da1981e17125a10d4c0ea3535fa5d273ae6e39
+
 
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
 
@@ -147,7 +144,11 @@ Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) \\
 \end{tabular}
 \end{center}
 
+Lasciamo C come parametro libero, e interpoliamo i valori raccolti di $V_{out}$ e $V_{in}$ in funzione della frequenza:
 
+$$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
+
+Dal fit otteniamo: $C=360 \cdot 10^{-9} \pm  $ in ottimo accordo con il valore noto.
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/ddpcond.png}
@@ -176,6 +177,15 @@ Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) \\
 4000 & 0.97 \\
 \end{tabular}
 \end{center}
+
+Anche questa volta interpoliamo i dati raccolti con la funzione:
+
+$$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
+
+La stima di L risulta in ottimo accordo con quella realizzata nella prima parte dell'esperienza.
+$L=0.0012 \pm H $
+
+Il test del $\chi^2$ conferma la validità delle ipotesi fatte.
 
 \section{Conclusioni}
 
