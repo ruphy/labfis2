@@ -6,7 +6,7 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 
 \begin{itemize}
   \item Generatore di onde
-  \item Un condensatore di capacità 367 $nF$ più errore
+  \item Un condensatore di capacità 367 $nF$
   \item Un'induttore di induttanza sconosciuta, e resistenza 40 $\Omega$.
   \item Un oscilloscopio con due sonde
   \item Una resistenza di 667 $\Omega$ (più errore)
@@ -28,7 +28,7 @@ Una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda
 
 Raccogliamo i dati (differenza di potenziale e tempo) dall'onda visualizzata sul display dell'oscilloscopio, tramite i cursori. 
 
-Con un'onda quadra a 50 Hz, abbiamo raccolto questi dati:
+Con un'onda quadra a 50 Hz, abbiamo raccolto i seguenti dati:
 \begin{center}
 \begin{tabular}{*{2}{c}}
 Tempo ($\mu s$) & Ddp ($V$) \\
@@ -49,18 +49,20 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 Interpoliamo i dati raccolti con la curva caratteristica della carica di un condensatore: 
 $$V_R = \varepsilon e^{-t/\tau}$$
 
-Il valore stimato dall'interpolazione è $\tau=RC$.
+Il valore stimato dall'interpolazione è $\tau=281.7 \pm 5 \mu s$.
+Valore atteso: $\tau=RC=248.5 \mu s$
 
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
 \end{center}
 
+%chi quadro!
 
 
 
 \subsubsection{Circuito RL}
-Con un'onda quadra a 250 Hz, abbiamo raccolto questi dati:
+Con un'onda quadra a 250 Hz, abbiamo raccolto i seguenti dati:
 
 \begin{center}
 \begin{tabular}{*{2}{c}}
@@ -77,31 +79,31 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 45 & 16.40 \\
 \end{tabular}
 \end{center}
-Interpoliamo i dati raccolti con la curva caratteristica della carica/scarica di un condensatore.
-Il valore stimato dall'interpolazione è $\tau=RC$ dell'equazione
+Interpoliamo i dati raccolti con la curva caratteristica della carica del circuito:
+
 $$V_R = \varepsilon \left( 1-e^{-t/\tau} \right)$$
+
+Il valore stimato dall'interpolazione è $\tau=16.05 \mu s$ \\
+Non conoscendo a priori il valore di L non possiamo valutare l'accordo con il valore teorico: $\tau=\frac{L}{R}$.
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/fitindu.png}
 \end{center}
 
-\subsection{Analisi}
+%chi quadro!
 
-\subsubsection{Circuito RC}
-\subsubsection{Circuito RL}
-\subsection{Analisi delle incertezze}
 
 
 \section{Corrente alternata}
 \subsection{Procedimento}
-Nella seconda parte dell'esperienza intendiamo misurare la risposta in frequenza (del circuito), o funzione di trasferimento. La funzione ditrasferimento è definita come:
+Nella seconda parte dell'esperienza intendiamo misurare la risposta in frequenza (o funzione di trasferimento), definita come:
 
 $H\left(\omega \right) = $  
 
 
-Pertanto misuriamo la ddp ai capi di $R$ e $C$ o $L$ in modo analogo alle prima parte dell'esperienza, e con il metodo dei fasori, l'angolo $\phi$ di sfasamento.
+Pertanto misuriamo la ddp ai capi di $R$ e $C$ o $L$ in modo analogo alle prima parte dell'esperienza, e la distanza tra due picchi delle onde visualizzate a schermo per determinare l'angolo $\phi$ di sfasamento.
 
-Per ricavare il rapporto $\frac{V_{R}}{V_{o}}$, dobbiamo risolvere alla forma di $V_R$. Trovandoci in regime di corrente alternata, la leggge di Ohm è nella forma: $ V_o = Zi_o$ con $Z = R + jX$, impedenza del circuito.
+Per ricavare il rapporto $\frac{V_{R}}{V_{o}}$, dobbiamo ricavare $V_R$. Trovandoci in regime di corrente alternata, la leggge di Ohm è nella forma: $ V_o = Zi_o$ con $Z = R + jX$, impedenza del circuito.
 Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si ha $Z_{tot} = \sum Z_i$
 
 \begin{itemize}
@@ -112,13 +114,13 @@ Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si 
 Allora: 
 
 
-$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $ 
+$$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$
 
-$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$
+$$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
 
-$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$
+$$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
 
-$\phi = \arctan \frac{X}{R} $ 
+$$\phi = \arctan \frac{X}{R} $$
 
 \subsection{Raccolta dati}
 
