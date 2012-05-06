@@ -65,6 +65,8 @@ Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\chi^2$ rido
 
 
 
+
+
 \subsubsection{Circuito RL}
 Con un'onda quadra a 250 Hz, abbiamo raccolto i seguenti dati:
 
@@ -117,10 +119,8 @@ Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si 
 
 Allora: 
 
-
-$$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$
-
-con X dato rispettivamente da:
+$$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$ 
+75fa
 
 \begin{itemize}
 \item circuito RC $\rightarrow$ $X=\frac{1}{\omega C}$
@@ -136,18 +136,20 @@ $$\phi = \arctan \frac{X}{R} $$
 
 
 \begin{center}
-\begin{tabular}{*{2}{c}}
-Frequenza ($Hz$) & ($V_{out}/V_{in}$) \\
+
+\begin{tabular}{*{3}{c}}
+Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) & $\phi$ \\
+>>>>>>> e0ac029505e47423644538da460fa120424775fa
 \midrule
-50 & 0.08 \\
-100 & 0.15 \\
-200 & 0.30 \\
-300 & 0.42 \\
-400 & 0.52 \\
-1000 & 0.83 \\
-1500 & 0.90 \\
-2000 & 0.93 \\
-4000 & 0.97 \\
+50 & 0.08 & 1.54\\
+100 & 0.15 & 1.41\\
+200 & 0.30 & 1.41\\
+300 & 0.42 & 1.24\\
+400 & 0.52 & 1.08 \\
+1000 & 0.83 & 0.70\\
+1500 & 0.90 & 0.49\\
+2000 & 0.93 & 0.38\\
+4000 & 0.97 & 0.20 \\
 \end{tabular}
 \end{center}
 
@@ -161,28 +163,37 @@ Dal fit otteniamo: $C=360 \cdot 10^{-9} \pm  F $ in ottimo accordo con il valore
  \includegraphics[scale=0.70]{grafici/C3/ddpcond.png}
 \end{center}
 
+\begin{center}
+ \includegraphics[scale=0.70]{grafici/C3/fasecap.png}
+\end{center}
 
 
 \subsection{Circuito RL}
 
-\begin{center}
- \includegraphics[scale=0.70]{grafici/C3/ddpindu.png}
-\end{center}
 
 \begin{center}
-\begin{tabular}{*{2}{c}}
-Frequenza ($Hz$) & ($V_{out}/V_{in}$) \\
+
+\begin{tabular}{*{3}{c}}
+Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) & $\phi (rad)$ \\
+>>>>>>> e0ac029505e47423644538da460fa120424775fa
 \midrule
-50 & 0.08 \\
-100 & 0.15 \\
-200 & 0.30 \\
-300 & 0.42 \\
-400 & 0.52 \\
-1000 & 0.83 \\
-1500 & 0.90 \\
-2000 & 0.93 \\
-4000 & 0.97 \\
+1000& 0.47 & 0.19 \\
+2000 & 0.62 & 0.35\\
+3000 & 0.79 & 0.45\\
+4000 & 1.05 & 0.58\\
+6000 & 1.48 & 0.79\\
+8000 & 2.01 & 1.01\\
+10000 & 2.56 & 0.94\\
+15000 & 3.64 & 1.13\\
+20000 & 4.28 & 1.26\\
+30000 & 5.08 & 1.36\\
+50000 & 5.89 & 1.57\\
 \end{tabular}
+\end{center}
+
+
+\begin{center}
+ \includegraphics[scale=0.70]{grafici/C3/ddpindu.png}
 \end{center}
 
 Anche questa volta interpoliamo i dati raccolti con la funzione:
@@ -207,8 +218,6 @@ Parametro & $\chi^2$ \\
 \midrule
 Condensatore $\tau =$ & 0.2 \\
 Induttore $\tau =$ & 0.2 \\
- & 0.30 \\
-300 & 0.42 \\
 
 \end{tabular}
 \end{center}
