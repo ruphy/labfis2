@@ -9,7 +9,7 @@ A tal fine costruiamo un circuito con i seguenti elementi:
   \item Un condensatore di capacità 367 $nF$
   \item Un'induttore di induttanza sconosciuta, e resistenza 40 $\Omega$.
   \item Un oscilloscopio con due sonde
-  \item Una resistenza di 667 $\Omega$ (più errore)
+  \item Una resistenza di 667 $\pm 10 \Omega$  \footnote{Nel corso dell'esperimento abbiamo verificato, propagando l'errore associato alla resistenza, che esso risultava trascurabile. Pertanto d'ora in poi non se ne terrà più conto}
 \end{itemize}
 
 \section{Corrente impulsata}
@@ -57,7 +57,11 @@ Valore atteso: $\tau=RC=248.5 \mu s$
  \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
 \end{center}
 
-%chi quadro!
+Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$
+
+$$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau)}{{\sigma_y}^2} $$
+
+Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\chi^2$ ridotto di .
 
 
 
@@ -116,11 +120,14 @@ Allora:
 
 $$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$
 
+con X dato rispettivamente da:
 
-$$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
+\begin{itemize}
+\item circuito RC $\rightarrow$ $X=\frac{1}{\omega C}$
+\item circuito RL $\rightarrow$ $X=\omega L$
+\end{itemize}
 
-$$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
-
+Mentre la fase risulta: 
 $$\phi = \arctan \frac{X}{R} $$
 
 
@@ -130,7 +137,7 @@ $$\phi = \arctan \frac{X}{R} $$
 
 \begin{center}
 \begin{tabular}{*{2}{c}}
-Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) \\
+Frequenza ($Hz$) & ($V_{out}/V_{in}$) \\
 \midrule
 50 & 0.08 \\
 100 & 0.15 \\
@@ -148,7 +155,7 @@ Lasciamo C come parametro libero, e interpoliamo i valori raccolti di $V_{out}$ 
 
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
 
-Dal fit otteniamo: $C=360 \cdot 10^{-9} \pm  $ in ottimo accordo con il valore noto.
+Dal fit otteniamo: $C=360 \cdot 10^{-9} \pm  F $ in ottimo accordo con il valore noto.
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/ddpcond.png}
@@ -164,7 +171,7 @@ Dal fit otteniamo: $C=360 \cdot 10^{-9} \pm  $ in ottimo accordo con il valore n
 
 \begin{center}
 \begin{tabular}{*{2}{c}}
-Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) \\
+Frequenza ($Hz$) & ($V_{out}/V_{in}$) \\
 \midrule
 50 & 0.08 \\
 100 & 0.15 \\
@@ -186,6 +193,10 @@ La stima di L risulta in ottimo accordo con quella realizzata nella prima parte 
 $L=0.0012 \pm H $
 
 Il test del $\chi^2$ conferma la validità delle ipotesi fatte.
+
+
+
+(chi quadro della delta phi 0.96)
 
 \section{Conclusioni}
 
