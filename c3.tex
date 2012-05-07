@@ -45,25 +45,18 @@ Interpoliamo i dati raccolti con la curva della carica di un condensatore:
 $$V_R = \varepsilon e^{-t/\tau}$$
 
 
-Il valore stimato dall'interpolazione è $\tau=281.7 \pm 5 \mu s$.
-
-Valore atteso: $\tau=RC=248.5 \mu s$
-
-
-Otteniamo un valore: $\chi^2 = 70 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 10$.
-
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
 \end{center}
 
-Il valore stimato dall'interpolazione è $\tau=281.7 \pm 5 \mu s$.
+Il valore stimato dall'interpolazione è $\tau=281.7 \mu s$.
 Valore atteso: $\tau=RC=248.5 \mu s$
 
 Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$:
 
 $$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau )}}{\sigma_y^2} $$
 
-Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = $ //
+Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = 0.36 $ \\
 Leggiamo dai valori tabulati la probabilità percentuale di ottenere un valore di $\tilde{\chi}^2 \geq {\tilde{\chi}_0}^2 $ (dati i gradi di libertà). Otteniamo una probabilità del ... $\%$, maggiore della soglia di accettabilità, fissata al $5\%$. 
 
 
@@ -97,7 +90,7 @@ I dati graficati:
  \includegraphics[scale=0.70]{grafici/C3/fitindu.png}
 \end{center}
 
-Otteniamo un valore: $\chi^2 = 0,.38 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$
+Otteniamo un valore: $\chi^2 = 0.38 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$
 
 
 \section{Corrente alternata}
@@ -154,7 +147,7 @@ Lasciamo C come parametro libero, e interpoliamo i valori raccolti di $V_{out}$ 
 
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
 
-Dal fit otteniamo: $C=360 \cdot 10^{-9} \pm  F $ in ottimo accordo con il valore noto.
+Dal fit otteniamo: $C=360 \cdot 10^{-9} F $ in ottimo accordo con il valore noto.
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/ddpcond.png}
@@ -166,7 +159,7 @@ Dal fit otteniamo: $C=360 \cdot 10^{-9} \pm  F $ in ottimo accordo con il valore
 
 
 
-Interpolo i dati della $\delta \phi$ utilizzando la funzione:
+Interpolo i dati della $ \phi$ utilizzando la funzione:
 
 $$ \phi = \arctan \frac{1}{2\pi\nu C R} $$
 
@@ -202,7 +195,7 @@ Anche questa volta interpoliamo i dati raccolti con la funzione:
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
 
 La stima di L risulta in ottimo accordo con quella realizzata nella prima parte dell'esperienza.
-$L=0.0012 \pm H $
+$L=0.0012 H $
 
 Il test del $\chi^2$ conferma la validità delle ipotesi fatte.
 
@@ -220,19 +213,8 @@ dove L, è il parametro libero da stimare.
  \includegraphics[scale=0.70]{grafici/C3/faseindu.png}
 \end{center}
 
-Da questo fit, otteniamo una $L=0.0017 H$, e un $\chi^2 = 8.48 $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = \pm 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto
+Da questo fit, otteniamo una $L=0.0017 H$, e un $\chi^2 = 8.48 $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = \pm 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
  
 
-\section{Conclusioni}
-
-
-\begin{center}
-\begin{tabular}{*{2}{c}}
-Parametro & $\chi^2$ \\
-\midrule
-Condensatore $\tau =$ & 0.2 \\
-Induttore $\tau =$ & 0.2 \\
-
-\end{tabular}
-\end{center}
-
+\section{Nota sugli errori dei parametri}
+Il software utilizzato per l'interpolazione dei dati non ci permette di ottenere l'errore sui parametri ricavati dal fit. Ci proponiamo di riuscire a risolvere questo problema per la consegna ufficiale della relazione.
