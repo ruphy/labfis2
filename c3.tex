@@ -17,14 +17,11 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 
 
 Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Colleghiamo la prima sonda all'ingresso del circuito, subito prima del condensatore: in tal modo l'oscilloscopio confronta il segnale in ingresso con la messa a terra, e visualizza a schermo la differenza di potenziale, restituendo sul display l'onda quadra prodotta dal generatore.  
-Analogamente una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica del condensatore/induttore.
-
-\subsection{Dati} 
+Analogamente una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica del condensatore/induttore. \\
+Raccogliamo i dati campionando dei punti dall'onda visualizzata sul display dell'oscilloscopio, usando i cursori per ottenere la ddp corrispondete all'istante di tempo considerato (si fissa il primo cursore sullo zero e il secondo sul punto dell'onda di cui si vuole conoscere il potenziale: l'oscilloscopio visualizza la differenza tra il potenziale dei due cursori, e dunque la ddp desiderata).
+Infine interpoliamo i dati raccolti con le curve caratteristiche della carica per i due differenti circuiti, ricavando il parametro $\tau$ (tempo caratteristico dei circuiti).
 
 \subsubsection{Circuito RC}
-
-Raccogliamo i dati campionando dei punti dall'onda visualizzata sul display dell'oscilloscopio, usando i cursori per ottenere la ddp corrispondete all'istante di tempo considerato (si fissa il primo cursore sullo zero e il secondo sul punto dell'onda di cui si vuole conoscere il potenziale: l'oscilloscopio visualizza la differenza tra il potenziale dei due cursori, e dunque la ddp desiderata). 
-
 Con un'onda quadra a 50 Hz, abbiamo raccolto i seguenti dati:
 \begin{center}
 \begin{tabular}{*{2}{c}}
@@ -43,7 +40,7 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 \end{tabular}
 \end{center}
 
-Interpoliamo i dati raccolti con la curva caratteristica della carica di un condensatore: 
+Interpoliamo i dati raccolti con la curva della carica di un condensatore: 
 $$V_R = \varepsilon e^{-t/\tau}$$
 
 
