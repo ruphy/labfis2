@@ -1,6 +1,6 @@
 \chapter{Circuiti RC e RL (C3)}
 
-Oggetto di studio di questa esperienza è l'andamento della differenza di potenziale ai capi della resistenza e della capacità (o induttanza) di circuiti RC o RL in corrente impulsata e in corrente alternata.
+Oggetto di studio di questa esperienza è l'andamento della differenza di potenziale ai capi di resistenza e capacità o induttanza.
 A tal fine costruiamo un circuito con i seguenti elementi:
 [disegno]
 
@@ -15,15 +15,12 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 \section{Corrente impulsata}
 \subsection{Procedimento}
 
-
-Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Colleghiamo la prima sonda all'ingresso del circuito, subito prima del condensatore: in tal modo l'oscilloscopio confronta il segnale in ingresso con la messa a terra, e visualizza a schermo la differenza di potenziale, restituendo sul display l'onda quadra prodotta dal generatore.  
-Analogamente una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica del condensatore/induttore.
-
-\subsection{Dati} 
+Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Una sonda posta prima del condensatore mostra sullo schermo dell'oscilloscopio il segnale.  
+Una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica di un condensatore/induttore.
 
 \subsubsection{Circuito RC}
 
-Raccogliamo i dati campionando dei punti dall'onda visualizzata sul display dell'oscilloscopio, usando i cursori per ottenere la ddp corrispondete all'istante di tempo considerato (si fissa il primo cursore sullo zero e il secondo sul punto dell'onda di cui si vuole conoscere il potenziale: l'oscilloscopio visualizza la differenza tra il potenziale dei due cursori, e dunque la ddp desiderata). 
+Raccogliamo i dati (differenza di potenziale e tempo) dall'onda visualizzata sul display dell'oscilloscopio, tramite i cursori. 
 
 Con un'onda quadra a 50 Hz, abbiamo raccolto i seguenti dati:
 \begin{center}
@@ -46,21 +43,19 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 Interpoliamo i dati raccolti con la curva caratteristica della carica di un condensatore: 
 $$V_R = \varepsilon e^{-t/\tau}$$
 
+Il valore stimato dall'interpolazione è $\tau=281.7 \pm 5 \mu s$.
+Valore atteso: $\tau=RC=248.5 \mu s$
+
+Otteniamo un valore: $\chi^2 = 70 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 10$.
+
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
 \end{center}
 
-Il valore stimato dall'interpolazione è $\tau=281.7 \pm 5 \mu s$.
-Valore atteso: $\tau=RC=248.5 \mu s$
-
-Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$:
+Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$, nella forma:
 
 $$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau )}}{\sigma_y^2} $$
-
-Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = $ //
-Leggiamo dai valori tabulati la probabilità percentuale di ottenere un valore di $\tilde{\chi}^2 \geq {\tilde{\chi}_0}^2 $ (dati i gradi di libertà). Otteniamo una probabilità del ... $\%$, maggiore della soglia di accettabilità, fissata al $5\%$. 
-
 
 \subsubsection{Circuito RL}
 Con un'onda quadra a 250 Hz, abbiamo raccolto i seguenti dati:
@@ -91,8 +86,7 @@ Non conoscendo a priori il valore di L non possiamo valutare l'accordo con il va
  \includegraphics[scale=0.70]{grafici/C3/fitindu.png}
 \end{center}
 
-%chi quadro!
-
+Otteniamo un valore: $\chi^2 = 0,.38 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$.
 
 
 \section{Corrente alternata}
@@ -120,7 +114,7 @@ $$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$
 \begin{itemize}
 \item circuito RC $\rightarrow$ $X=\frac{1}{\omega C}$
 \item circuito RL $\rightarrow$ $X=\omega L$
-\end{itemize}
+\end{itemize}05
 
 Mentre la fase risulta: 
 $$\phi = \arctan \frac{X}{R} $$
@@ -164,9 +158,9 @@ Dal fit otteniamo: $C=360 \cdot 10^{-9} \pm  F $ in ottimo accordo con il valore
 
 Interpolo i dati della $\delta \phi$ utilizzando la funzione:
 
-$$ \phi = \arctan \frac{1}{2\pi\nu \tau} $$
+$$ \phi = \arctan \frac{1}{2\pi\nu C R} $$
 
-con $\tau$ parametro libero. Tramite il test del $\chi^2$ verifico l'accordo con i nostri dati, ottenendo un $\tilde{\chi}^2 = 1.05$
+con C parametro libero. Tramite il test del $\chi^2$ verifico l'accordo con i nostri dati, ottenendo un $\tilde{\chi}^2 = 1.05$
 
 \subsection{Circuito RL}
 \begin{center}
@@ -216,7 +210,9 @@ dove L, è il parametro libero da stimare.
  \includegraphics[scale=0.70]{grafici/C3/faseindu.png}
 \end{center}
 
-Da questo fit, otteniamo una $L=0.0017 H$, e un $\chi^2 = 8.48 $, considerando una $\sigma_y = 2 \pi \nu \sigma_{t}$, dove  per $\sigma_t = \pm 2 \mu s$. L'incertezza sulla frequenza è considerata trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Avendo 9 gradi di libertà, otteniamo un $\tilde{\chi}^2 = 0.94$.
+Da questo fit, otteniamo una $L=0.0017 H$, e un $\chi^2 = 8.48 $, considerando una $\sigma_y_i = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = \pm 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_i$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. git
+
+Poichè abbiamo 9 gradi di libertà, otteniamo un $\tilde{\chi}^2 = 0.94$.
  
 
 \section{Conclusioni}
