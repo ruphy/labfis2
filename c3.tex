@@ -15,11 +15,8 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 \section{Corrente impulsata}
 \subsection{Procedimento}
 
-
 Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Una sonda posta prima del condensatore mostra sullo schermo dell'oscilloscopio il segnale.  
 Una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica di un condensatore/induttore.
-
-\subsection{Dati} 
 
 \subsubsection{Circuito RC}
 
@@ -49,6 +46,8 @@ $$V_R = \varepsilon e^{-t/\tau}$$
 Il valore stimato dall'interpolazione è $\tau=281.7 \pm 5 \mu s$.
 Valore atteso: $\tau=RC=248.5 \mu s$
 
+Otteniamo un valore: $\chi^2 = 70 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 10$.
+
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
@@ -57,8 +56,6 @@ Valore atteso: $\tau=RC=248.5 \mu s$
 Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$, nella forma:
 
 $$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau )}}{\sigma_y^2} $$
-
-Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = $ 
 
 \subsubsection{Circuito RL}
 Con un'onda quadra a 250 Hz, abbiamo raccolto i seguenti dati:
@@ -89,8 +86,7 @@ Non conoscendo a priori il valore di L non possiamo valutare l'accordo con il va
  \includegraphics[scale=0.70]{grafici/C3/fitindu.png}
 \end{center}
 
-%chi quadro!
-
+Otteniamo un valore: $\chi^2 = 0,.38 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$.
 
 
 \section{Corrente alternata}
@@ -214,7 +210,9 @@ dove L, è il parametro libero da stimare.
  \includegraphics[scale=0.70]{grafici/C3/faseindu.png}
 \end{center}
 
-Da questo fit, otteniamo una $L=0.0017 H$, e un $\chi^2 = 8.48 $, considerando una $\sigma_y = 2 \pi \nu \sigma_{t}$, dove  per $\sigma_t = \pm 2 \mu s$. L'incertezza sulla frequenza è considerato trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Avendo 9 gradi di libertà, otteniamo un $\tilde{\chi}^2 = 0.94$.
+Da questo fit, otteniamo una $L=0.0017 H$, e un $\chi^2 = 8.48 $, considerando una $\sigma_y_i = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = \pm 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_i$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. 
+
+Poichè abbiamo 9 gradi di libertà, otteniamo un $\tilde{\chi}^2 = 0.94$.
  
 
 \section{Conclusioni}
