@@ -1,6 +1,6 @@
 \chapter{Circuiti RC e RL (C3)}
 
-Oggetto di studio di questa esperienza è l'andamento della differenza di potenziale ai capi di resistenza e capacità o induttanza.
+Oggetto di studio di questa esperienza è l'andamento della differenza di potenziale ai capi della resistenza e della capacità (o induttanza) di circuiti RC o RL in corrente impulsata e in corrente alternata.
 A tal fine costruiamo un circuito con i seguenti elementi:
 [disegno]
 
@@ -16,14 +16,14 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 \subsection{Procedimento}
 
 
-Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Una sonda posta prima del condensatore mostra sullo schermo dell'oscilloscopio il segnale.  
-Una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica di un condensatore/induttore.
+Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Colleghiamo la prima sonda all'ingresso del circuito, subito prima del condensatore: in tal modo l'oscilloscopio confronta il segnale in ingresso con la messa a terra, e visualizza a schermo la differenza di potenziale, restituendo sul display l'onda quadra prodotta dal generatore.  
+Analogamente una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica del condensatore/induttore.
 
 \subsection{Dati} 
 
 \subsubsection{Circuito RC}
 
-Raccogliamo i dati (differenza di potenziale e tempo) dall'onda visualizzata sul display dell'oscilloscopio, tramite i cursori. 
+Raccogliamo i dati campionando dei punti dall'onda visualizzata sul display dell'oscilloscopio, usando i cursori per ottenere la ddp corrispondete all'istante di tempo considerato (si fissa il primo cursore sullo zero e il secondo sul punto dell'onda di cui si vuole conoscere il potenziale: l'oscilloscopio visualizza la differenza tra il potenziale dei due cursori, e dunque la ddp desiderata). 
 
 Con un'onda quadra a 50 Hz, abbiamo raccolto i seguenti dati:
 \begin{center}
@@ -46,19 +46,21 @@ Tempo ($\mu s$) & Ddp ($V$) \\
 Interpoliamo i dati raccolti con la curva caratteristica della carica di un condensatore: 
 $$V_R = \varepsilon e^{-t/\tau}$$
 
-Il valore stimato dall'interpolazione è $\tau=281.7 \pm 5 \mu s$.
-Valore atteso: $\tau=RC=248.5 \mu s$
-
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
 \end{center}
 
-Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$, nella forma:
+Il valore stimato dall'interpolazione è $\tau=281.7 \pm 5 \mu s$.
+Valore atteso: $\tau=RC=248.5 \mu s$
+
+Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$:
 
 $$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau )}}{\sigma_y^2} $$
 
-Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = $ 
+Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = $ //
+Leggiamo dai valori tabulati la probabilità percentuale di ottenere un valore di $\tilde{\chi}^2 \geq {\tilde{\chi}_0}^2 $ (dati i gradi di libertà). Otteniamo una probabilità del ... $\%$, maggiore della soglia di accettabilità, fissata al $5\%$. 
+
 
 \subsubsection{Circuito RL}
 Con un'onda quadra a 250 Hz, abbiamo raccolto i seguenti dati:
