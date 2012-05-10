@@ -170,7 +170,7 @@ Ora interpolo i dati della $ \phi$ utilizzando la funzione:
 
 $$ \phi = \arctan \frac{1}{2\pi\nu C R} $$
 
-con C parametro libero. Tramite il test del $\chi^2$ verifico l'accordo con i nostri dati, ottenendo un $\tilde{\chi}^2 = 1.05$
+con C parametro libero. Tramite il test del $\chi^2$ verifico l'accordo con i nostri dati, ottenendo un $\tilde{\chi}^2 = 1.05$, a riflettere una probabilità del $43\%$ di ottenere un $\tilde{\chi}^2$ maggiore; dunque il risultato è accettabile.
 
 \subsection{Circuito RL}
 \begin{center}
@@ -202,22 +202,22 @@ Anche questa volta interpoliamo i dati raccolti con la funzione:
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
 
 La stima di L risulta in ottimo accordo con quella realizzata nella prima parte dell'esperienza.
-$L=0.0012 H $
+($L=1.2$ mH)
 
-Il test del $\chi^2$ conferma la validità delle ipotesi fatte.
+Il test del $\chi^2$ conferma la validità delle ipotesi fatte ($\chi^2 = 0.089$).
 
-Interpolo i dati utilizzando la funzione:
+Interpolo nuovamente i dati, considerando $\phi$, utilizzando la funzione:
 
 $$ \phi = \arctan \frac{2\pi\nu L}{R} $$
 
-dove L, è il parametro libero da stimare.
+dove L è il parametro libero da stimare.
 
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/faseindu.png}
 \end{center}
 
-Da questo fit, otteniamo una $L=0.0017 H$, e un $\chi^2 = 8.48 $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = \pm 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
+Da questo fit, otteniamo una $L=1.7$ mH, e un $\chi^2 = 8.48 $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = \pm 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
 
 
 \section{Nota sugli errori dei parametri}
