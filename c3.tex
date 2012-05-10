@@ -60,7 +60,7 @@ Per verificare l'accordo tra la legge e la distribuzione dei valori osservati op
 $$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau ))}}{\sigma_y^2} $$
 
 Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = 0.36 $ \\
-Leggiamo dai valori tabulati la probabilità percentuale di ottenere un valore di $\tilde{\chi}^2 \geq {\tilde{\chi}_0}^2 $ (dati i gradi di libertà). Otteniamo una probabilità del ... $\%$, maggiore della soglia di accettabilità, fissata al $5\%$. 
+Leggiamo dai valori tabulati la probabilità percentuale di ottenere un valore di $\tilde{\chi}^2 \geq {\tilde{\chi}_0}^2 $ (dati i gradi di libertà). Otteniamo una probabilità maggiore del $90\%$, maggiore della soglia di accettabilità, fissata al $5\%$. 
 
 
 \subsubsection{Circuito RL}
@@ -93,7 +93,7 @@ I dati graficati:
  \includegraphics[scale=0.70]{grafici/C3/fitindu.png}
 \end{center}
 
-Otteniamo un valore: $\chi^2 = 0.38 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$
+Otteniamo un valore: $\chi^2 = 0.38 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$, per un accordo perfetto.
 
 
 \section{Corrente alternata}
@@ -106,7 +106,7 @@ $H\left(\omega \right) = \begin{cases}
                          \end{cases}
 $  
 
-Pertanto misuriamo la ddp ai capi di $R$ e $C$ o $L$ in modo analogo alle prima parte dell'esperienza, e la distanza tra due picchi delle onde visualizzate a schermo per determinare l'angolo $\phi$ di sfasamento ($\delta \phi = 2 \pi \delta t \ni$).
+Pertanto misuriamo la ddp ai capi di $R$ e $C$ o $L$ in modo analogo alle prima parte dell'esperienza, e la distanza tra due picchi delle onde visualizzate a schermo per determinare l'angolo $\phi$ di sfasamento ($\delta \phi = 2 \pi \Delta t$).
 
 Per ricavare il rapporto $\frac{V_{R}}{V_{o}}$, dobbiamo ricavare $V_R$. Trovandoci in regime di corrente alternata, la leggge di Ohm è nella forma: $ V_o = Zi_o$ con $Z = R + jX$, impedenza del circuito.
 Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si ha $Z_{tot} = \sum Z_i$
@@ -136,7 +136,7 @@ $$\phi = \arctan \frac{X}{R} $$
 \begin{center}
 
 \begin{tabular}{*{3}{c}}
-Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) & $\phi$ \\
+Frequenza ($Hz$) & $V_{out}/V_{in}$ & $\phi$ \\
 \midrule
 50 & 0.08 & 1.54\\
 100 & 0.15 & 1.41\\
