@@ -171,6 +171,14 @@ Ora interpolo i dati della $ \phi$ utilizzando la funzione:
 $$ \phi = \arctan \frac{1}{2\pi\nu C R} $$
 
 con C parametro libero. Tramite il test del $\chi^2$ verifico l'accordo con i nostri dati, ottenendo un $\tilde{\chi}^2 = 1.05$, a riflettere una probabilità del $43\%$ di ottenere un $\tilde{\chi}^2$ maggiore; dunque il risultato è accettabile.
+\\
+
+
+La frequenza di taglio si definisce come $\omega_c = 1/RC$. Nel nostro caso $\omega_c = 4025\ Hz$. Il comportamento del circuito varia a seconda di quanto la nostra frequenza $\omega$ si avvicina al valore della frequenza di taglio. \\
+Per frequenze molto basse il carattere capacitivo dell'impedenza domina e pertanto la caduta di potenziale si trova tutta ai capi del condensatore, e la fase $\phi \simeq -\frac{\pi}{2}$. Viceversa per frequenze molto alte, domina il comportamento resistivo e lo sfasamento diviene: $ \phi \simeq 0$. \\  
+Per $\omega \simeq \omega_c$, siamo nella transizione tra i due regimi e le impedenze si equivalgono. La fase diviene: $ \phi \simeq -\pi/4$.  \\
+
+L'insieme dei fenomeni da noi osservati in questa secondo parte, ci permette di affermare che il circuito RC da noi costruito agisce come un filtro passa-basso passivo, cioè un filtro che riduce le componenti alle frequenze superiori a quella di taglio (abbattendo l'ampiezza di $V_{out}$ all'aumentare della frequenza, come si vede nel grafico). Il più semplice filtro passa-basso è, infatti, un circuito RC. 
 
 \subsection{Circuito RL}
 \begin{center}
@@ -218,6 +226,13 @@ dove L è il parametro libero da stimare.
 \end{center}
 
 Da questo fit, otteniamo una $L=1.7$ mH, e un $\chi^2 = 8.48 $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
+\\
+
+La frequenza di taglio viene definita come $\omega_c = R/L$. Nel nostro caso $\omega_c = 55\ Khz$. Il comportamento del nostro circuito varia a seconda di quanto la nostra frequenza $\omega$ si avvicina al valore della frequenza di taglio. \\
+Per frequenze molto basse il carattere resistivo dell'impedenza domina e pertanto la caduta di potenziale si trova solo ai capi della resistenza; per cui $ \phi \simeq 0$. Viceversa per frequenze molto alte, domina il comportamento induttivo, e lo sfasamento prodotto è simile a quello che introdurrebbe nel circuito un componente puramente induttivo ($\phi \simeq \frac{\pi}{2}$).  \\
+Per $\omega = \omega_c$, essendo in transizione tra i due regime, si ha un comportamento intermedio e la fase diviene: $ \phi = \pi/4$. \\
+
+L'insieme dei fenomeni da noi osservati in questa secondo parte, ci permette di affermare che il circuito RL da noi costruito agisce come un filtro passa-alto passivo, cioè un filtro che riduce le componenti alle frequenze inferiori a quella di taglio (abbattendo l'ampiezza di $V_{out}$ al diminuire della frequenza , come si vede nel grafico). Il più semplice filtro passa-alto è, infatti, un circuito RL. 
 
 
 \section{Nota sugli errori dei parametri}
