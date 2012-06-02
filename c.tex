@@ -23,16 +23,29 @@ I dati sono molti, dunque forniamo qui soltanto una visione grafica, e lasciamo 
 
 \section{Analisi dati}
 
+Chiamiamo $D = 13.480$m il cammino geometrico della luce per tornare allo specchio rotante, ovvero il doppio della distanza specchio rotante/specchio fisso; $A$ la distanza del punto di convergenza del fascio laser dalla lente $l_2$ e $B$ la distanza tra $l_2$ e lo specchio rotante. 
+
+Per calcolare con precisione $A$, conoscendo la distanza focale di $l_2$, la ricaviamo dalla formula dei punti coniugati:
+$$A=\frac{(B+D)f}{B+D-f} = 256\text{mm}$$
+
+
+Per calcolare $c$, dobbiamo interpolare i dati presi nel modo seguente:
+$$\Delta s = \frac{\tilde{A}}{c}\omega$$
+ove
+$$\tilde{A} = \frac{4*A*D^2}{2}$$
+
+$\sage{2*e^2}$
+
+La funzione che ci permetterà di calcolare $c$ è la seguente:
+
+$$c = \frac{\tilde{A}}{m}$$
+ove
+
 Data una 
 m=0.04594423946498933
 
 Ricaviamo, tramite  il fit della funzione $V=R*I$" dove R è parametro da stimare, due resistenze ignote.
 
-
-\includegraphics[scale=0.75]{grafici/C1/res1.png}
-\
-
-\includegraphics[scale=0.75]{grafici/C1/res2.png}
 
 Misuro la resistenza interna del voltometro, mantenendo costante la ddp a $14.5\ V$ e variando la resistenza all'interno del circuito. 
 Il voltmetro è in parallelo al circuito, perciò $R_i$:
@@ -41,9 +54,6 @@ $$R_i = \frac{RV}{RI-V} $$
 
 dove R è la resistenza variabile, I la corrente nel circuito e $V= 14.5\ V$
 
-\begin{center}
-\begin{tabular}{*{2}{c}}
-\end{tabular}
 
 La resistenza risulta $9.20 \pm 0.27 \ M \Omega$.
 
@@ -56,8 +66,6 @@ In questo caso, R è fissato ($R=0.5 \Omega$) e sono V e I a variare
 
 La resistenza interna risulta $11.42 \pm 0.45 \Omega$
 
-
-\end{center}
 
 
 Colleghiamo una piccola lampada a filamento al circuito, e verifichiamo che il suo comportamento resistivo non segue la legge di Ohm. 
