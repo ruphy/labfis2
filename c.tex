@@ -30,6 +30,8 @@ def plot_experiment(m, q):
     plt.plot(sp2, diff2, '.r')
     xin = np.arange(min(sp)*0.8, max(sp)*1.2, 100)
     yin = m*xin+q
+    plt.xlabel(r"$\omega (rad/s)$")
+    plt.ylabel(r"$\Delta s (\mu m)$")
     plt.plot(xin, yin, "g-")
     plt.grid(True)
     plt.savefig("grafici/C/dati.png", dpi=300)
@@ -47,7 +49,7 @@ L'obiettivo del nostro esperimento è misurare la velocità della luce $c$.
 
 L'apparato di misurazione consiste principalmente in:
 \begin{itemize}
- \item Un laser Elio-Neon ($\lambda=32$ nm).
+ \item Un laser Elio-Neon ($\lambda=632$ nm).
  \item Uno specchio rotante a velocità angolare regolabile.
  \item Due lenti convergenti, di lunghezza focale $l_1 = 48mm$ e $l_2 = 252 mm$.
  \item Un microscopio con beam splitter e micrometro.
@@ -64,20 +66,16 @@ I dati sono molti, dunque forniamo qui soltanto una visione grafica, e lasciamo 
 
 \section{Analisi dati}
 
-
 \begin{sagesilent}
 at = 4*a*d^2/(d+b)
 plot_experiment(fit[m], fit[q]) 
 \end{sagesilent}
 
-\begin{center}
-\includegraphics[scale=0.75]{grafici/C/dati.png}
-\end{center}
 
 Chiamiamo $D = \sage{d}$mm il cammino geometrico della luce per tornare allo specchio rotante, ovvero il doppio della distanza specchio rotante/specchio fisso; $A$ la distanza del punto di convergenza del fascio laser dalla lente $l_2$ e $B$ la distanza tra $l_2$ e lo specchio rotante. 
 
 Per calcolare con precisione $A$, conoscendo la distanza focale di $l_2$, la ricaviamo dalla formula dei punti coniugati:
-$$A=\frac{(B+D)f}{B+D-f} = \sage{n(a)} \text{mm}$$
+$$A=\frac{(B+D)f}{B+D-f} = \sage{n(a, digits=4)} \text{mm}$$
 
 
 Per calcolare $c$, dobbiamo interpolare i dati presi nel modo seguente:
@@ -86,10 +84,48 @@ ove
 $$\tilde{A} = \frac{4*A*D^2}{D+B}$$
 
 
-La funzione che ci permetterà di calcolare $c$ è banale, e con in nostri dati vale:
+La funzione che ci permetterà di calcolare $c$ è ora banale, e con in nostri dati vale:
 
 $$c = \frac{\tilde{A}}{m} = \sage{n(at/fit[m], digits=4)} \text{m/s}$$
 
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C/dati.png}
+\end{center}
 
+Valutiamo la bontà del nostro fit con il test del $\chi^2$. L'errore è evidentemente maggiore dell'errore dovuto alla precisione strumentale (5 $\mu$m), e dunque utilizzeremo la stima a posteriori degli errori. Con questi dati otteniamo:
 
+\begin{sagesilent}
+# Chi quadro
+def funct(x):
+    return fit[m]*x+fit[q]
 
+chi = 0
+for i in range(0,len(diff)):
+    teo = funct(sp[i])
+    chi += (diff[i]-teo)^2/teo
+    
+chirid = chi/(len(diff)-3)
+\end{sagesilent}
+
+$$\chi^2 = \sage{n(chi, digits=4)}$$
+$$\tilde{\chi}^2 = \sage{n(chirid, digits=4)}$$
+
+\section{Allegato: dati}
+\begin{sagesilent}
+def stampa_dati(vel, deltas):
+  s = r"\begin{tabular}{c|c}"
+  s += r"$\omega$ ($rad/s$) & $|\Delta s|$ ($\mu$m) ($\pm5\mu m$) \\"
+  s += r"\midrule"
+  for i in range(0, len(vel)):
+    s += "%d & %d \\\\" % (vel[i], deltas[i])
+  s += r"\end{tabular}"
+  return s
+\end{sagesilent}
+
+\begin{center}
+ \sagestr{stampa_dati(sp, diff)}
+\end{center}
+Dati scartati:
+\begin{center}
+ \sagestr{stampa_dati(sp2, diff2)}
+\end{center}
