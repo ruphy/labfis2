@@ -140,7 +140,7 @@ $$\tilde{\chi}^2 = \sage{n(chiridnoq, digits=4)}$$
 \begin{sagesilent}
 def stampa_dati(vel, deltas, col1, col2):
   s = r"\begin{tabular}{c|c}"
-  s += "%s & %s \\" % (col1, col2)
+  s += "%s & %s \\\\" % (col1, col2)
   s += r"\midrule"
   for i in range(0, len(vel)):
     s += "%d & %d \\\\" % (vel[i], deltas[i])
