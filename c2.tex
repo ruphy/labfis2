@@ -11,24 +11,13 @@ plt.xlabel("Frequenza (Hz)")
 plt.ylabel("Corrente (mA)")
 plt.grid(True, which='both')
 plt.loglog(d['frequenza_hz'], d['i_ma'], '.r')
-plt.savefig("out.png")
+plt.savefig("grafici/C2-1.png")
 
-def plot_experiment(m, q):
-    plt.clf()
-    plt.plot(sp, diff, '.k')
-    plt.plot(sp2, diff2, '.r')
-    xin = np.arange(min(sp)*0.8, max(sp)*1.2, 100)
-    yin = m*xin+q
-    plt.xlabel(r"$\omega (rad/s)$")
-    plt.ylabel(r"$\Delta s (\mu m)$")
-    plt.plot(xin, yin, "g-")
-    plt.grid(True)
-    plt.savefig("grafici/C/dati.png", dpi=300)
-    
-d = 13480/2
-f = 252
-b = 220
-a = (b+d)*f/(b+d-f)
+plt.clf()
+plt.ylim(ymin=0.3, ymax=1.5)
+plt.grid(True, which='both')
+plt.loglog(d['frequenza_hz'], d['valore_mu']/d['v_rms'], '.r')
+plt.savefig("grafici/C2-2.png")
 \end{sagesilent}
 
 
