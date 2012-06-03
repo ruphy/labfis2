@@ -55,17 +55,19 @@ L'apparato di misurazione consiste principalmente in:
  \item Un microscopio con beam splitter e micrometro.
 \end{itemize}
 
-Lo specchio rotante viene fatto girare con velocità angolare $\omega_1$ in senso orario e $\omega_2$ in senso antiorario. Queste velocità angolari sono identiche nella maggior parte dei casi, e la loro differenza è trascurabile, dunque da qui in avanti sarà considerata semplicemente la velocità angolare $\omega$.
+Durante l'esperimento viene puntato un laser su di uno specchio rotante, fatto rimbalzare su di uno specchio fisso, e dopo un'altra riflessione sullo specchio rotante raccolto e misurato tramite un microscopio.
 
-Si misura a questo punto lo spostamento del punto luminoso visualizzato nel microscopio, tramite cursori e micrometro. A seconda della velocità angolare dello specchio rotante si osserverà uno spostamento del puntino nel microscopio. Ci aspettiamo che questa dipendenza sia di tipo lineare.
+Lo specchio rotante viene fatto girare con velocità angolare $\omega_1$ in senso orario e $\omega_2$ in senso antiorario. Queste velocità angolari sono (in modulo) identiche nella maggior parte dei casi, o con differenza trascurabile, dunque da qui in avanti si parlerà semplicemente di velocità angolare $\omega$.
+
+Si misura a questo punto lo spostamento del punto luminoso visualizzato nel microscopio, tramite cursori e micrometro. A seconda della velocità angolare dello specchio rotante si osserverà uno spostamento del puntino nel microscopio, dovuta alla rotazione dello specchio durante il tempo di volo dei fotoni. Ci aspettiamo che questa dipendenza tra spostamento e velocità angolare sia di tipo lineare.
 
 Chiamando $s_{cw}$ e $s_{ccw}$ rispettivamente le misure con specchio rotante in senso orario e antiorario, per come è orientata la strumentazione il numero
 $$\Delta s = s_{cw} - s_{ccw}$$
 deve essere positivo.
 
-Purtroppo però non è questo il caso per qualche misura presa in mattinata, per ragioni sconosciute e che non siamo riusciti a riprodurre. Questi dati sono esclusi dalla misurazione in quanto evidenti errori, e sono mostrati in rosso nel grafico seguente.
+Purtroppo però non è questo il caso per qualche misura presa in mattinata, per ragioni sconosciute e che non siamo riusciti a riprodurre. Questi dati sono esclusi dall'analisi in quanto evidenti errori, e sono mostrati in rosso nel grafico seguente.
 
-I dati sono molti, dunque forniamo qui soltanto una visione grafica, e lasciamo la tabella come allegato alla fine della relazione.
+/*I dati sono molti, dunque forniamo qui soltanto una visione grafica, e lasciamo la tabella come allegato alla fine della relazione.*/
 
 \section{Analisi dati}
 
@@ -74,8 +76,7 @@ at = 4*a*d^2/(d+b)
 plot_experiment(fit[m], fit[q]) 
 \end{sagesilent}
 
-NON È VERO!!!
-Chiamiamo $D = \sage{d}$mm il cammino geometrico della luce per tornare allo specchio rotante, ovvero il doppio della distanza specchio rotante/specchio fisso; $A$ la distanza del punto di convergenza del fascio laser dalla lente $l_2$ e $B$ la distanza tra $l_2$ e lo specchio rotante. 
+Chiamiamo $D = \sage{d}$mm la distanza specchio rotante/specchio fisso, $A$ la distanza del punto di convergenza del fascio laser dalla lente $l_2$ e $B$ la distanza tra $l_2$ e lo specchio rotante. Misuriamo $B$ e $D$ con l'aiuto di un metro a nastro.
 
 Per calcolare con precisione $A$, conoscendo la distanza focale di $l_2$, la ricaviamo dalla formula dei punti coniugati:
 $$A=\frac{(B+D)f}{B+D-f} = \sage{n(a, digits=4)} \text{mm}$$
@@ -88,7 +89,7 @@ $$\tilde{A} = 4\frac{AD^2}{D+B}$$
 
 L'interpolazione viene fatta sulla funzione
 $$y=mx+q$$
-Risulta coerente la stima di $q=\sage{n(fit[q], digits=2)}$, compatibile con il valore 0 visti i valori e le grandi incertezze, difficilmente stimabili, in gioco.
+Risulta coerente la stima di $q=\sage{n(fit[q], digits=2)}$, compatibile con il valore 0 visti i valori e le grandi incertezze sperimentali, difficilmente stimabili a priori.
 
 La funzione che ci permetterà di calcolare $c$ è ora banale, e con in nostri dati vale:
 
