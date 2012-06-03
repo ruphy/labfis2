@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-d = load("http://pubdata.sage.wikifm.org/lab2-exp-data/misura-c.sobj", verbose=False)
+d = load("sobj/misura-c.sobj", verbose=False)
 m1 = d["m1"]
 m2 = d["m2"]
 speed = d["speed"]
@@ -18,11 +18,6 @@ for i in range(0,len(m1)):
     else:
         diff2.append(m1[i]-m2[i])
         sp2.append(speed[i]*6.28)
-
-var('m, q')
-model(x) = m*x+q
-dataprime = [(sp[i], diff[i]) for i in range(0, len(sp))]
-fit = find_fit(dataprime, model, solution_dict = True)
 
 def plot_experiment(m, q):
     plt.clf()
@@ -71,11 +66,6 @@ Purtroppo però non è questo il caso per qualche misura presa in mattinata, per
 
 \section{Analisi dati}
 
-\begin{sagesilent}
-at = 4*a*d^2/(d+b)
-plot_experiment(fit[m], fit[q]) 
-\end{sagesilent}
-
 Chiamiamo $D = \sage{d}$mm la distanza specchio rotante/specchio fisso, $A$ la distanza del punto di convergenza del fascio laser dalla lente $l_2$ e $B$ la distanza tra $l_2$ e lo specchio rotante. Misuriamo $B$ e $D$ con l'aiuto di un metro a nastro.
 
 Per calcolare con precisione $A$, conoscendo la distanza focale di $l_2$, la ricaviamo dalla formula dei punti coniugati:
@@ -83,17 +73,37 @@ $$A=\frac{(B+D)f}{B+D-f} = \sage{n(a, digits=4)} \text{mm}$$
 
 
 Per calcolare $c$, dobbiamo interpolare linearmente:
-$$\Delta s = \frac{\tilde{A}}{c}\omega = m\omega$$
+$$\Delta s = \frac{\tilde{A}}{c}\omega\qquad (= m\omega)$$
 ove
 $$\tilde{A} = 4\frac{AD^2}{D+B}$$
+ricavata dalla geometria del problema.
+
+\begin{sagesilent}
+var('m, q')
+model(x) = m*x+q
+dataprime = [(sp[i], diff[i]) for i in range(0, len(sp))]
+fit = find_fit(dataprime, model, solution_dict = True)
+model2(x) = m*x
+fit2 = find_fit(dataprime, model2, solution_dict = True)
+
+at = 4*a*d^2/(d+b)
+plot_experiment(fit[m], fit[q]) 
+\end{sagesilent}
 
 L'interpolazione viene fatta sulla funzione
 $$y=mx+q$$
-Risulta coerente la stima di $q=\sage{n(fit[q], digits=2)}$, compatibile con il valore 0 visti i valori e le grandi incertezze sperimentali, difficilmente stimabili a priori.
+in cui abbiamo lasciato libero il parametro $q$.
+
+Risulta coerente la stima di fit $q=\sage{n(fit[q], digits=2)}$, compatibile con il valore 0 visti i valori e le grandi incertezze sperimentali, difficilmente stimabili a priori.
 
 La funzione che ci permetterà di calcolare $c$ è ora banale, e con in nostri dati vale:
 
-$$c = \frac{\tilde{A}}{m} = \sage{n(2*at/fit[m], digits=4)} \text{m/s}$$
+$$c = 2\frac{\tilde{A}}{m} = \sage{n(2*at/fit[m], digits=4)} \text{m/s}$$
+
+Abbiamo anche provato a imporre il passaggio per l'origine ($q = 0$), nel qual caso
+$$c = 2\frac{\tilde{A}}{m} = \sage{n(2*at/fit2[m], digits=4)} \text{m/s}$$
+
+Il fattore 2 è introdotto in quanto la differenza non viene misurata tra specchio fermo e specchio rotante, ma con specchio rotante nelle direzioni opposte.
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/C/dati.png}
@@ -108,20 +118,29 @@ def funct(x):
 
 chi = 0
 for i in range(0,len(diff)):
-    teo = funct(sp[i])
+    teo = model.subs(x=sp[i], m=fit[m], q=fit[q])
     chi += (diff[i]-teo)^2/teo
     
+chinoq = 0
+for i in range(0,len(diff)):
+    teo = model2.subs(x=sp[i], m=fit2[m])
+    chinoq += (diff[i]-teo)^2/teo
+    
 chirid = chi/(len(diff)-3)
+chiridnoq = chinoq/(len(diff)-2)
 \end{sagesilent}
 
 $$\chi^2 = \sage{n(chi, digits=4)}$$
 $$\tilde{\chi}^2 = \sage{n(chirid, digits=4)}$$
+Per quanto riguarda il fit senza $q$
+$$\chi^2 = \sage{n(chinoq, digits=4)}$$
+$$\tilde{\chi}^2 = \sage{n(chiridnoq, digits=4)}$$
 
 \section{Allegato: dati}
 \begin{sagesilent}
-def stampa_dati(vel, deltas):
+def stampa_dati(vel, deltas, col1, col2):
   s = r"\begin{tabular}{c|c}"
-  s += r"$\omega$ ($rad/s$) & $|\Delta s|$ ($\mu$m) ($\pm5\mu m$) \\"
+  s += "%s & %s \\" % (col1, col2)
   s += r"\midrule"
   for i in range(0, len(vel)):
     s += "%d & %d \\\\" % (vel[i], deltas[i])
@@ -130,9 +149,9 @@ def stampa_dati(vel, deltas):
 \end{sagesilent}
 
 \begin{center}
- \sagestr{stampa_dati(sp, diff)}
+ \sagestr{stampa_dati(sp, diff, r"$\omega$ ($rad/s$)", r"$|\Delta s|$ ($\mu$m) ($\pm5\mu m$)")}
 \end{center}
 Dati scartati:
 \begin{center}
- \sagestr{stampa_dati(sp2, diff2)}
+ \sagestr{stampa_dati(sp2, diff2, r"$\omega$ ($rad/s$)", r"$|\Delta s|$ ($\mu$m) ($\pm5\mu m$)")}
 \end{center}
