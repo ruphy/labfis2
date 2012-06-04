@@ -97,9 +97,14 @@ $\theta (°) $ & $\sigma_{\theta}$ & N & $\sigma_{N}$ & n & $\sigma_{n}$\\
 \subsection{Reticolo ad incidenza radente}
 
 \begin{sagesilent}
-var('d, h, l, k,n, sigma_h, sigma_l,sigma_k')
+import numpy as np
+dati = np.recfromcsv("dati/interferometro.csv")
 
+var('d, h, l, k,n, sigma_h, sigma_l,sigma_k')
 lamb(h,k,l) = (d/n)*(cos(atan(h/l))-cos(atan(k/l)))
+
+
+elle = 344
 
 dif = lamb.differentiate()
 errs = vector([sigma_h, sigma_l, sigma_k])
@@ -124,24 +129,29 @@ Il cui differenziale è:
 $$\sage{dif}$$
 
 Dunque, l'incertezza su $l$ è data dalla relazione
-$$\sigma_l = \sage{errscal}$$
+$$\sigma_\lambda = \sage{errscal}$$
+
+
+\begin{sagesilent}
+subd = errscal.subs(d=0.1,h=30,l=elle,sigma_h=0.3,sigma_k=0.3,sigma_l=1)
+sublambda = lamb.subs(d=0.1,h=30,l=elle)
+
+lambdas = [abs((sublambda.subs(h=int(dato['h']), k=dato['k'], n=int(dato['n']))*10^7).n(digits=4)) for dato in dati]
+errorsarr = [(subd.subs(n=int(dato['n']), k=dato['k'])*10^7).n(digits=4) for dato in dati]
+print errorsarr
+
+def stampa_dati(wa, header):
+  s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)+1)
+  s += r"}{|c}}"
+  s += "%s \\\\" % (header)
+  s += r"\midrule"
+  for i in range(0, len(wa)):
+    a = ["%s" % x for x in wa[i]]
+    s += "%s & %i & %.2f \\\\" % (join(a, "&"), lambdas[i], errorsarr[i])
+  s += r"\end{tabular}"
+  return s
+\end{sagesilent}
 
 \begin{center}
-\begin{tabular}{c|c|c|c|c|c|c|c}
-
-n & h $(cm)$ & $\sigma_h$ & $\Delta h (cm)$ & $\theta (°)$ & $\sigma_{\theta}$ & $\lambda$ & $\sigma_{\lambda}$\\
-\midrule
-
-6	& 6.5	& 0.2 &	23.4 & &	1.083043981  & &\\
-5	& 12.5	& &	17.2 & &	2.0821086591 & &\\
-4	& 16.5	& &	13.1 & &	2.7474869399 & &\\
-3	& 23	& &	7    & & 	3.8270695544 & &\\
-2	& 25.5	& &	4.6  & &	4.2416126702 & &\\
-1	& 27.5	& &	2.3	 & &	4.5729295588 & &\\
-0	& 30	& &	0 	 & &	4.9866429981 & &\\
-1	& 32	& &	2 	 & &	5.3172412847 & &\\
-2	& 34	& &	3.8	 & & 	5.6474852401 & &\\
-3	& 37.5	& &	7.5	 & &	6.2244955262 & &\\
-
-\end{tabular}
+\sagestr{stampa_dati(dati, "n & k &h & $\lambda$ & $\sigma_\lambda$ ")}
 \end{center}
