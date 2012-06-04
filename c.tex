@@ -29,7 +29,7 @@ def plot_experiment(m, q):
     plt.ylabel(r"$\Delta s (\mu m)$")
     plt.plot(xin, yin, "g-")
     plt.grid(True)
-    plt.savefig("grafici/C/dati.png", dpi=300)
+    plt.savefig("grafici/C-dati.png", dpi=300)
     
 d = 13480/2
 f = 252
@@ -106,7 +106,7 @@ $$c = 2\frac{\tilde{A}}{m} = \sage{n(2*at/fit2[m], digits=4)} \text{m/s}$$
 Il fattore 2 è introdotto in quanto la differenza non viene misurata tra specchio fermo e specchio rotante, ma con specchio rotante nelle direzioni opposte.
 
 \begin{center}
-\includegraphics[scale=0.75]{grafici/C/dati.png}
+\includegraphics[scale=0.75]{grafici/C-dati.png}
 \end{center}
 
 Valutiamo la bontà del nostro fit con il test del $\chi^2$. L'errore è evidentemente maggiore dell'errore dovuto alla precisione strumentale (5 $\mu$m), e dunque utilizzeremo la stima a posteriori degli errori. Con questi dati otteniamo:
