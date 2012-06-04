@@ -1,15 +1,3 @@
-\documentclass[a4paper,10pt]{report}
- 
-
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{booktabs}
-\usepackage[table]{xcolor}
-\usepackage{amssymb}
-\usepackage[utf8x]{inputenc}
-
-\begin{document}
 
 \chapter{Interferometro (O2)}
 
@@ -108,11 +96,35 @@ $\theta (°) $ & $\sigma_{\theta}$ & N & $\sigma_{N}$ & n & $\sigma_{n}$\\
 
 \subsection{Reticolo ad incidenza radente}
 
+\begin{sagesilent}
+var('d, h, l, k,n, sigma_h, sigma_l,sigma_k')
+
+lamb(h,k,l) = (d/n)*(cos(atan(h/l))-cos(atan(k/l)))
+
+dif = lamb.differentiate()
+errs = vector([sigma_h, sigma_l, sigma_k])
+slam = vector([d, h, l])
+
+for i in range(0, len(dif)):
+    slam[i] = (dif[i]*errs[i])
+    
+errscal = abs(slam)
+\end{sagesilent}
+
+
 In questa parte dell'esperienza misuriamo la $\lambda$ della luce a laser attraverso considerazioni geometriche riguardo ai fenomeni di interferenza e riflessione. Infatti, noto il passo del reticolo (nel nostro caso il reticolo consiste in un righello metallico, e dunque il passo è $d = 1 mm$), possiamo ricavare $\lambda$ dalla relazione:
 
 $$ n\lambda = d(cos\theta_i-cos\theta_r) $$
 
 con $l = 344 cm $ (distanza sorgente-schermo) e $\theta = arctg\frac{h}{l}$
+
+Per considerare l'errore che commettiamo su $l$, dunque, la funzione che ci interessa è:
+$$\sage{lamb}$$
+Il cui differenziale è:
+$$\sage{dif}$$
+
+Dunque, l'incertezza su $l$ è data dalla relazione
+$$\sigma_l = \sage{errscal}$$
 
 \begin{center}
 \begin{tabular}{c|c|c|c|c|c|c|c}
@@ -133,13 +145,3 @@ n & h $(cm)$ & $\sigma_h$ & $\Delta h (cm)$ & $\theta (°)$ & $\sigma_{\theta}$ 
 
 \end{tabular}
 \end{center}
-				
-
-
-
-
-
-
-\end{document} 
-
-
