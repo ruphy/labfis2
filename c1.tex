@@ -10,15 +10,58 @@ Di seguito, gli strumenti con la loro precisione:
 - Generatore da banco, resistenza interna ignota.
 
 
-\section{Analisi dat}
+\section{Analisi dati}
 
 Ricaviamo, tramite  il fit della funzione $V=R*I$" dove R è parametro da stimare, due resistenze ignote.
+
+\subsection{Dati}
+
+\begin{center}
+\begin{tabular}{*{4}{c}}
+Corrente1 & Potenziale1 & Corrente2 & Potenziale2\\
+\midrule
+396 & 201 & 3043 & 207\\
+512 & 261 & 3667 & 250\\
+706 & 360 & 4703 & 319\\
+890 & 454 & 6365 & 432\\
+1126 & 574 & 8984 & 609\\
+1242 & 633 & 12326 & 836\\
+1557 & 794 & 16898 & 1145\\
+1812 & 925 & 340 & 24\\
+1971 & 1005 & 725 & 50\\
+2290 & 1168 & 966 & 66\\
+2524 & 1286 & 1595 & 108\\
+2850 & 1454 & 1822 & 124\\
+3116 & 1589 & 2160 & 146\\
+3407 & 1737 & 2302 & 157\\
+3883 & 1980 & 2584 & 176\\
+4229 & 2157 & 3100 & 211\\
+4598 & 2344 & 3370 & 229\\
+5072 & 2586 & 4036 & 274\\
+5505 & 2807 & 4348 & 295\\
+5820 & 2967 & 4596 & 312\\
+6257 & 3191 & 4894 & 332\\
+6738 & 3436 & 5578 & 379\\
+7521 & 3835 & 6613 & 449\\
+7880 & 4018 & 6963 & 473\\
+8493 & 4331 & 7371 & 500\\
+8852 & 4514 & 7864 & 533\\
+9135 & 4658 & 8603 & 584\\
+9431 & 4809 & 9066 & 615\\
+9720 & 4957 & 9667 & 656\\
+9972 & 5085 & 10816 & 733\\
+
+\end{tabular}
+\end{center}
 
 
 \includegraphics[scale=0.75]{grafici/C1/res1.png}
 \
+$\chi^2 = 5.76 $
 
 \includegraphics[scale=0.75]{grafici/C1/res2.png}
+
+$\chi^2 = 4.88 $
 
 Misuro la resistenza interna del voltometro, mantenendo costante la ddp a $14.5\ V$ e variando la resistenza all'interno del circuito. 
 Il voltmetro è in parallelo al circuito, perciò $R_i$:
@@ -29,8 +72,8 @@ dove R è la resistenza variabile, I la corrente nel circuito e $V= 14.5\ V$
 
 \begin{center}
 \begin{tabular}{*{2}{c}}
-Resistenza $M\Omega$ & Corrente $nA$
-\midline 
+Resistenza $M\Omega$ & Corrente $nA$\\
+\midrule
 7&      36\\
 9&      32\\
 10& 30\\
@@ -53,8 +96,8 @@ $$R_i = \frac{V-RI}{I}$$
 
 In questo caso, R è fissato ($R=0.5 \Omega$) e sono V e I a variare
 \begin{tabular}{*{2}{c}}
-Volt $mV$ & Corrente $nA$
-\midline
+Volt $mV$ & Corrente $nA$\\
+\midrule
 22&      1769\\
 40&      3271\\
 60&      5047\\
@@ -80,8 +123,54 @@ Colleghiamo una piccola lampada a filamento al circuito, e verifichiamo che il s
 
 \includegraphics[scale=0.75]{grafici/C1/lampa.png}
 
-La lampadina ha un comportamento non-ohmico nel momento in cui il filamento si scalda sufficientemente e inizia ad emettere luce ($\~500mV$).
+La lampadina ha un comportamento non-ohmico nel momento in cui il filamento si scalda sufficientemente e inizia ad emettere luce ($500mV$).
 
 
+\section{Partitore resistivo}
+
+\subsection{Situazione senza carico}
+\begin{center}
+\begin{tabular}{*{2}{c}}
+$V_{in}$ & $\frac{V_{in}}{V_{out}}$\\
+\midrule
+329.0 & 0.5015 \\
+493.0 & 0.501 \\
+544.0 & 0.5018 \\
+618.0 & 0.5016 \\
+667.0 & 0.5007 \\
+776.0 & 0.5 \\
+803.0 & 0.5006 \\
+927.0 & 0.5005 \\
+1078.0 & 0.5 \\
+1285.0 & 0.4996 \\
+\end{tabular}
+
+\end{center}
+
+$\chi^2=0.0169147373983$
 
 
+\includegraphics[scale=0.75]{grafici/C1/part1.png}
+
+\subsection{Situazione con carico}
+\begin{center}
+
+\begin{tabular}{*{2}{c}}
+$V_{in}$ & $\frac{V_{in}}{V_{out}}$\\
+\midrule
+220.0 & 3.1 \\
+276.0 & 3.1051 \\
+302.0 & 3.1126 \\
+410.0 & 3.1073 \\
+511.0 & 3.1115 \\
+559.0 & 3.1055 \\
+624.0 & 3.109 \\
+752.0 & 3.109 \\
+906.0 & 3.1093 \\
+1036.0 & 3.111 \\
+\end{tabular}
+
+\end{center}
+\includegraphics[scale=0.75]{grafici/C1/part2.png}
+
+$\chi^2 = 12.9963702671$
