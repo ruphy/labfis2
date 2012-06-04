@@ -97,7 +97,10 @@ $\theta (°) $ & $\sigma_{\theta}$ & N & $\sigma_{N}$ & n & $\sigma_{n}$\\
 \subsection{Reticolo ad incidenza radente}
 
 \begin{sagesilent}
+
 import numpy as np
+import matplotlib.mlab as ml
+
 dati = np.recfromcsv("dati/interferometro.csv")
 
 var('d, h, l, k,n, sigma_h, sigma_l,sigma_k')
@@ -124,11 +127,11 @@ $$ n\lambda = d(cos\theta_i-cos\theta_r) $$
 con $l = 344 cm $ (distanza sorgente-schermo) e $\theta = arctg\frac{h}{l}$
 
 Per considerare l'errore che commettiamo su $l$, dunque, la funzione che ci interessa è:
-$$\sage{lamb}$$
+$$\lambda = \sage{lamb}$$
 Il cui differenziale è:
-$$\sage{dif}$$
+$$\nabla \lambda = \sage{dif}$$
 
-Dunque, l'incertezza su $l$ è data dalla relazione
+Dunque, l'incertezza su $\lambda$ è data dalla relazione
 $$\sigma_\lambda = \sage{errscal}$$
 
 
@@ -136,9 +139,13 @@ $$\sigma_\lambda = \sage{errscal}$$
 subd = errscal.subs(d=0.1,h=30,l=elle,sigma_h=0.3,sigma_k=0.3,sigma_l=1)
 sublambda = lamb.subs(d=0.1,h=30,l=elle)
 
-lambdas = [abs((sublambda.subs(h=int(dato['h']), k=dato['k'], n=int(dato['n']))*10^7).n(digits=4)) for dato in dati]
-errorsarr = [(subd.subs(n=int(dato['n']), k=dato['k'])*10^7).n(digits=4) for dato in dati]
+lambdas = [abs((sublambda.subs(h=int(dato['h']), k=dato['k'], n=int(dato['n']))*10^7)).n(digits=4) for dato in dati]
+errorsarr = np.array([(subd.subs(n=int(dato['n']), k=dato['k'])*10^7).n(digits=4) for dato in dati], dtype='f4')
 print errorsarr
+
+dati = ml.rec_append_fields(dati, "lambda", lambdas)
+dati = ml.rec_append_fields(dati, "sigma_lambda", errorsarr)
+print dati
 
 def stampa_dati(wa, header):
   s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)+1)
@@ -146,12 +153,14 @@ def stampa_dati(wa, header):
   s += "%s \\\\" % (header)
   s += r"\midrule"
   for i in range(0, len(wa)):
-    a = ["%s" % x for x in wa[i]]
-    s += "%s & %i & %.2f \\\\" % (join(a, "&"), lambdas[i], errorsarr[i])
+    a = ["%.4G" % x for x in wa[i]]
+    s += "%s \\\\" % join(a, "&")
   s += r"\end{tabular}"
   return s
 \end{sagesilent}
 
+Sostituendo:
 \begin{center}
 \sagestr{stampa_dati(dati, "n & k &h & $\lambda$ & $\sigma_\lambda$ ")}
 \end{center}
+Graficati:
