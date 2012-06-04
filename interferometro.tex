@@ -1,0 +1,157 @@
+
+\chapter{Interferometro (O2)}
+
+\subsubsection{ strumenti}
+
+
+\subsubsection{Misura della lunghezza d'onda del laser}
+
+$$ \lambda = \frac{2d}{m} $$
+
+con $d$ spostamento dello specchio mobile e $m$ numero di massimo attraversati (visualizzati sullo schermo).
+
+\begin{center}
+
+\begin{tabular}{c c}
+\textbf{Fabry-Perot} & \hspace{2cm} \textbf{Michelson}\\
+\\
+\begin{tabular}{c|c|c|c|c|c}
+d ($\mu m$)& $\sigma_d$ & m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$\\
+\midrule
+29 & 1 & 87 & 4 & 670 & 38\\
+25 & 1 & 79 & 1 & 632 & 26\\
+31 & 1 & 81 & 1 & 642 & 26\\
+26 & 1 & 75 & 7 & 693 & 70\\
+20 & 1 & 64 & 5 & 625 & 58\\
+35 & 1 & 107 & 5 & 654 & 36\\
+
+
+?? \\
+
+\end{tabular}
+
+& \hspace{2cm}
+
+\begin{tabular}{c|c|c|c|c}
+d ($\mu m$)& m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$\\
+\midrule
+25 & 75 & ? & 666 & ?\\
+75 & 72 & ? & 697 & ?\\
+
+\end{tabular}
+
+\end{tabular}
+
+\end{center} 
+
+In cui $\sigma_{\lambda}$ è data dalla propagazione dell'errore su d e m:
+
+$$ \sigma_{\lambda} = \sqrt{ ( \frac{\partial f}{\partial d} \sigma_{d} )^2 + ( \frac{\partial f}{\partial m} \sigma_{m} )^2 } $$
+
+Valore atteso: 632.8 $nm$\\
+
+Dalla media pesata otteniamo una $\lambda$ di:
+
+$$ \lambda =\displaystyle \sum{\frac{\frac{x_i}{(\sigma_i)^2}}{\frac{1}{(\sigma_i)^2}}} \pm \displaystyle\sum{\frac{1}{(\sigma_i)^2}} = 644 \pm 14 nm $$
+
+
+
+\subsection{Misura dell'indice di rifrazione dell'aria}
+
+Si pone una cella a vuoto (spessore $d=3 cm$) tra lo specchio semi-riflettente e lo specchio rotante (che in questa parte dell'esperienza rimane fisso) nell'interferometro di Michelson. La cella è collegata ad un compressore, e un barometro segna la variazione di pressione.
+Raccogliamo il numero di massimi che attraversano lo schermo al variare della pressione e ricaviamo $n_{aria}$ dalla relazione:
+$$ n = mP+1 $$
+$$ m = \frac{n_i - n_f}{P_i-P_f} = \frac{N \lambda_0}{2d(P_i-P_f}$$
+
+\begin{center}
+\begin{tabular}{c|c|c}
+$P_i-P_f$ ($kPa$) & N & m \\
+\midrule
+70 & 19 & $2.859\cdot10^{-6}$\\
+\end{tabular}
+\end{center}
+
+$$ n = mP+1 = 1.000289 \pm $$
+
+Valore atteso: 1.000293
+
+\subsection{Misura dell'indice di rifrazione del vetro}
+
+In modo analogo a quanto fatto per la misura di $n_{aria}$, si pone tra lo specchio semi-riflettente e lo specchio rotante una lastra di vetro (spessore $t= 5 mm$). Raccogliamo il numero N di frange di interferenza contate per uno spostamento angolare superiore a $10°$, e ricaviamo $n_{vetro}$ dalla relazione:
+
+$$n=\frac{(2t-N\lambda_0)(1-cos(\theta))}{2t(1-cos\theta)-N\lambda_0}$$
+
+Per fissare lo zero, troviamo l'angolo di deviazione minima.
+
+$\delta = 0.6 \pm (?) $
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c}
+$\theta (°) $ & $\sigma_{\theta}$ & N & $\sigma_{N}$ & n & $\sigma_{n}$\\
+\midrule
+10.8 & 3 & 112 & 3 & 1.578 & ? \\
+9.2 & 3 & 87 & 2 & 1.529 & ? \\
+\end{tabular}
+\end{center}
+
+\subsection{Reticolo ad incidenza radente}
+
+\begin{sagesilent}
+import numpy as np
+dati = np.recfromcsv("dati/interferometro.csv")
+
+var('d, h, l, k,n, sigma_h, sigma_l,sigma_k')
+lamb(h,k,l) = (d/n)*(cos(atan(h/l))-cos(atan(k/l)))
+
+
+elle = 344
+
+dif = lamb.differentiate()
+errs = vector([sigma_h, sigma_l, sigma_k])
+slam = vector([d, h, l])
+
+for i in range(0, len(dif)):
+    slam[i] = (dif[i]*errs[i])
+    
+errscal = abs(slam)
+\end{sagesilent}
+
+
+In questa parte dell'esperienza misuriamo la $\lambda$ della luce a laser attraverso considerazioni geometriche riguardo ai fenomeni di interferenza e riflessione. Infatti, noto il passo del reticolo (nel nostro caso il reticolo consiste in un righello metallico, e dunque il passo è $d = 1 mm$), possiamo ricavare $\lambda$ dalla relazione:
+
+$$ n\lambda = d(cos\theta_i-cos\theta_r) $$
+
+con $l = 344 cm $ (distanza sorgente-schermo) e $\theta = arctg\frac{h}{l}$
+
+Per considerare l'errore che commettiamo su $l$, dunque, la funzione che ci interessa è:
+$$\sage{lamb}$$
+Il cui differenziale è:
+$$\sage{dif}$$
+
+Dunque, l'incertezza su $l$ è data dalla relazione
+$$\sigma_\lambda = \sage{errscal}$$
+
+
+\begin{sagesilent}
+subd = errscal.subs(d=0.1,h=30,l=elle,sigma_h=0.3,sigma_k=0.3,sigma_l=1)
+sublambda = lamb.subs(d=0.1,h=30,l=elle)
+
+lambdas = [abs((sublambda.subs(h=int(dato['h']), k=dato['k'], n=int(dato['n']))*10^7).n(digits=4)) for dato in dati]
+errorsarr = [(subd.subs(n=int(dato['n']), k=dato['k'])*10^7).n(digits=4) for dato in dati]
+print errorsarr
+
+def stampa_dati(wa, header):
+  s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)+1)
+  s += r"}{|c}}"
+  s += "%s \\\\" % (header)
+  s += r"\midrule"
+  for i in range(0, len(wa)):
+    a = ["%s" % x for x in wa[i]]
+    s += "%s & %i & %.2f \\\\" % (join(a, "&"), lambdas[i], errorsarr[i])
+  s += r"\end{tabular}"
+  return s
+\end{sagesilent}
+
+\begin{center}
+\sagestr{stampa_dati(dati, "n & k &h & $\lambda$ & $\sigma_\lambda$ ")}
+\end{center}
