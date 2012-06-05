@@ -12,14 +12,14 @@ plt.xlabel("Frequenza (Hz)")
 plt.ylabel("Corrente (mA)")
 plt.grid(True, which='both')
 plt.loglog(d['frequenza_hz'], d['i_ma'], '.r')
-plt.savefig("grafici/C2-1.png")
+plt.savefig("grafici/C2-1.png", dpi=300)
 
 plt.clf()
 plt.ylim(ymin=0.3, ymax=1.5)
 plt.grid(True, which='both')
 plt.title("Impedenze")
 plt.loglog(d['frequenza_hz'], d['valore_mu']/d['v_rms'], '.r')
-plt.savefig("grafici/C2-2.png")
+plt.savefig("grafici/C2-2.png", dpi=300)
 \end{sagesilent}
 
 
