@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 d = load("sobj/oscilloscopio-c2.sobj", verbose=False)
+
+rc = load("sobj/C2-RC.sobj", verbose=False)
+
+rl = load("sobj/C2-RL.sobj", verbose=False)
+
 d.sort()
 
 plt.clf()
@@ -27,12 +32,12 @@ plt.savefig("grafici/C2-2.png")
 
 \section{Risposta in frequenza del multimetro}
 \begin{center}
-\includegraphics[scale=0.75]{grafici/C2-1.png} 
+\includegraphics[scale=0.75]{grafici/C2/C2-1.png} 
 \end{center}
 
 \section{Misura di impedenze ignote}
 \begin{center}
-\includegraphics[scale=0.75]{grafici/C2-2.png} 
+\includegraphics[scale=0.75]{grafici/C2/C2-2.png} 
 \end{center}
 
 L'obiettivo del nostro esperimento è misurare la velocità della luce $c$.
@@ -40,6 +45,37 @@ L'obiettivo del nostro esperimento è misurare la velocità della luce $c$.
 L'apparato di misurazione consiste principalmente in:
 
 \section{Analisi dati}
+
+
+\begin{sagesilent}
+#Circuiti RL- Impedenze Ignote
+
+freq = rl['freq']
+t= rl['tempo']
+vb = rl['2vb']
+i = vb/677
+phi=2*n(pi)*freq*t
+z = rl['deltav']/2*i
+
+plt.clf()
+plt.subplot(211)
+plt.plot(freq,z,'bo')
+plt.autoscale(enable=True,axis='both')
+plt.grid(True)
+plt.xlabel("Frequenza (Hz)")
+plt.ylabel("Z")
+plt.subplot(212)
+plt.loglog(freq,phi,'ro')
+plt.grid(True,which="both")
+plt.xlabel("Frequenza (Hz)")
+plt.ylabel("$\mu s$")
+plt.savefig("grafici/C2/rc.png")
+\end{sagesilent}
+
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C2/rc.png} 
+\end{center}
+
 
 \section{Allegato: dati}
 \begin{sagesilent}
