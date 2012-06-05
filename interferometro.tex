@@ -134,7 +134,6 @@ $$\nabla \lambda \sage{dif}$$
 Dunque, l'incertezza su $\lambda$ è data dalla relazione
 $$\sigma_\lambda = \sage{errscal}$$
 
-
 \begin{sagesilent}
 subd = errscal.subs(d=0.1,h=30,l=elle,sigma_h=0.3,sigma_k=0.3,sigma_l=3)
 sublambda = lamb.subs(d=0.1,h=30,l=elle)
@@ -147,6 +146,7 @@ dati = ml.rec_append_fields(dati, "lambda", lambdas)
 dati = ml.rec_append_fields(dati, "sigma_lambda", errorsarr)
 
 meanlambda = np.average(dati['lambda'], weights=1./(dati['sigma_lambda']**2))
+errtot = 1/sum(1/dati['sigma_lambda']**2)
 
 def stampa_dati(wa, header):
   s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)+1)
@@ -177,4 +177,4 @@ plt.savefig("grafici/interfer-lambda-con-err.png", dpi=300)
 
 \includegraphics[scale=0.75]{grafici/interfer-lambda-con-err.png}
 
-Valor medio: $\sage{round(meanlambda, 2)}$ nm
+Valor medio: $\sage{int(meanlambda)}\pm\sage{int(errtot)}$ nm
