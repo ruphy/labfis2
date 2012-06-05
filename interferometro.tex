@@ -32,11 +32,11 @@ d ($\mu m$)& $\sigma_d$ & m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$
 
 & \hspace{2cm}
 
-\begin{tabular}{c|c|c|c|c}
-d ($\mu m$)& m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$\\
+\begin{tabular}{c|c|c|c|c|c}
+d ($\mu m$) & $\sigma_d$ & m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$\\
 \midrule
-25 & 75 & ? & 666 & ?\\
-75 & 72 & ? & 697 & ?\\
+25 & 1& 75 & 2 & 666 & ?\\
+75 & 1& 72 & 1 & 697 & ?\\
 
 \end{tabular}
 
@@ -46,7 +46,7 @@ d ($\mu m$)& m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$\\
 
 In cui $\sigma_{\lambda}$ è data dalla propagazione dell'errore su d e m:
 
-$$ \sigma_{\lambda} = \sqrt{ ( \frac{\partial f}{\partial d} \sigma_{d} )^2 + ( \frac{\partial f}{\partial m} \sigma_{m} )^2 } $$
+$$ \sigma_{\lambda} = \sqrt{ ( \frac{\partial \lambda}{\partial d} \sigma_{d} )^2 + ( \frac{\partial \lambda}{\partial m} \sigma_{m} )^2 } $$
 
 Valore atteso: 632.8 $nm$\\
 
@@ -61,7 +61,7 @@ $$ \lambda =\displaystyle \sum{\frac{\frac{x_i}{(\sigma_i)^2}}{\frac{1}{(\sigma_
 Si pone una cella a vuoto (spessore $d=3 cm$) tra lo specchio semi-riflettente e lo specchio rotante (che in questa parte dell'esperienza rimane fisso) nell'interferometro di Michelson. La cella è collegata ad un compressore, e un barometro segna la variazione di pressione.
 Raccogliamo il numero di massimi che attraversano lo schermo al variare della pressione e ricaviamo $n_{aria}$ dalla relazione:
 $$ n = mP+1 $$
-$$ m = \frac{n_i - n_f}{P_i-P_f} = \frac{N \lambda_0}{2d(P_i-P_f}$$
+$$ m = \frac{n_i - n_f}{P_i-P_f} = \frac{N \lambda_0}{2d(P_i-P_f)}$$
 
 \begin{center}
 \begin{tabular}{c|c|c}
