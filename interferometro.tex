@@ -110,7 +110,7 @@ lamb(h,k,l) = (d/n)*(cos(atan(h/l))-cos(atan(k/l)))
 elle = 344
 
 dif = lamb.differentiate()
-errs = vector([sigma_h, sigma_l, sigma_k])
+errs = vector([sigma_h, sigma_k, sigma_l])
 slam = vector([d, h, l])
 
 for i in range(0, len(dif)):
@@ -136,7 +136,7 @@ $$\sigma_\lambda = \sage{errscal}$$
 
 
 \begin{sagesilent}
-subd = errscal.subs(d=0.1,h=30,l=elle,sigma_h=0.3,sigma_k=0.3,sigma_l=1)
+subd = errscal.subs(d=0.1,h=30,l=elle,sigma_h=0.3,sigma_k=0.3,sigma_l=3)
 sublambda = lamb.subs(d=0.1,h=30,l=elle)
 
 lambdas = [abs((sublambda.subs(h=int(dato['h']), k=dato['k'], n=int(dato['n']))*10^7)).n(digits=4) for dato in dati]
@@ -145,7 +145,8 @@ print errorsarr
 
 dati = ml.rec_append_fields(dati, "lambda", lambdas)
 dati = ml.rec_append_fields(dati, "sigma_lambda", errorsarr)
-print dati
+
+meanlambda = np.average(dati['lambda'], weights=1./(dati['sigma_lambda']**2))
 
 def stampa_dati(wa, header):
   s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)+1)
@@ -161,6 +162,19 @@ def stampa_dati(wa, header):
 
 Sostituendo:
 \begin{center}
-\sagestr{stampa_dati(dati, "n & k &h & $\lambda$ & $\sigma_\lambda$ ")}
+\sagestr{stampa_dati(dati, "n & k (cm) &h (cm)& $\lambda$ (nm) & $\sigma_\lambda$ ")}
 \end{center}
 Graficati:
+\begin{sagesilent}
+import matplotlib.pyplot as plt
+plt.clf()
+plt.errorbar(dati['k'], dati['lambda'], dati['sigma_lambda'], fmt="ro")
+plt.grid(True)
+plt.ylabel(r"$\lambda$ (nm)")
+plt.xlabel("k (cm)")
+plt.savefig("grafici/interfer-lambda-con-err.png", dpi=300)
+\end{sagesilent}
+
+\includegraphics[scale=0.75]{grafici/interfer-lambda-con-err.png}
+
+Valor medio: $\sage{round(meanlambda, 2)}$ nm

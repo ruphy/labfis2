@@ -5,7 +5,9 @@
 \newlabel{@sageinline1}{{%
 \left( h, k, l \right) \ {\mapsto} \ \left(-\frac{d h}{{\left(\frac{h^{2}}{l^{2}} + 1\right)}^{\left(\frac{3}{2}\right)} l^{2} n},\,\frac{d k}{{\left(\frac{k^{2}}{l^{2}} + 1\right)}^{\left(\frac{3}{2}\right)} l^{2} n},\,-\frac{{\left(\frac{k^{2}}{{\left(\frac{k^{2}}{l^{2}} + 1\right)}^{\left(\frac{3}{2}\right)} l^{3}} - \frac{h^{2}}{{\left(\frac{h^{2}}{l^{2}} + 1\right)}^{\left(\frac{3}{2}\right)} l^{3}}\right)} d}{n}\right)}{}{}{}{}}
 \newlabel{@sageinline2}{{%
-\sqrt{\frac{{\left(\frac{k^{2}}{{\left(\frac{k^{2}}{l^{2}} + 1\right)}^{\left(\frac{3}{2}\right)} l^{3}} - \frac{h^{2}}{{\left(\frac{h^{2}}{l^{2}} + 1\right)}^{\left(\frac{3}{2}\right)} l^{3}}\right)}^{2} d^{2} \sigma_{k}^{2}}{n^{2}} + \frac{d^{2} k^{2} \sigma_{l}^{2}}{{\left(\frac{k^{2}}{l^{2}} + 1\right)}^{3} l^{4} n^{2}} + \frac{d^{2} h^{2} \sigma_{h}^{2}}{{\left(\frac{h^{2}}{l^{2}} + 1\right)}^{3} l^{4} n^{2}}}}{}{}{}{}}
+\sqrt{\frac{{\left(\frac{k^{2}}{{\left(\frac{k^{2}}{l^{2}} + 1\right)}^{\left(\frac{3}{2}\right)} l^{3}} - \frac{h^{2}}{{\left(\frac{h^{2}}{l^{2}} + 1\right)}^{\left(\frac{3}{2}\right)} l^{3}}\right)}^{2} d^{2} \sigma_{l}^{2}}{n^{2}} + \frac{d^{2} k^{2} \sigma_{k}^{2}}{{\left(\frac{k^{2}}{l^{2}} + 1\right)}^{3} l^{4} n^{2}} + \frac{d^{2} h^{2} \sigma_{h}^{2}}{{\left(\frac{h^{2}}{l^{2}} + 1\right)}^{3} l^{4} n^{2}}}}{}{}{}{}}
 \newlabel{@sageinline3}{{%
-\begin{tabular}{c*{6}{|c}}n & k &h & $\lambda $ & $\sigma _\lambda $  \\\midrule6&6.5&30&600&15.55 \\5&12.5&30&624&25.92 \\4&16.5&30&658&39.51 \\3&23&30&520&69.07 \\2&25.5&30&524&113.3 \\1&27.5&30&600&242.2 \\1&32&30&512&277.3 \\2&34&30&532&146.5 \\3&37.5&30&700&106.8 \\\end{tabular}}{}{}{}{}}
-%358fa61cc89ac15c8819bb0678549b8b% md5sum of corresponding .sage file (minus "goboom" and pause/unpause lines)
+\begin{tabular}{c*{6}{|c}}n & k (cm) &h (cm)& $\lambda $ (nm) & $\sigma _\lambda $  \\\midrule6&6.5&30&600&16.52 \\5&12.5&30&624&19.58 \\4&16.5&30&658&24.33 \\3&23&30&520&32.88 \\2&25.5&30&524&50.23 \\1&27.5&30&600&102.6 \\1&32&30&512&110.2 \\2&34&30&532&57.46 \\3&37.5&30&700&41.75 \\\end{tabular}}{}{}{}{}}
+\newlabel{@sageinline4}{{%
+608.32}{}{}{}{}}
+%ac71d245377c1485e3da09541cdf6e6e% md5sum of corresponding .sage file (minus "goboom" and pause/unpause lines)
