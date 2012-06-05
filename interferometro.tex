@@ -32,11 +32,11 @@ d ($\mu m$)& $\sigma_d$ & m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$
 
 & \hspace{2cm}
 
-\begin{tabular}{c|c|c|c|c}
-d ($\mu m$)& m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$\\
+\begin{tabular}{c|c|c|c|c|c}
+d ($\mu m$) & $\sigma_d$ & m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$\\
 \midrule
-25 & 75 & ? & 666 & ?\\
-75 & 72 & ? & 697 & ?\\
+25 & 1& 75 & 2 & 666 & ?\\
+75 & 1& 72 & 1 & 697 & ?\\
 
 \end{tabular}
 
@@ -46,7 +46,7 @@ d ($\mu m$)& m & $\sigma_m$ & $\lambda$ ($nm$) & $\sigma_{\lambda}$\\
 
 In cui $\sigma_{\lambda}$ è data dalla propagazione dell'errore su d e m:
 
-$$ \sigma_{\lambda} = \sqrt{ ( \frac{\partial f}{\partial d} \sigma_{d} )^2 + ( \frac{\partial f}{\partial m} \sigma_{m} )^2 } $$
+$$ \sigma_{\lambda} = \sqrt{ ( \frac{\partial \lambda}{\partial d} \sigma_{d} )^2 + ( \frac{\partial \lambda}{\partial m} \sigma_{m} )^2 } $$
 
 Valore atteso: 632.8 $nm$\\
 
@@ -61,7 +61,7 @@ $$ \lambda =\displaystyle \sum{\frac{\frac{x_i}{(\sigma_i)^2}}{\frac{1}{(\sigma_
 Si pone una cella a vuoto (spessore $d=3 cm$) tra lo specchio semi-riflettente e lo specchio rotante (che in questa parte dell'esperienza rimane fisso) nell'interferometro di Michelson. La cella è collegata ad un compressore, e un barometro segna la variazione di pressione.
 Raccogliamo il numero di massimi che attraversano lo schermo al variare della pressione e ricaviamo $n_{aria}$ dalla relazione:
 $$ n = mP+1 $$
-$$ m = \frac{n_i - n_f}{P_i-P_f} = \frac{N \lambda_0}{2d(P_i-P_f}$$
+$$ m = \frac{n_i - n_f}{P_i-P_f} = \frac{N \lambda_0}{2d(P_i-P_f)}$$
 
 \begin{center}
 \begin{tabular}{c|c|c}
@@ -97,7 +97,10 @@ $\theta (°) $ & $\sigma_{\theta}$ & N & $\sigma_{N}$ & n & $\sigma_{n}$\\
 \subsection{Reticolo ad incidenza radente}
 
 \begin{sagesilent}
+
 import numpy as np
+import matplotlib.mlab as ml
+
 dati = np.recfromcsv("dati/interferometro.csv")
 
 var('d, h, l, k,n, sigma_h, sigma_l,sigma_k')
@@ -107,7 +110,7 @@ lamb(h,k,l) = (d/n)*(cos(atan(h/l))-cos(atan(k/l)))
 elle = 344
 
 dif = lamb.differentiate()
-errs = vector([sigma_h, sigma_l, sigma_k])
+errs = vector([sigma_h, sigma_k, sigma_l])
 slam = vector([d, h, l])
 
 for i in range(0, len(dif)):
@@ -124,21 +127,26 @@ $$ n\lambda = d(cos\theta_i-cos\theta_r) $$
 con $l = 344 cm $ (distanza sorgente-schermo) e $\theta = arctg\frac{h}{l}$
 
 Per considerare l'errore che commettiamo su $l$, dunque, la funzione che ci interessa è:
-$$\sage{lamb}$$
+$$\lambda\sage{lamb}$$
 Il cui differenziale è:
-$$\sage{dif}$$
+$$\nabla \lambda \sage{dif}$$
 
-Dunque, l'incertezza su $l$ è data dalla relazione
+Dunque, l'incertezza su $\lambda$ è data dalla relazione
 $$\sigma_\lambda = \sage{errscal}$$
 
-
 \begin{sagesilent}
-subd = errscal.subs(d=0.1,h=30,l=elle,sigma_h=0.3,sigma_k=0.3,sigma_l=1)
+subd = errscal.subs(d=0.1,h=30,l=elle,sigma_h=0.3,sigma_k=0.3,sigma_l=3)
 sublambda = lamb.subs(d=0.1,h=30,l=elle)
 
-lambdas = [abs((sublambda.subs(h=int(dato['h']), k=dato['k'], n=int(dato['n']))*10^7).n(digits=4)) for dato in dati]
-errorsarr = [(subd.subs(n=int(dato['n']), k=dato['k'])*10^7).n(digits=4) for dato in dati]
+lambdas = [abs((sublambda.subs(h=int(dato['h']), k=dato['k'], n=int(dato['n']))*10^7)).n(digits=4) for dato in dati]
+errorsarr = np.array([(subd.subs(n=int(dato['n']), k=dato['k'])*10^7).n(digits=4) for dato in dati], dtype='f4')
 print errorsarr
+
+dati = ml.rec_append_fields(dati, "lambda", lambdas)
+dati = ml.rec_append_fields(dati, "sigma_lambda", errorsarr)
+
+meanlambda = np.average(dati['lambda'], weights=1./(dati['sigma_lambda']**2))
+errtot = 1/sum(1/dati['sigma_lambda']**2)
 
 def stampa_dati(wa, header):
   s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)+1)
@@ -146,12 +154,27 @@ def stampa_dati(wa, header):
   s += "%s \\\\" % (header)
   s += r"\midrule"
   for i in range(0, len(wa)):
-    a = ["%s" % x for x in wa[i]]
-    s += "%s & %i & %.2f \\\\" % (join(a, "&"), lambdas[i], errorsarr[i])
+    a = ["%.4G" % x for x in wa[i]]
+    s += "%s \\\\" % join(a, "&")
   s += r"\end{tabular}"
   return s
 \end{sagesilent}
 
+Sostituendo:
 \begin{center}
-\sagestr{stampa_dati(dati, "n & k &h & $\lambda$ & $\sigma_\lambda$ ")}
+\sagestr{stampa_dati(dati, "n & k (cm) &h (cm)& $\lambda$ (nm) & $\sigma_\lambda$ ")}
 \end{center}
+Graficati:
+\begin{sagesilent}
+import matplotlib.pyplot as plt
+plt.clf()
+plt.errorbar(dati['k'], dati['lambda'], dati['sigma_lambda'], fmt="ro")
+plt.grid(True)
+plt.ylabel(r"$\lambda$ (nm)")
+plt.xlabel("k (cm)")
+plt.savefig("grafici/interfer-lambda-con-err.png", dpi=300)
+\end{sagesilent}
+
+\includegraphics[scale=0.75]{grafici/interfer-lambda-con-err.png}
+
+Valor medio: $\sage{int(meanlambda)}\pm\sage{int(errtot)}$ nm
