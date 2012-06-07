@@ -1,25 +1,7 @@
 \begin{sagesilent}
 import matplotlib.pyplot as plt
 import numpy as np
-
-d = np.recfromcsv("dati/", verbose=False)
-d.sort()
-
-plt.clf()
-plt.ylim(ymin=3, ymax=15)
-plt.title("Grafico 1")
-plt.xlabel("Frequenza (Hz)")
-plt.ylabel("Corrente (mA)")
-plt.grid(True, which='both')
-plt.loglog(d['frequenza_hz'], d['i_ma'], '.r')
-plt.savefig("grafici/C2-1.png")
-
-plt.clf()
-plt.ylim(ymin=0.3, ymax=1.5)
-plt.grid(True, which='both')
-plt.title("Impedenze")
-plt.loglog(d['frequenza_hz'], d['valore_mu']/d['v_rms'], '.r')
-plt.savefig("grafici/C2-2.png")
+import scipy.optimize as opt
 \end{sagesilent}
 
 
@@ -49,9 +31,38 @@ per ricavare la lunghezza d’onda.
 \section{Rifrazione attraverso un prisma}
 
 \section{Interferenza da doppia fenditura}
+\begin{sagesilent}
+dfen = np.recfromcsv("dati/microonde-doppiafen.csv")
+dfen.sort()
+var('x,a,w,t')
+model(x, a, w, t) = a*sin(w*x+t)
+
+def ff(x, a,w,t):
+  f = fast_callable(model)
+  return f(x,a,w,t)
+
+#print dfen['angolo']
+pars, pcov = opt.curve_fit(ff, np.array(dfen['angolo']), np.array(dfen['volt']), p0=[500., 50., 1.])
+
+print n(ff(1, 1, 1, 1))
+print pcov
+
+print pars
+plt.clf()
+xin = np.arange(min(dfen['angolo']), 220, 1)
+print "now"
+yin = ff(xin, pars[0], pars[1], pars[2])
+plt.plot(xin, yin)
+plt.plot(dfen['angolo'], dfen['volt'], 'o--')
+
+plt.savefig("grafici/microonde-doppiafend.png")
+\end{sagesilent}
+
+\includegraphics[scale=0.75]{grafici/microonde-doppiafend.png}
+
 Preparazione: utilizzando un supporto magnetico sul goniometro, montare tra lastre di metallo in modo da avere due
 fenditure di circa 1,5 cm. Spostando il ricevitore si troveranno i massimi e i minimi di interferenza e si potrà verificare la
-loro posizione rispetto alla previsione teorica: $d \sin(\theta) = n λ$ (per i massimi, con d distanza delle fenditure, $\theta$ angolo
+loro posizione rispetto alla previsione teorica: $d \sin(\theta) = n \lambda$ (per i massimi, con d distanza delle fenditure, $\theta$ angolo
 rispetto alla perpendicolare, n numero intero).
 
 \section{Specchio di Lloyd}
@@ -77,6 +88,6 @@ def stampa_dati(wa, header):
 
 \begin{center}
 
-\sagestr{stampa_dati(d, r"Frequenza (Hz) & I (mA) & Valore mu & $V_{rms}$ (V)")}
+% \sagestr{stampa_dati(d, r"Frequenza (Hz) & I (mA) & Valore mu & $V_{rms}$ (V)")}
 \end{center}
 

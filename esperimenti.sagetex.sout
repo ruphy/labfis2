@@ -9,5 +9,7 @@
 \newlabel{@sageinline3}{{%
 \begin{tabular}{c*{6}{|c}}n & k (cm) &h (cm)& $\lambda $ (nm) & $\sigma _\lambda $  \\\midrule6&6.5&30&600&16.52 \\5&12.5&30&624&19.58 \\4&16.5&30&658&24.33 \\3&23&30&520&32.88 \\2&25.5&30&524&50.23 \\1&27.5&30&600&102.6 \\1&32&30&512&110.2 \\2&34&30&532&57.46 \\3&37.5&30&700&41.75 \\\end{tabular}}{}{}{}{}}
 \newlabel{@sageinline4}{{%
-608.32}{}{}{}{}}
-%ac71d245377c1485e3da09541cdf6e6e% md5sum of corresponding .sage file (minus "goboom" and pause/unpause lines)
+608}{}{}{}{}}
+\newlabel{@sageinline5}{{%
+96}{}{}{}{}}
+%a1e1f2afcaa0aaf46bedac60098e5cd5% md5sum of corresponding .sage file (minus "goboom" and pause/unpause lines)
