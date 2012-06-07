@@ -221,12 +221,59 @@ $$ \phi = \arctan \frac{2\pi\nu L}{R} $$
 
 dove L è il parametro libero da stimare.
 
+\begin{sagesilent}
+import numpy as np
+import matplotlib.pyplot as plt
+
+import types
+chiquad = types.FunctionType(load("sobj/chiquad.sobj"), globals())
+
+#Fit del ddp in funzione della frequenza per l'induttore
+dati3 = load("sobj/C3-Induttore2.sobj", verbose=False)
+dati3 = np.sort(dati3)
+
+#dati3 = dati3[dati3['frequenza'] > 4500]
+deltaV = dati3['v_out']/dati3['v_in']
+
+var('x,L,a')
+
+def func(x, L):
+    return (667)/(np.sqrt((667+90)^2+(x*2*n(pi)*L)^2)-50)
+
+def fu(P, x):
+    return func(x, P[0])
+
+ntuple = list((dati3['frequenza'][i], deltaV[i]) for i in range(0, len(deltaV)))
+fit = find_fit(ntuple, func, parameters=[L], initial_guess=[0.002], variables=[x],solution_dict=True)
+ 
+import scipy.odr as odr
+# mymodel = odr.Model(fu)
+# mydata = odr.RealData(dati3['frequenza'], deltaV)
+# myodr = odr.ODR(mydata, mymodel, beta0=[0.002],  maxit=1000)
+(pars, errors, hes) = odr.odr(fu, [0.002, 50], deltaV, dati3['frequenza'])
+
+chiquadrato = chiquad(np.array(dati3['frequenza']), deltaV, func, ysigma=float(0.05), param=[pars[0]])
+
+plt.clf()
+plt.semilogx(dati3['frequenza'],deltaV , 'ro')
+xsp = np.arange(0, 500000, 500)
+ysp = func(xsp, pars[0])
+plt.plot(xsp, ysp, 'b--')
+
+plt.grid(True)
+plt.ylabel(r"$\frac{V_{out}}{V_{in}}$ ")
+plt.xlabel(r"Frequenza $\nu$ - $(Hz)$")
+plt.savefig("grafici/C3-faseindu.png", dpi=300)
+
+lstring = "%.4G" % (pars[0]*1000)
+lerrorstring = "%.2G" % (errors[0]*1000)
+\end{sagesilent}
 
 \begin{center}
- \includegraphics[scale=0.70]{grafici/C3/faseindu.png}
+ \includegraphics[scale=0.70]{grafici/C3-faseindu.png}
 \end{center}
 
-Da questo fit, otteniamo una $L=1.7$ mH, e un $\chi^2 = 8.48 $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
+Da questo fit, otteniamo una $L=\sage{lstring}\pm\sage{lerrorstring}$ mH, e un $\chi^2 = \sage{round(chiquadrato,3)} $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
 \\
 
 La frequenza di taglio viene definita come $\omega_c = R/L$. Nel nostro caso $\omega_c = 55\ Khz$. Il comportamento del nostro circuito varia a seconda di quanto la nostra frequenza $\omega$ si avvicina al valore della frequenza di taglio. \\
