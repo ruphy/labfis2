@@ -28,6 +28,8 @@ d = \frac{n \lambda}{\frac{sin(\theta_{dx}-\theta_{sx})}{2}}
 L'errore su d si ottiene dalla propagazione degli errori associati alla misura degli angoli. Si ha dunque:
 
 \begin{sagesilent}
+import numpy as np
+dati = np.recfromcsv('dati/spettrometro-reticolo.csv')
 var('n')
 var('dtheta', latex_name=r'\Delta\theta')
 var('lam', latex_name=r'\lambda')
