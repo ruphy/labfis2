@@ -1,0 +1,80 @@
+\documentclass[a4paper,10pt]{report}
+ 
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{amssymb}
+\usepackage[utf8x]{inputenc}
+
+\begin{document}
+
+\chapter{ Spettrometro (O3)}
+
+
+\section*{Reticolo}
+
+\subparagraph{Introduzione}
+
+Nella prima parte dell'esperienza misuriamo le lunghezze d'onda corrispondenti a differenti righe spettrali emesse da una sorgente di gas eccitato, attraverso l'uso di un reticolo a diffrazione. \\
+Il reticolo a diffrazione consiste in una lastra di vetro su cui sono tracciate delle linee parallele molto sottili. La distanza tra le fenditure dà il passo del reticolo.\\
+La luce proveniente dalla sorgente viene fatta passare prima attraverso una fenditura, e successivamente attraverso una lente convergente, il cui piano focale coincide proprio con il piano su cui giace la fenditura: tale sistema prende il nome di collimatore. I raggi paralleli uscenti dalla lente intercettano il reticolo, che attraverso una procedura sperimentale viene posto ortogonalmente al fascio, e da lì vengono deviati di un angolo $\theta$. Un telescopio montato su un piatto rotante permette di osservare le righe d'emissione del gas, ruotando opportunamente la piattaforma secondo la direzione $\theta_{\lambda} $ data dalla legge:
+\begin{equation}
+sin \theta_{\lambda} = m \frac{\lambda}{d}
+\label{eq:theta}
+\end{equation}
+
+
+Da tale legge, dunque possiamo risalire alla lunghezza d'onda, attraverso la lettura dell'angolo di cui si è ruotato il telescopio (la piattaforma è dotata di un goniometro).
+
+\subparagraph{Passo del reticolo}
+
+Prima di iniziare la raccolta dati è necessario posizionare il reticolo in modo tale che risulti perpendicolare al fascio di luce incidente. A tal fine misuriamo gli angoli di deviazione per massimi dello stesso ordine, e lo zero corrisponde alla direzione della luce non deviata. Otteniamo $\theta_{0} = 283° 3' $ \\
+Per stabilire il passo del reticolo utilizziamo una sorgente di cui è nota la lunghezza d'onda (lampada a sodio: $\lambda_{Na} = 589.3 $ nm ), e giriamo la \ref{eq:theta} per ricavare d. In particolare utilizziamo una versione della \ref{eq:theta} che diminuisca l'errore sperimentale a cui sono soggette le misure, in cui a $\theta$ si sostituisce la media dei due angoli destro e sinistro $\theta_{dx} $ e $\theta_{sx}$.
+
+\begin{equation}
+d = \frac{n \lambda}{\frac{sin(\theta_{dx}-\theta_{sx})}{2}}
+\end{equation}
+
+L'errore su d si ottiene dalla propagazione degli errori associati alla misura degli angoli. Si ha dunque:
+%Errore: Iaco
+
+%Tabella: Iaco
+
+Otteniamo $ d = 1652 nm $
+
+
+
+
+\section*{Prisma}
+
+Nella seconda parte dell'esperienza intendiamo verificare la legge di Cauchy:
+\begin{equation}
+n = a + \frac{b}{\lambda^2}
+\label{Cauchy}
+\end{equation}
+che lega l'indice di rifrazione di un materiale alla lunghezza d'onda della luce incidente, per l'indice di rifrazione di un prisma di vetro.
+I coefficienti a e b che figurano in \ref{Cauchy} vengono determinati interpolando l'equazione per indici di rifrazione misurati per lunghezze d'onda note. \\
+Pertanto misuriamo n corrispondente alle differenti righe spettrali del mercurio (utilizziamo una lampada Hg come sorgente) attraverso la legge:
+\begin{equation}
+n = \frac{sin(\frac{\alpha + \delta}{2})}{sin(\frac{\alpha}{2})}
+\label{n}
+\end{equation}
+in cui $\alpha$ è l'angolo al vertice del prisma, misurabile per riflessione, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.
+
+\section*{Determinazionedi una sorgente ignota}
+Infine utilizziamo i procedimenti e i valori stimati nelle prime parti dell'esperienza  per determinare, mediante lo spettro, il gas corripondente alla sorgente ignota.\\
+
+Calcoliamo n dalla \ref{n}, ed utilizziamo tali valori per ricavare le lunghezze d'onda dalla \ref{Cauchy}, dove adesso sono noti i parametri a e b:
+\begin{equation}
+\lambda = \sqrt{\frac{b}{n-a}}
+\end{equation}
+
+
+
+
+
+
+\end{document}
