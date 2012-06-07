@@ -26,7 +26,16 @@ d = \frac{n \lambda}{\frac{sin(\theta_{dx}-\theta_{sx})}{2}}
 \end{equation}
 
 L'errore su d si ottiene dalla propagazione degli errori associati alla misura degli angoli. Si ha dunque:
-%Errore: Iaco
+
+\begin{sagesilent}
+var('n')
+var('dtheta', latex_name=r'\Delta\theta')
+var('lam', latex_name=r'\lambda')
+var('sigma_dtheta', latex_name=r'\sigma_{\Delta\theta}')
+d(dtheta)=n*lam/(sin(dtheta)/2)
+derror = d.diff()*sigma_dtheta
+\end{sagesilent}
+$$\sage{derror}$$
 
 %Tabella: Iaco
 
