@@ -18,7 +18,7 @@ Da tale legge, dunque possiamo risalire alla lunghezza d'onda, attraverso la let
 
 \subparagraph{Passo del reticolo}
 
-Prima di iniziare la raccolta dati è necessario posizionare il reticolo in modo tale che risulti perpendicolare al fascio di luce incidente. A tal fine misuriamo gli angoli di deviazione per massimi dello stesso ordine, e lo zero corrisponde alla direzione della luce non deviata. Otteniamo $\theta_{0} = 283° 3' $ \\
+Prima di iniziare la raccolta dati è necessario posizionare il reticolo in modo tale che risulti perpendicolare al fascio di luce incidente. A tal fine misuriamo gli angoli di deviazione per massimi dello stesso ordine, e lo zero corrisponde alla direzione della luce non deviata. Otteniamo $\theta_{0} = 283 3' $ \\
 Per stabilire il passo del reticolo utilizziamo una sorgente di cui è nota la lunghezza d'onda (lampada a sodio: $\lambda_{Na} = 589.3 $ nm ), e giriamo la \ref{eq:theta} per ricavare d. In particolare utilizziamo una versione della \ref{eq:theta} che diminuisca l'errore sperimentale a cui sono soggette le misure, in cui a $\theta$ si sostituisce la media dei due angoli destro e sinistro $\theta_{dx} $ e $\theta_{sx}$.
 
 \begin{equation}
@@ -122,7 +122,8 @@ plt.plot(xin,yin,'--')
 plt.grid(True,which="both")
 plt.savefig("grafici/spettro-cauchy.png", dpi=300)
 \end{sagesilent}
-
+$$a = \sage{myout.beta[1]}$$
+$$b = \sage{myout.beta[0]}$$
 Nella seconda parte dell'esperienza intendiamo verificare la legge di Cauchy:
 \begin{equation}
 n = a + \frac{b}{\lambda^2}
@@ -135,11 +136,55 @@ Pertanto misuriamo n corrispondente alle differenti righe spettrali del mercurio
 n = \frac{sin(\frac{\alpha + \delta}{2})}{sin(\frac{\alpha}{2})}
 \label{n}
 \end{equation}
-in cui $\alpha$ è l'angolo al vertice del prisma, misurabile per riflessione, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.
+in cui $\alpha$ è l'angolo al vertice del prisma, di 60, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.
+
+
+\begin{sagesilent}
+import numpy as np
+import matplotlib.mlab as ml
+
+dati = np.recfromcsv('dati/spettro-cauchy.csv')
+var('n, alpha')
+var('delta', latex_name=r'\delta')
+var('sigma_delta', latex_name=r'\sigma_{\delta}')
+
+d(delta)=sin((alpha+delta)/2)/sin(alpha/2)
+
+derror = (d.diff())*sigma_delta
+sigmadel=0.0087
+alpha_nostro=1.047
+
+
+def ret_error(dato):
+  res = derror(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n']),
+                    sigma_delta=sigmadel)
+  return abs(res[0])
+  
+errorsarr = np.array([ret_error(dato) for dato in dati ])
+
+dcalc = np.array([float(d(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n'])).n(digits=2) ) for dato in dati ])
+
+print dati
+print dcalc
+print errorsarr
+dati = ml.rec_append_fields(dati, "error_d", errorsarr)
+
+def stampa_dati(datiarr, header):
+  s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
+  s += r"}{|c}}"
+  s += "%s \\\\" % (header)
+  s += r"\midrule"
+  for i in range(0, len(datiarr)):
+    a = ["%.3G" %x for x in datiarr[i]]
+    s += "%s \\\\" % join(a, "&")
+  s += r"\end{tabular}"
+  return s
+\end{sagesilent}
 
 \begin{center}
-\sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$")}
+\sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$ & $\delta$ & $\sigma_{\delta}$")}
 \end{center}
+
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/spettro-cauchy.png}
