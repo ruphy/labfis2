@@ -22,26 +22,69 @@ Prima di iniziare la raccolta dati è necessario posizionare il reticolo in modo
 Per stabilire il passo del reticolo utilizziamo una sorgente di cui è nota la lunghezza d'onda (lampada a sodio: $\lambda_{Na} = 589.3 $ nm ), e giriamo la \ref{eq:theta} per ricavare d. In particolare utilizziamo una versione della \ref{eq:theta} che diminuisca l'errore sperimentale a cui sono soggette le misure, in cui a $\theta$ si sostituisce la media dei due angoli destro e sinistro $\theta_{dx} $ e $\theta_{sx}$.
 
 \begin{equation}
-d = \frac{n \lambda}{\frac{sin(\theta_{dx}-\theta_{sx})}{2}}
+d = \frac{n \lambda}{sin(\frac{\theta_{dx}-\theta_{sx}}{2})}
 \end{equation}
 
 L'errore su d si ottiene dalla propagazione degli errori associati alla misura degli angoli. Si ha dunque:
 
 \begin{sagesilent}
 import numpy as np
-dati = np.recfromcsv('dati/spettrometro-reticolo.csv')
+import matplotlib.mlab as ml
+
+dati = np.recfromcsv('dati/spettro-reticolo.csv')
 var('n')
 var('dtheta', latex_name=r'\Delta\theta')
 var('lam', latex_name=r'\lambda')
 var('sigma_dtheta', latex_name=r'\sigma_{\Delta\theta}')
-d(dtheta)=n*lam/(sin(dtheta)/2)
-derror = d.diff()*sigma_dtheta
+d(dtheta)=n*lam/(sin(dtheta))
+derror = (d.diff())*sigma_dtheta
+sigmadth=2*0.0087
+
+dfasterror = fast_float(derror)
+#print derror.subs(lam=1,n=2,dtheta=1.).n()
+
+# dati['deltatheta'] = dati['deltatheta']*10^(-3)
+
+def ret_error(dato):
+  deltheta = dato['deltatheta']
+  res = derror(dtheta=deltheta).subs(lam=dato['lambda']*10^-9, n=int(dato['n']),
+                    sigma_dtheta=sigmadth)
+  return abs(res[0])
+  
+errorsarr = np.array([ret_error(dato) for dato in dati ])
+
+dcalc = np.array([float(d.subs(lam=dato['lambda']*10^-9,n=int(dato['n']),dtheta=dato['deltatheta']).n(digits=2) ) for dato in dati ])
+print dati
+print dcalc
+print errorsarr
+dati = ml.rec_append_fields(dati, "d", dcalc*10^6)
+dati = ml.rec_append_fields(dati, "error_d", errorsarr*10^6)
+
+def stampa_dati(datiarr, header):
+  s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
+  s += r"}{|c}}"
+  s += "%s \\\\" % (header)
+  s += r"\midrule"
+  for i in range(0, len(datiarr)):
+    a = ["%.3G" %x for x in datiarr[i]]
+    s += "%s \\\\" % join(a, "&")
+  s += r"\end{tabular}"
+  return s
 \end{sagesilent}
-$$\sage{derror}$$
+$$d:\sage{d}$$
+Derivata e moltiplicata per $\sigma_{\Delta\theta}$, otteniamo $\sigma_d$:
+$$\sigma_d: \sage{derror}$$
+Per i nostri dati:
+\begin{center}
+\sagestr{stampa_dati(dati, r'n & $\lambda$ (nm) & $\Delta\theta$ (rad) & d ($\mu$m)& $\sigma_d$ ($\mu$m)' )} 
+\end{center}
 
-%Tabella: Iaco
+\begin{sagesilent}
+media = np.average(dati['d'], weights=1./dati['error_d']**2)
+errmedia = 1./np.sqrt(sum(1./dati['error_d']**2))
+\end{sagesilent}
 
-Otteniamo $ d = 1652 nm $
+Otteniamo $d=\sage{round(media, 3)}\pm\sage{errmedia.n(digits=2)}$ $\mu$m.
 
 
 
