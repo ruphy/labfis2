@@ -5,6 +5,7 @@ rc = np.recfromcsv("dati/C2-RC.csv")
 rl = np.recfromcsv("dati/C2-RL.csv")
 
 
+
 def stampa_dati(wa, header):
   s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)-1)
   s += r"}{|c}}"
@@ -15,11 +16,31 @@ def stampa_dati(wa, header):
     s += "%s \\\\" % join(a, "&")
   s += r"\end{tabular}"
   return s
+  
+  
+
+plt.clf()
+plt.ylim(ymin=3, ymax=15)
+plt.title("Grafico 1")
+plt.xlabel("Frequenza (Hz)")
+plt.ylabel("Corrente (mA)")
+plt.grid(True, which='both')
+plt.loglog(d['frequenza_hz'], d['i_ma'], '.r')
+plt.savefig("grafici/C2-1.png", dpi=300)
+
+plt.clf()
+plt.ylim(ymin=0.3, ymax=1.5)
+plt.grid(True, which='both')
+plt.title("Impedenze")
+plt.loglog(d['frequenza_hz'], d['valore_mu']/d['v_rms'], '.r')
+plt.savefig("grafici/C2-2.png", dpi=300)
+
 \end{sagesilent}
 
 
 
 \chapter{C2}
+
 
 \section{Risposta in frequenza del multimetro}
 
@@ -37,6 +58,15 @@ Indi per cui, la propagazione degli errori risulta:
 $$\sigma_r = \sqrt{\frac{\sigma_{mu}^2}{V_{RMS}^2} + \frac{\sigma_{rms}^2}{V_{RMS}^4}}$$
 
 %E' giusto pensare che rimanga costante?f'
+
+In nostro multimetro opera nella banda di $True\ RMS$, fino a  $1000\ Hz$.   
+
+%Quesiti:
+%
+%
+%
+%
+%
 
 \section{Misura di impedenze ignote}
 
