@@ -1,98 +1,77 @@
 \begin{sagesilent}
-import matplotlib.pyplot as plt
 import numpy as np
 
-d = load("sobj/oscilloscopio-c2.sobj", verbose=False)
-
-rc = load("sobj/C2-RC.sobj", verbose=False)
-
-rl = load("sobj/C2-RL.sobj", verbose=False)
-
-d.sort()
-
-plt.clf()
-plt.ylim(ymin=3, ymax=15)
-plt.title("Grafico 1")
-plt.xlabel("Frequenza (Hz)")
-plt.ylabel("Corrente (mA)")
-plt.grid(True, which='both')
-plt.loglog(d['frequenza_hz'], d['i_ma'], '.r')
-plt.savefig("grafici/C2-1.png")
-
-plt.clf()
-plt.ylim(ymin=0.3, ymax=1.5)
-plt.grid(True, which='both')
-plt.title("Impedenze")
-plt.loglog(d['frequenza_hz'], d['valore_mu']/d['v_rms'], '.r')
-plt.savefig("grafici/C2-2.png")
-\end{sagesilent}
+rc = np.recfromcsv("dati/C2-RC.csv")
+rl = np.recfromcsv("dati/C2-RL.csv")
 
 
-\chapter{C2}
-
-\section{Risposta in frequenza del multimetro}
-\begin{center}
-\includegraphics[scale=0.75]{grafici/C2/C2-1.png} 
-\end{center}
-
-\section{Misura di impedenze ignote}
-\begin{center}
-\includegraphics[scale=0.75]{grafici/C2/C2-2.png} 
-\end{center}
-
-L'obiettivo del nostro esperimento è misurare la velocità della luce $c$.
-
-L'apparato di misurazione consiste principalmente in:
-
-\section{Analisi dati}
-
-
-\begin{sagesilent}
-#Circuiti RL- Impedenze Ignote
-
-freq = rl['freq']
-t= rl['tempo']
-vb = rl['2vb']
-i = vb/677
-phi=2*n(pi)*freq*t
-z = rl['deltav']/2*i
-
-plt.clf()
-plt.subplot(211)
-plt.plot(freq,z,'bo')
-plt.autoscale(enable=True,axis='both')
-plt.grid(True)
-plt.xlabel("Frequenza (Hz)")
-plt.ylabel("Z")
-plt.subplot(212)
-plt.loglog(freq,phi,'ro')
-plt.grid(True,which="both")
-plt.xlabel("Frequenza (Hz)")
-plt.ylabel("$\mu s$")
-plt.savefig("grafici/C2/rc.png")
-\end{sagesilent}
-
-\begin{center}
-\includegraphics[scale=0.75]{grafici/C2/rc.png} 
-\end{center}
-
-
-\section{Allegato: dati}
-\begin{sagesilent}
 def stampa_dati(wa, header):
   s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)-1)
   s += r"}{|c}}"
   s += "%s \\\\" % (header)
   s += r"\midrule"
   for i in range(0, len(wa)):
-    a = ["%s" %x for x in d[i]]
+    a = ["%s" %x for x in wa[i]]
     s += "%s \\\\" % join(a, "&")
   s += r"\end{tabular}"
   return s
 \end{sagesilent}
 
+
+
+\chapter{C2}
+
+\section{Risposta in frequenza del multimetro}
+
+
+
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C2/cv.png} 
+\end{center}
+
+Per il grafico in alto,che mostra la lettura dell'intensità di corrente in funzione della frequenza, l'errore è dato dalla sensibilità dello strumento: $\sigma_i = 0.1\ mA$.
+\
+
+Il secondo grafico, che mostra i limiti operativi del multimetro rispetto la frequenza, L'errore sulla lettura dal multimetro è la sensibilità dello strumento: $\sigma_{mu} = 0.005\ V$. Per stimare l'errore su $V_{RM}$ abbiamo usato la deviazione standard, assumendo quindi che $V_{RMS}$ dovrebbe rimanere costante. 
+Indi per cui, la propagazione degli errori risulta:
+$$\sigma_r = \sqrt{\frac{\sigma_{mu}^2}{V_{RMS}^2} + \frac{\sigma_{rms}^2}{V_{RMS}^4}}$$
+
+%E' giusto pensare che rimanga costante?f'
+
+\section{Misura di impedenze ignote}
+
+Scopo di questa seconda parte è misurare l'impedenza di un circuito RC e RL in frequenza alternata. Mostreremo la dipendenza di Z dalla frequenza.
+
+
 \begin{center}
 
-\sagestr{stampa_dati(d, r"Frequenza (Hz) & I (mA) & Valore mu & $V_{rms}$ (V)")}
+%\sagestr{stampa_dati(rc, r"Frequenza (Hz) & I (mA) & Valore mu & $V_{rms}$ (V)")}
 \end{center}
+
+
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C2/rc.png} 
+\end{center}
+
+Dal fit ricavo: $C = 374.53\pm8.44 nF$, che rientra nei valori aspettabili, dato che il valore teorico è $367 nF$. 
+Il $chi^{\tilde}^2= 1.4461 $ 
+
+%chi quadro rotto da sistemare.
+
+\begin{center}
+
+%\sagestr{stampa_dati(rl, r"Frequenza (Hz) & I (mA) & Valore mu & $V_{rms}$ (V)")}
+\end{center}
+
+
+
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C2/rl.png} 
+\end{center}
+
+$L = 0.016074\pm 0.000092 H$
+$\chi^{\tilde}^2 = 1.4546$
+
+
+
 
