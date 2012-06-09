@@ -90,6 +90,25 @@ Otteniamo $d=\sage{round(media, 3)}\pm\sage{errmedia.n(digits=2)}$ $\mu$m.
 
 
 \section*{Prisma}
+
+
+Nella seconda parte dell'esperienza intendiamo verificare la legge di Cauchy:
+\begin{equation}
+n = a + \frac{b}{\lambda^2}
+\label{Cauchy}
+\end{equation}
+che lega l'indice di rifrazione di un materiale alla lunghezza d'onda della luce incidente, nel caso dell'indice di rifrazione di un prisma di vetro.
+I coefficienti a e b che figurano in \ref{Cauchy} vengono determinati con il metodo dei minimi quadrati. \\
+Pertanto misuriamo n corrispondente alle differenti righe spettrali del mercurio (utilizziamo una lampada Hg come sorgente) attraverso la legge:
+\begin{equation}
+n = \frac{sin(\frac{\alpha + \delta}{2})}{sin(\frac{\alpha}{2})}
+\label{n}
+\end{equation}
+in cui $\alpha$ è l'angolo al vertice del prisma, di $60°$, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.
+
+Con tale procedura otteniamo i seguenti valori per i parametri:
+
+
 \begin{sagesilent}
  #Fit per ricavare i parametri della relazione di Cauchy
 import numpy as np
@@ -97,7 +116,6 @@ from scipy import odr
 import matplotlib.pyplot as plt
 
 dati = np.recfromcsv('dati/spettro-cauchy.csv')
-
 
 l = 1./(dati['l']**2)
 n = dati['n']
@@ -113,6 +131,8 @@ mydata = odr.RealData(l,n)
 
 myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.],  maxit=5000)
 myout = myodr.run()
+
+myout.pprint()
    
 plt.clf()
 plt.plot(l,n,'ro')
@@ -121,22 +141,14 @@ yin = func(myout.beta,xin)
 plt.plot(xin,yin,'--')
 plt.grid(True,which="both")
 plt.savefig("grafici/spettro-cauchy.png", dpi=300)
+
 \end{sagesilent}
+
+
 $$a = \sage{myout.beta[1]}$$
 $$b = \sage{myout.beta[0]}$$
-Nella seconda parte dell'esperienza intendiamo verificare la legge di Cauchy:
-\begin{equation}
-n = a + \frac{b}{\lambda^2}
-\label{Cauchy}
-\end{equation}
-che lega l'indice di rifrazione di un materiale alla lunghezza d'onda della luce incidente, per l'indice di rifrazione di un prisma di vetro.
-I coefficienti a e b che figurano in \ref{Cauchy} vengono determinati interpolando l'equazione per indici di rifrazione misurati per lunghezze d'onda note. \\
-Pertanto misuriamo n corrispondente alle differenti righe spettrali del mercurio (utilizziamo una lampada Hg come sorgente) attraverso la legge:
-\begin{equation}
-n = \frac{sin(\frac{\alpha + \delta}{2})}{sin(\frac{\alpha}{2})}
-\label{n}
-\end{equation}
-in cui $\alpha$ è l'angolo al vertice del prisma, di 60, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.
+
+Dati raccolti:
 
 
 \begin{sagesilent}
@@ -144,6 +156,7 @@ import numpy as np
 import matplotlib.mlab as ml
 
 dati = np.recfromcsv('dati/spettro-cauchy.csv')
+print dati.dtype
 var('n, alpha')
 var('delta', latex_name=r'\delta')
 var('sigma_delta', latex_name=r'\sigma_{\delta}')
@@ -182,13 +195,20 @@ def stampa_dati(datiarr, header):
 \end{sagesilent}
 
 \begin{center}
-\sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$ & $\delta$ & $\sigma_{\delta}$")}
+\sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$ & $\delta$ & $\sigma_n$")}
 \end{center}
+
+
+In cui l'errore su $n$ è dato dall'errore su $\delta$ tramite la:
+
+$$\sigma_n: \sage{derror}$$
+
 
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/spettro-cauchy.png}
 \end{center}
+
 
 \section*{Determinazionedi una sorgente ignota}
 Infine utilizziamo i procedimenti e i valori stimati nelle prime parti dell'esperienza  per determinare, mediante lo spettro, il gas corripondente alla sorgente ignota.\\
