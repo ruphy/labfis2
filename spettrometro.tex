@@ -131,6 +131,8 @@ mydata = odr.RealData(l,n)
 
 myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.],  maxit=5000)
 myout = myodr.run()
+
+myout.pprint()
    
 plt.clf()
 plt.plot(l,n,'ro')

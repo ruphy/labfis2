@@ -1,5 +1,6 @@
 \begin{sagesilent}
 import numpy as np
+import matplotlib.pyplot as plt
 
 rc = np.recfromcsv("dati/C2-RC.csv")
 rl = np.recfromcsv("dati/C2-RL.csv")
@@ -18,22 +19,6 @@ def stampa_dati(wa, header):
   return s
   
   
-
-plt.clf()
-plt.ylim(ymin=3, ymax=15)
-plt.title("Grafico 1")
-plt.xlabel("Frequenza (Hz)")
-plt.ylabel("Corrente (mA)")
-plt.grid(True, which='both')
-plt.loglog(d['frequenza_hz'], d['i_ma'], '.r')
-plt.savefig("grafici/C2-1.png", dpi=300)
-
-plt.clf()
-plt.ylim(ymin=0.3, ymax=1.5)
-plt.grid(True, which='both')
-plt.title("Impedenze")
-plt.loglog(d['frequenza_hz'], d['valore_mu']/d['v_rms'], '.r')
-plt.savefig("grafici/C2-2.png", dpi=300)
 
 \end{sagesilent}
 
@@ -70,28 +55,22 @@ In nostro multimetro opera nella banda di $True\ RMS$, fino a  $1000\ Hz$.
 
 \section{Misura di impedenze ignote}
 
-Scopo di questa seconda parte è misurare l'impedenza di un circuito RC e RL in frequenza alternata. Mostreremo la dipendenza di Z dalla frequenza.
+Scopo di questa seconda parte è misurare l'andamento dell''impedenza di un circuito RC e RL in funzionde della frequenza alternata.
 
+Gli errori su queste misure è l'incertezza dell'oscilloscopio: ($\pm$) la sua risoluzione, propagati secondo la seguente formula.
 
-\begin{center}
+$$\sigma_r = \sqrt{\frac{\sigma_{deltaV}^2}{(2*i)^2} + \frac{\sigma_{i}^2}{(2*i)^4}}$$
 
-%\sagestr{stampa_dati(rc, r"Frequenza (Hz) & I (mA) & Valore mu & $V_{rms}$ (V)")}
-\end{center}
 
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/C2/rc.png} 
 \end{center}
-
-Dal fit ricavo: $C = 374.53\pm8.44 nF$, che rientra nei valori aspettabili, dato che il valore teorico è $367 nF$. 
-Il $chi^{\tilde}^2= 1.4461 $ 
-
-%chi quadro rotto da sistemare.
-
-\begin{center}
-
-%\sagestr{stampa_dati(rl, r"Frequenza (Hz) & I (mA) & Valore mu & $V_{rms}$ (V)")}
-\end{center}
+Parametri ricavati dal fit:
+\
+$C = 374.53\pm 8.44 nF$.
+\
+$\chi_{rid}^2= 1.4461 $ 
 
 
 
@@ -99,8 +78,8 @@ Il $chi^{\tilde}^2= 1.4461 $
 \includegraphics[scale=0.75]{grafici/C2/rl.png} 
 \end{center}
 
-$L = 0.016074\pm 0.000092 H$
-$\chi^{\tilde}^2 = 1.4546$
+$L = 0.016074\pm 0.000092 H$ \
+$\chi_{rid}^2 = 1.4546$ 
 
 
 
