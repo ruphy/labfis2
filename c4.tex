@@ -1,0 +1,74 @@
+\chapter{C4}
+
+\begin{sagesilent}
+
+import numpy as np
+from scipy import odr
+import matplotlib.pyplot as plt
+
+trasfm = np.recfromcsv("dati/C4-tensione-fase.csv")
+chiquad = load("sobj/chiquad.sobj")
+#Sottosmorzamento tempo-volt
+#Smorzamento critico tempo-volt
+#Sovrasmorzamento tempo-volt
+
+#Funzione di trasferimento del modulo: freq-volt
+#Funzione di trasferimento fase:freq-rad
+
+
+  
+\end{sagesilent}
+
+
+
+%Sottosmorzamento
+\begin{sagesilent}
+ 
+om = 2*n(pi)*100
+t =np.array([190,570,950,1520])
+picchi=np.array([520,-148,60,-24])
+
+def func(P,x):
+    return P[0]*P[1]*P[2]*exp(-P[3]*t)*(P[3]*cos(om*x)+om*sin(100*x))
+    
+plt.clf()
+plt.plot(t,picchi,'bo')
+
+mod = odr.Model(func)
+data = odr.RealData(t,picchi)
+done = odr.ODR(data, mod, beta0=[1.,1.,1.,1.],maxit=1000)
+sotto = done.run()
+
+xin = np.arange(1,1000,1)
+yin = func(sotto.beta,xin)
+plt.plot(xin,yin,'g--')
+plt.xlabel(r"$\omega$ [$rad/s$]")
+plt.ylabel(r"$V(\omega)$ [$rad$]")
+plt.savefig("grafici/C4/om.png",dpi=300)
+ 
+\end{sagesilent}
+
+
+%Funzione di trasferimento del modulo
+\begin{sagesilent}
+
+freq = transm['frequenza_hz']
+v = transm['v_out_v_in']
+
+#Funzione di trasferimento del modulo
+
+def fu(P,x):
+    return (P[0]*2*3.14*x*P[1])/( sqrt( (2*3.14*x*P[1])^2+(w*P[2]/R)^2*((2*3.14*x)^2-[1]^2)^2 ) )
+  
+  
+mymod = odr.Model(fu)
+mydata= odr.RealData(freq,v)
+myodr = odr.ODR(mydata,mymod,bet0=[],maxit=1000)
+mytrasm = odr.run()
+  
+  
+chir = chiquad(freq,z, fu, ysigma=yerr, param=[mytransm.beta])/len(freq)
+print "Chi quadro %.4f" % chir
+  
+\end{sagesilent}
+
