@@ -158,12 +158,12 @@ mymodel = odr.Model(func)
 
 mydata = odr.RealData(l,n)
 
-myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.],  maxit=5000)
+myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.], maxit=1000)
 myout = myodr.run()
 
 a = myout.beta[0]
 b = myout.beta[1]
-chiquadrato = chiquad(np.array(l), n, fun, ysigma=float(0.05), param=[a,b]) 
+chiquadrato = chiquad(np.array(l), n, fun, ysigma=l*0.01, param=[a,b]) 
 
    
 plt.clf()
@@ -321,26 +321,16 @@ lcalc= np.array([float(l(enne=dato,digits=4).subs(b=coeff1, a=coeff2)  ) for dat
 
 
 
-print dati
-print ncalc
-print errorsarr
-print lcalc
+#print dati
+#print ncalc
+#print errorsarr
+#print lcalc
 #print errorl
 dati = ml.rec_append_fields(dati, "n", ncalc)
 dati = ml.rec_append_fields(dati, "error_n", errorsarr)
 dati = ml.rec_append_fields(dati, "l", lcalc)
 #dati = ml.rec_append_fields(dati, "error_l", errorl)
 
-def stampa_dati(datiarr, header):
-  s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
-  s += r"}{|c}}"
-  s += "%s \\\\" % (header)
-  s += r"\midrule"
-  for i in range(0, len(datiarr)):
-    a = ["%.3G" %x for x in datiarr[i]]
-    s += "%s \\\\" % join(a, "&")
-  s += r"\end{tabular}"
-  return s
 \end{sagesilent}
 
 \begin{center}

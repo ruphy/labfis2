@@ -48,11 +48,47 @@ Interpoliamo i dati raccolti con la curva della carica di un condensatore:
 $$V_R = \varepsilon e^{-t/\tau}$$
 
 
+
+%Qui
+\begin{sagesilent}
+
+rct = np.recfromcsv('dati/C3/RCtau.csv')
+tempo = rct['t']
+volt = rct['v']
+yerr = volt*0.04
+
+def fu(P,x):
+    return P[0]*exp((-1./P[1])*x)
+    
+def fu1(x,v,t):
+    return v*exp(-x/t)
+    
+mymod = odr.Model(fu)
+mydata = odr.RealData(tempo,volt)
+
+myodr = odr.ODR(mydata, mymod, beta0=[20.,200.], maxit=5000)
+out = myodr.run()
+
+chi = chiquad(tempo,volt,fu1,ysigma=float(0.4),param=[out.beta[0],out.beta[1]])
+ 
+plt.clf()
+plt.errorbar(tempo,volt,yerr,np.zeros_like(yerr),'ro')
+xin = np.arange(min(tempo),1.5*max(tempo),10)
+yin = fu1(xin,out.beta[0],out.beta[1])
+plt.plot(xin,yin,'--')
+plt.ylabel(r"$D.d.p$ $(V)$ ")
+plt.xlabel(r"$Tempo$ $(\mu s)$")
+plt.grid(True)
+plt.savefig("grafici/C3/rct.png",dpi=300)
+
+\end{sagesilent}
+
+
 \begin{center}
- \includegraphics[scale=0.70]{grafici/C3/fitcond.png}
+ \includegraphics[scale=0.70]{grafici/C3/rct.png}
 \end{center}
 
-Il valore stimato dall'interpolazione è $\tau=281.7 \mu s$.
+Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)}\pm \sage{round(out.sd_beta[1],2)} \mu s$.
 Valore atteso: $\tau=RC=248.5 \mu s$
 
 Nella misura abbiamo riscontrato un errore $\sigma_y= 0.4\ V$.
@@ -60,7 +96,7 @@ Per verificare l'accordo tra la legge e la distribuzione dei valori osservati op
 
 $$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau ))}}{\sigma_y^2} $$
 
-Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = 0.36 $ \\
+Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = \sage{round(chi,3)}$ \\
 Leggiamo dai valori tabulati la probabilità percentuale di ottenere un valore di $\tilde{\chi}^2 \geq {\tilde{\chi}_0}^2 $ (dati i gradi di libertà). Otteniamo una probabilità maggiore del $90\%$, maggiore della soglia di accettabilità, fissata al $5\%$. 
 
 
@@ -86,15 +122,51 @@ Interpoliamo i dati raccolti con la curva caratteristica della carica del circui
 
 $$V_R = \varepsilon \left( 1-e^{-t/\tau} \right)$$
 
-Il valore stimato dall'interpolazione è $\tau=16.05 \mu s$ \\
+%Qui
+\begin{sagesilent}
+ 
+rlt = np.recfromcsv('dati/C3/RLtau.csv')
+tempo = rlt['t']
+volt = rlt['v']
+yerr = volt*0.04
+
+def fu(P,x):
+    return P[0]*(1-exp((-1./P[1])*x))
+    
+def fu1(x,v,t):
+    return v*(1-exp(-x/t))
+    
+mymod = odr.Model(fu)
+mydata = odr.RealData(tempo,volt)
+
+myodr = odr.ODR(mydata, mymod, beta0=[20.,16.], maxit=5000)
+out = myodr.run()
+
+chi = chiquad(tempo,volt,fu1,ysigma=float(0.4),param=[out.beta[0],out.beta[1]])
+ 
+plt.clf()
+plt.errorbar(tempo,volt,yerr,np.zeros_like(yerr),'ro')
+xin = np.arange(min(tempo),1.5*max(tempo),10)
+yin = fu1(xin,out.beta[0],out.beta[1])
+plt.plot(xin,yin,'--')
+plt.ylabel(r"$D.d.p$ $(V)$ ")
+plt.xlabel(r"$Tempo$ $(\mu s)$")
+plt.grid(True)
+plt.savefig("grafici/C3/rlt.png",dpi=300)
+
+\end{sagesilent}
+
+
+
+Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)} \pm \sage{round(out.sd_beta[1],2)}\mu s$ \\
 Non conoscendo a priori il valore di L non possiamo valutare l'accordo con il valore teorico: $\tau=\frac{L}{R}$.
 
 I dati graficati:
 \begin{center}
- \includegraphics[scale=0.70]{grafici/C3/fitindu.png}
+ \includegraphics[scale=0.70]{grafici/C3/rlt.png}
 \end{center}
 
-Otteniamo un valore: $\chi^2 = 0.38 $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$, per un accordo perfetto.
+Otteniamo un valore: $\chi^2 = \sage{round(chi,2)} $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$, per un accordo perfetto.
 
 
 \section{Corrente alternata}
@@ -154,6 +226,47 @@ Frequenza ($Hz$) & $V_{out}/V_{in}$ & $\phi$ \\
 Lasciamo C come parametro libero, e interpoliamo i valori raccolti di $V_{out}$ e $V_{in}$ in funzione della frequenza:
 
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
+
+\begin{sagesilent}
+
+rcf = np.recfromcsv('dati/C3/RCfun.csv',delimiter="\t")
+freq = rcf['frequenza']
+volt = rcf['v_out']/rcf['v_in']
+yerr = 0.05
+xerr = 0
+
+print freq
+print volt
+
+var('x,C')
+def funz(x, C):
+    return 667/(((667)^2)+((1./x)^2*1/(2*pi*C)^2))^(1/2)
+    
+def func(P,x):
+    return 667/(((667)^2)+((1./x)^2*1/(2*pi*P[0])^2))^(1/2)
+    
+mymod = odr.Model(func)
+mydata = odr.RealData(freq,volt)
+
+myodr = odr.ODR(mydata, mymod, beta0=[20.,16.], maxit=5000)
+out = myodr.run()
+
+chi = chiquad(freq,volt,funz,ysigma=float(0.05),param=[out.beta[0]])
+ 
+ 
+plt.clf()
+
+xin = np.arange(min(freq),1.5*max(freq),10)
+yin = funz(xin,out.beta[0])
+plt.plot(xin,yin,'--')
+plt.ylabel(r"$D.d.p$ $(V)$ ")
+plt.xlabel(r"$Tempo$ $(\mu s)$")
+plt.grid(True)
+plt.savefig("grafici/C3/ddpcond.png",dpi=300)
+
+ 
+\end{sagesilent}
+
 
 Dal fit otteniamo: $C=360 \cdot 10^{-9} F $ in ottimo accordo con il valore noto.
 
