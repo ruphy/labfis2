@@ -6,7 +6,7 @@ from scipy import odr
 import matplotlib.pyplot as plt
 import matplotlib.mlab as ml
 
- #classica funzione chiquadrato, non cancellare
+#classica funzione chiquadrato, non cancellare
 def chiquad(xdata, ydata, yfunc, ysigma = (), param=()):
     yteo = yfunc(xdata, *param)
     ddof = len(xdata) - 1 - len(param)
@@ -19,6 +19,19 @@ def chiquad(xdata, ydata, yfunc, ysigma = (), param=()):
         return sum(((ydata-yteo)/ys)**2)
     else:
         return sum((ydata-yteo)**2/yteo)
+
+        
+#Funzione stampadati
+def stampa_dati(datiarr, header):
+  s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
+  s += r"}{|c}}"
+  s += "%s \\\\" % (header)
+  s += r"\midrule"
+  for i in range(0, len(datiarr)):
+    a = ["%.3G" %x for x in datiarr[i]]
+    s += "%s \\\\" % join(a, "&")
+  s += r"\end{tabular}"
+  return s
         
 \end{sagesilent}
 
@@ -79,22 +92,9 @@ def ret_error(dato):
 errorsarr = np.array([ret_error(dato) for dato in dati ])
 
 dcalc = np.array([float(d.subs(lam=dato['lambda']*10^-9,n=int(dato['n']),dtheta=dato['deltatheta']).n(digits=2) ) for dato in dati ])
-print dati
-print dcalc
-print errorsarr
 dati = ml.rec_append_fields(dati, "d", dcalc*10^6)
 dati = ml.rec_append_fields(dati, "error_d", errorsarr*10^6)
 
-def stampa_dati(datiarr, header):
-  s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
-  s += r"}{|c}}"
-  s += "%s \\\\" % (header)
-  s += r"\midrule"
-  for i in range(0, len(datiarr)):
-    a = ["%.3G" %x for x in datiarr[i]]
-    s += "%s \\\\" % join(a, "&")
-  s += r"\end{tabular}"
-  return s
 \end{sagesilent}
 $$d:\sage{d}$$
 Derivata e moltiplicata per $\sigma_{\Delta\theta}$, otteniamo $\sigma_d$:
@@ -161,10 +161,9 @@ mydata = odr.RealData(l,n)
 myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.],  maxit=5000)
 myout = myodr.run()
 
-myout.pprint()
-
-        
-chiquadrato = chiquad(np.array(l), n, fun, ysigma=float(0.05), param=[myout.beta[0] ,myout.beta[1]]) 
+a = myout.beta[0]
+b = myout.beta[1]
+chiquadrato = chiquad(np.array(l), n, fun, ysigma=float(0.05), param=[a,b]) 
 
    
 plt.clf()
@@ -181,7 +180,7 @@ plt.savefig("grafici/spettro-cauchy.png", dpi=300)
 
 $$a = \sage{myout.beta[1]} \pm \sage{myout.sd_beta[1]}$$
 $$b = \sage{myout.beta[0]} \pm \sage{myout.sd_beta[0]}$$
-$$ \chi^ 2 = \sage{round(chiquadrato,3)}$$
+$$ \chi^ 2 = \sage{chiquadrato}$$
 
 Dati raccolti:
 
