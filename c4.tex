@@ -30,6 +30,11 @@ picchi=np.array([520,-148,60,-24])
 
 def func(P,x):
     return P[0]*P[1]*P[2]*exp(-P[3]*t)*(P[3]*cos(om*x)+om*sin(100*x))
+
+var('x,r,c,v,g')
+def f(x,r,c, v, g):
+    return r*c*v*exp(-g*t)*(g*cos(om*x)+om*sin(100*x))
+    
     
 plt.clf()
 plt.plot(t,picchi,'bo')
@@ -39,8 +44,9 @@ data = odr.RealData(t,picchi)
 done = odr.ODR(data, mod, beta0=[1.,1.,1.,1.],maxit=1000)
 sotto = done.run()
 
-xin = np.arange(1,1000,1)
-yin = func(sotto.beta,xin)
+
+xin = np.arange(min(t),max(t),1)
+yin = f(xin,sotto.beta[0],sotto.beta[1],sotto.beta[2],sotto.beta[3])
 plt.plot(xin,yin,'g--')
 plt.xlabel(r"$\omega$ [$rad/s$]")
 plt.ylabel(r"$V(\omega)$ [$rad$]")
