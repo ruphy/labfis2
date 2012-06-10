@@ -129,63 +129,14 @@ Pertanto misuriamo n corrispondente alle differenti righe spettrali del mercurio
 n = \frac{sin(\frac{\alpha + \delta}{2})}{sin(\frac{\alpha}{2})}
 \label{n}
 \end{equation}
-in cui $\alpha$ è l'angolo al vertice del prisma, di $60°$, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.
+in cui $\alpha$ è l'angolo al vertice del prisma, di $60°$, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.\\
 
-Con tale procedura otteniamo i seguenti valori per i parametri:
-
-
-\begin{sagesilent}
- #Fit per ricavare i parametri della relazione di Cauchy
-
-
-dati = np.recfromcsv('dati/spettro-cauchy.csv')
-
-l = 1./(dati['l']**2)
-n = dati['n']
-
-var('x,P')
-
-#Questa funzione serve solo al chiquadro e per il grafico
-def fun(x,a,b):
-    return a*x+b
-
-
-#Questa funzione serve per il fit fatto da odr
-def func(P,x):
-    return P[0]*x+P[1]
-    
-mymodel = odr.Model(func)
-
-mydata = odr.RealData(l,n)
-
-myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.],  maxit=5000)
-myout = myodr.run()
-
-a = myout.beta[0]
-b = myout.beta[1]
-chiquadrato = chiquad(np.array(l), n, fun, ysigma=float(0.05), param=[a,b]) 
-
-   
-plt.clf()
-plt.plot(l,n,'ro')
-xin = np.arange(0.9*min(l),1.3*max(l),2*max(l)/10) 
-yin = fun(xin,myout.beta[0],myout.beta[1])
-plt.plot(xin,yin,'--')
-plt.grid(True,which="both")
-plt.savefig("grafici/spettro-cauchy.png", dpi=300)
- 
-
-\end{sagesilent}
-
-
-$$a = \sage{myout.beta[1]} \pm \sage{myout.sd_beta[1]}$$
-$$b = \sage{myout.beta[0]} \pm \sage{myout.sd_beta[0]}$$
-$$ \chi^ 2 = \sage{chiquadrato}$$
-
-Dati raccolti:
-
+Con tale procedura otteniamo i seguenti valori:
 
 \begin{sagesilent}
+
+#dati = np.recfromcsv('dati/spettro-cauchy.csv')
+
 import numpy as np
 import matplotlib.mlab as ml
 
@@ -236,6 +187,63 @@ def stampa_dati(datiarr, header):
 In cui l'errore su $n$ è dato dall'errore su $\delta = 0.0087 rad $ tramite la:
 
 $$\sigma_n: \sage{derror}$$
+
+
+Dal fit otteniamo i seguenti parametri:
+
+\begin{sagesilent}
+ #Fit per ricavare i parametri della relazione di Cauchy
+
+
+dati = np.recfromcsv('dati/spettro-cauchy.csv')
+
+l = 1./(dati['l']**2)
+n = dati['n']
+
+var('x,P')
+
+#Questa funzione serve solo al chiquadro e per il grafico
+def fun(x,a,b):
+    return a*x+b
+
+
+#Questa funzione serve per il fit fatto da odr
+def func(P,x):
+    return P[0]*x+P[1]
+    
+mymodel = odr.Model(func)
+
+mydata = odr.RealData(l,n)
+
+myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.],  maxit=5000)
+myout = myodr.run()
+
+a = myout.beta[0]
+b = myout.beta[1]
+chiquadrato = chiquad(np.array(l), n, fun, ysigma=errorsarr, param=[a,b]) 
+
+   
+plt.clf()
+plt.plot(l,n,'ro')
+xin = np.arange(0.9*min(l),1.3*max(l),2*max(l)/10) 
+yin = fun(xin,myout.beta[0],myout.beta[1])
+plt.plot(xin,yin,'--')
+
+plt.errorbar(l,n,errorsarr,np.zeros_like(errorsarr),'bo')
+
+plt.grid(True,which="both")
+plt.savefig("grafici/spettro-cauchy.png", dpi=300)
+ 
+
+\end{sagesilent}
+
+
+$$a = \sage{myout.beta[1]} \pm \sage{myout.sd_beta[1]}$$
+$$b = \sage{myout.beta[0]} \pm \sage{myout.sd_beta[0]}$$
+
+Effettuamo il test del ${\chi}^2$ per verificare la bontà delle ipotesi, ed otteniamo:
+
+$$ \chi^ 2 = \sage{chiquadrato}$$
 
 
 
@@ -346,4 +354,8 @@ def stampa_dati(datiarr, header):
 \begin{center}
 \sagestr{stampa_dati(dati, r"  $\delta$ & $n$ & $\sigma_n$ & $\lambda$  ") }
 \end{center}
+
+
+Dal confronto con i valori tabulati otteniamo che l'accordo migliore è con lo spettro del neon. Infatti, come si può osservare:
+
 
