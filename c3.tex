@@ -247,17 +247,20 @@ ntuple = list((dati3['frequenza'][i], deltaV[i]) for i in range(0, len(deltaV)))
 fit = find_fit(ntuple, func, parameters=[L], initial_guess=[0.002], variables=[x],solution_dict=True)
  
 import scipy.odr as odr
-# mymodel = odr.Model(fu)
-# mydata = odr.RealData(dati3['frequenza'], deltaV)
-# myodr = odr.ODR(mydata, mymodel, beta0=[0.002],  maxit=1000)
-(pars, errors, hes) = odr.odr(fu, [0.002, 50], deltaV, dati3['frequenza'])
+mymodel = odr.Model(fu)
+mydata = odr.RealData(dati3['frequenza'], deltaV)
+myodr = odr.ODR(mydata, mymodel, beta0=[0.002],  maxit=1000)
+myout = myodr.run()
 
-chiquadrato = chiquad(np.array(dati3['frequenza']), deltaV, func, ysigma=float(0.05), param=[pars[0]])
+
+#(pars, errors, hes) = odr.odr(fu, [0.002, 50], deltaV, dati3['frequenza'])
+
+chiquadrato = chiquad(np.array(dati3['frequenza']), deltaV, fu, ysigma=float(0.05), param=[myout.beta])
 
 plt.clf()
 plt.semilogx(dati3['frequenza'],deltaV , 'ro')
 xsp = np.arange(0, 500000, 500)
-ysp = func(xsp, pars[0])
+ysp = func(xsp, myout.beta[0])
 plt.plot(xsp, ysp, 'b--')
 
 plt.grid(True)
@@ -265,13 +268,10 @@ plt.ylabel(r"$\frac{V_{out}}{V_{in}}$ ")
 plt.xlabel(r"Frequenza $\nu$ - $(Hz)$")
 plt.savefig("grafici/C3-faseindu.png", dpi=300)
 
-lstring = "%.4G" % (pars[0]*1000)
-lerrorstring = "%.2G" % (errors[0]*1000)
+lstring = "%.4G" % (myout.beta[0]*1000)
+lerrorstring = "%.2G" % (myout.sd_beta[0]*1000)
 \end{sagesilent}
 
-\begin{center}
- \includegraphics[scale=0.70]{grafici/C3-faseindu.png}
-\end{center}
 
 Da questo fit, otteniamo una $L=\sage{lstring}\pm\sage{lerrorstring}$ mH, e un $\chi^2 = \sage{round(chiquadrato,3)} $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
 \\
@@ -281,7 +281,3 @@ Per frequenze molto basse il carattere resistivo dell'impedenza domina e pertant
 Per $\omega = \omega_c$, essendo in transizione tra i due regime, si ha un comportamento intermedio e la fase diviene: $ \phi = \pi/4$. \\
 
 L'insieme dei fenomeni da noi osservati in questa secondo parte, ci permette di affermare che il circuito RL da noi costruito agisce come un filtro passa-alto passivo, cioè un filtro che riduce le componenti alle frequenze inferiori a quella di taglio (abbattendo l'ampiezza di $V_{out}$ al diminuire della frequenza , come si vede nel grafico). Il più semplice filtro passa-alto è, infatti, un circuito RL. 
-
-
-\section{Nota sugli errori dei parametri}
-Il software utilizzato per l'interpolazione dei dati non ci permette di ottenere l'errore sui parametri ricavati dal fit. Ci proponiamo di riuscire a risolvere questo problema per la consegna ufficiale della relazione.
