@@ -133,6 +133,22 @@ myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.],  maxit=5000)
 myout = myodr.run()
 
 myout.pprint()
+
+def chiquad(xdata, ydata, yfunc, ysigma = (), param=()):
+    yteo = yfunc(xdata, *param)
+    ddof = len(xdata) - 1 - len(param)
+    if (np.isscalar(ysigma)):
+        ys = np.ones_like(xdata)*ysigma
+    else:
+        ys = ysigma
+ 
+    if (len(ys)):
+        return sum(((ydata-yteo)/ys)**2)
+    else:
+        return sum((ydata-yteo)**2/yteo)
+        
+chiquadrato = chiquad(np.array(l, n, func, ysigma=float(0.05), param=[pars[0]]) 
+
    
 plt.clf()
 plt.plot(l,n,'ro')
@@ -141,6 +157,7 @@ yin = func(myout.beta,xin)
 plt.plot(xin,yin,'--')
 plt.grid(True,which="both")
 plt.savefig("grafici/spettro-cauchy.png", dpi=300)
+ 
 
 \end{sagesilent}
 
@@ -209,6 +226,30 @@ $$\sigma_n: \sage{derror}$$
 \includegraphics[scale=0.75]{grafici/spettro-cauchy.png}
 \end{center}
 
+\begin{comment}
+\begin{sagesilent}
+import numpy as np
+ 
+def chiquad(xdata, ydata, yfunc, ysigma = (), param=()):
+    yteo = yfunc(xdata, *param)
+    ddof = len(xdata) - 1 - len(param)
+    if (np.isscalar(ysigma)):
+        ys = np.ones_like(xdata)*ysigma
+    else:
+        ys = ysigma
+ 
+    if (len(ys)):
+        return sum(((ydata-yteo)/ys)**2)
+    else:
+        return sum((ydata-yteo)**2/yteo)
+        
+chiquadrato = chiquad(np.array(l, n, func, ysigma=float(0.05), param=[pars[0]])    
+
+        
+\end{sagesilent}
+\end{comment}
+
+
 
 \section*{Determinazionedi una sorgente ignota}
 Infine utilizziamo i procedimenti e i valori stimati nelle prime parti dell'esperienza  per determinare, mediante lo spettro, il gas corripondente alla sorgente ignota.\\
@@ -264,25 +305,25 @@ lcalc= np.array([float(l(enne=dato,digits=4).subs(b=coeff1, a=coeff2)  ) for dat
 
 #var('sigma_a', 'sigma_b')
 
-lerror(a,b)=sqrt(b/(enne-a))
+#lerror(a,b)=sqrt(b/(enne-a))
 
-dif = lerror.differentiate()
+#dif = lerror.differentiate()
 
 #dif=vector([lerror.diff(a), lerror.diff(b)])
 
-def errscal(dato):
-  errs = vector([sigma_a, sigma_b])
-  slam = vector([0, 0])
-  diffVal = dif(a=coeff1, b=coeff2, digits=4).subs(enne=dato)
+#def errscal(dato):
+ # errs = vector([sigma_a, sigma_b])
+ # slam = vector([0, 0])
+ # diffVal = dif(a=coeff1, b=coeff2, digits=4).subs(enne=dato)
   
-  for i in range(0, len(dif)):
-      slam[i] = (diffVal[i]*errs[i])
+ # for i in range(0, len(dif)):
+ #     slam[i] = (diffVal[i]*errs[i])
     
-  return abs(slam)
+ # return abs(slam)
 
-print 'ncalc', ncalc
+#print 'ncalc', ncalc
 
-errorl = np.array([float(errscal(trick) ) for trick in ncalc ])
+#errorl = np.array([float(errscal(trick) ) for trick in ncalc ])
 
 
 
@@ -290,11 +331,11 @@ print dati
 print ncalc
 print errorsarr
 print lcalc
-print errorl
+#print errorl
 dati = ml.rec_append_fields(dati, "n", ncalc)
 dati = ml.rec_append_fields(dati, "error_n", errorsarr)
 dati = ml.rec_append_fields(dati, "l", lcalc)
-dati = ml.rec_append_fields(dati, "error_l", errorl)
+#dati = ml.rec_append_fields(dati, "error_l", errorl)
 
 def stampa_dati(datiarr, header):
   s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
@@ -309,6 +350,6 @@ def stampa_dati(datiarr, header):
 \end{sagesilent}
 
 \begin{center}
-\sagestr{stampa_dati(dati, r"  $\delta$ & $n$ & $\sigma_n$ & $\lambda$ & $\sigma_{\lambda}$ ") }
+\sagestr{stampa_dati(dati, r"  $\delta$ & $n$ & $\sigma_n$ & $\lambda$  ") }
 \end{center}
 
