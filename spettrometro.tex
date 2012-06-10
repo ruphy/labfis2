@@ -145,8 +145,8 @@ plt.savefig("grafici/spettro-cauchy.png", dpi=300)
 \end{sagesilent}
 
 
-$$a = \sage{myout.beta[1]}$$
-$$b = \sage{myout.beta[0]}$$
+$$a = \sage{myout.beta[1]} \pm \sage{myout.sd_beta[1]}$$
+$$b = \sage{myout.beta[0]} \pm \sage{myout.sd_beta[0]}$$
 
 Dati raccolti:
 
@@ -199,7 +199,7 @@ def stampa_dati(datiarr, header):
 \end{center}
 
 
-In cui l'errore su $n$ è dato dall'errore su $\delta$ tramite la:
+In cui l'errore su $n$ è dato dall'errore su $\delta = 0.0087 rad $ tramite la:
 
 $$\sigma_n: \sage{derror}$$
 
@@ -218,4 +218,97 @@ Calcoliamo n dalla \ref{n}, ed utilizziamo tali valori per ricavare le lunghezze
 \lambda = \sqrt{\frac{b}{n-a}}
 \end{equation}
 
+
+%Elaborazione dati:
+
+
+\begin{sagesilent}
+import numpy as np
+import matplotlib.mlab as ml
+
+dati = np.recfromcsv('dati/spettro-neon.csv')
+
+var('alpha')
+var('delta', latex_name=r'\delta')
+var('sigma_delta', latex_name=r'\sigma_{\delta}')
+
+
+n(delta) = sin((alpha+delta)/2)/sin(alpha/2)
+
+nerror = (n.diff())*sigma_delta
+sigmadel=0.0087
+alpha_nostro=1.047
+coeff1=9333.5
+coeff2=1.5919
+sigma_a = 0.000766
+sigma_b = 164.4
+
+
+def ret_error(dato):
+  res = nerror(delta=dato['delta']).subs(alpha=alpha_nostro, sigma_delta=sigmadel)
+  return abs(res[0])
+  
+errorsarr = np.array([ret_error(dato) for dato in dati ])
+
+ncalc = np.array([float(n(delta=dato['delta']).subs(alpha=alpha_nostro).n(digits=2) ) for dato in dati ])
+
+#Determinazione delle lambda incongite
+
+var('a', 'b', 'enne')
+
+l(enne)=sqrt(b/(enne-a))
+
+lcalc= np.array([float(l(enne=dato,digits=4).subs(b=coeff1, a=coeff2)  ) for dato in ncalc ])
+
+#Propagazione errori
+
+#var('sigma_a', 'sigma_b')
+
+lerror(a,b)=sqrt(b/(enne-a))
+
+dif = lerror.differentiate()
+
+#dif=vector([lerror.diff(a), lerror.diff(b)])
+
+def errscal(dato):
+  errs = vector([sigma_a, sigma_b])
+  slam = vector([0, 0])
+  diffVal = dif(a=coeff1, b=coeff2, digits=4).subs(enne=dato)
+  
+  for i in range(0, len(dif)):
+      slam[i] = (diffVal[i]*errs[i])
+    
+  return abs(slam)
+
+print 'ncalc', ncalc
+
+errorl = np.array([float(errscal(trick) ) for trick in ncalc ])
+
+
+
+print dati
+print ncalc
+print errorsarr
+print lcalc
+print errorl
+dati = ml.rec_append_fields(dati, "n", ncalc)
+dati = ml.rec_append_fields(dati, "error_n", errorsarr)
+dati = ml.rec_append_fields(dati, "l", lcalc)
+dati = ml.rec_append_fields(dati, "error_l", errorl)
+
+def stampa_dati(datiarr, header):
+  s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
+  s += r"}{|c}}"
+  s += "%s \\\\" % (header)
+  s += r"\midrule"
+  for i in range(0, len(datiarr)):
+    a = ["%.3G" %x for x in datiarr[i]]
+    s += "%s \\\\" % join(a, "&")
+  s += r"\end{tabular}"
+  return s
+\end{sagesilent}
+
+\begin{center}
+\sagestr{stampa_dati(dati, r"  $\delta$ & $n$ & $\sigma_n$ & $\lambda$ & $\sigma_{\lambda}$ ") }
+\end{center}
 
