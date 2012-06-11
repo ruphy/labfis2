@@ -12,11 +12,16 @@ A tal fine costruiamo un circuito con i seguenti elementi:
   \item Un condensatore di capacità 367 $nF$, misurata con il multimetro
   \item Un'induttore di induttanza sconosciuta, e resistenza 40 $\Omega$.
   \item Un oscilloscopio con due sonde
-  \item Una resistenza di 677 $\Omega$ 
+  \item Una resistenza di 677 $\Omega$ da noi misurata in C1 con un'incertezza che qui risulta trascurabile. 
+\end{itemize}
+La resistenza equivalente sul circuito è quindi:
+\begin{itemize}
+ \item Per il circuito RC: $R_{eq} = 677+50 = 727\ \Omega$.
+ \item Per il circuito RL: $R_{eq} = 677+50+40 = 767\ \Omega$
 \end{itemize}
 
+
 \section{Corrente impulsata: Studio del $\tau$ del circuito}
-\subsection{Procedimento}
 
 Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Colleghiamo la prima sonda all'ingresso del circuito, subito prima del condensatore: in tal modo l'oscilloscopio confronta il segnale in ingresso con la messa a terra, e visualizza a schermo la differenza di potenziale, restituendo sul display l'onda quadra prodotta dal generatore.  
 Analogamente una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica del condensatore/induttore. \\
@@ -54,7 +59,7 @@ $$V_R = \varepsilon e^{-t/\tau}$$
 rct = np.recfromcsv('dati/C3/RCtau.csv')
 tempo = rct['t']
 volt = rct['v']
-yerr = volt*0.04
+yerr = volt*0.08
 
 def fu(P,x):
     return P[0]*exp((-1./P[1])*x)
@@ -68,8 +73,9 @@ mydata = odr.RealData(tempo,volt)
 myodr = odr.ODR(mydata, mymod, beta0=[20.,200.], maxit=5000)
 out = myodr.run()
 
-chi = chiquad(tempo,volt,fu1,ysigma=float(0.4),param=[out.beta[0],out.beta[1]])
- 
+chi = chiquad(tempo,volt,fu1,ysigma=yerr,param=[out.beta[0],out.beta[1]])
+
+chir = chi/(len(tempo)-2)
 plt.clf()
 plt.errorbar(tempo,volt,yerr,np.zeros_like(yerr),'ro')
 xin = np.arange(0,1000,10)
@@ -88,16 +94,16 @@ plt.savefig("grafici/C3/RCtau.png",dpi=300)
 \end{center}
 
 Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)}\pm \sage{round(out.sd_beta[1],2)}\ \mu s$.
-Valore atteso: $\tau=RC=266.8\ \mu s$, con R=$727\ \Omega$
+Valore atteso: $\tau=RC=266.8\ \mu s$, con R=$727\ \Omega$.
+L'errore è l'incertezza della misura del tempo e del potenziale, letti sul display dell'oscilloscopio. Per quanto riguarda il tempo, l'errore è stata assunto trascurabile poichè abbiamo campionato usando la griglia dell'oscilloscopio; per quanto riguarda il potenziale, abbiamo stimato un'errore percentuale del 8\%, che è circa il rapporto tra l'incertezza dello strumento e il valore della misura. L'incertezza sulla misura non è costante, perchè abbiamo variato più volte la risoluzione dello strumento al fine di ottenere dati più precisi.
+\\
 
-Nella misura abbiamo riscontrato un errore $\sigma_y= 0.4\ V$.
 Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$:
 
-$$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau ))}}{\sigma_y^2} $$
+Otteniamo $$ \chi^2 = \frac{\sum{(y_i - f(x_i,\tau ))}}{\sigma_y^2} $$
 
-Dividendo per i gradi di libertà (7 in questo caso), otteniamo un $\tilde{\chi}^2 = \sage{round(chi,3)}$ \\
-Leggiamo dai valori tabulati la probabilità percentuale di ottenere un valore di $\tilde{\chi}^2 \geq {\tilde{\chi}_0}^2 $ (dati i gradi di libertà). Otteniamo una probabilità maggiore del $90\%$, maggiore della soglia di accettabilità, fissata al $5\%$. 
-
+$\chi^2 = \sage{round(chi,3)}$ con d.o.f = $\sage{len(tempo)-2}$\\
+Il p-value associato è $0.04$, che è minore della soglia di accettabilità fissata a $0.05$. !! %Che si fa?
 
 \subsubsection{Circuito RL}
 Con un'onda quadra a 250 Hz, abbiamo raccolto i seguenti dati:
@@ -141,12 +147,14 @@ mydata = odr.RealData(tempo,volt)
 myodr = odr.ODR(mydata, mymod, beta0=[20.,16.], maxit=5000)
 out = myodr.run()
 
-chi = chiquad(tempo,volt,fu1,ysigma=float(0.4),param=[out.beta[0],out.beta[1]])
- 
+chi = chiquad(tempo,volt,fu1,ysigma=yerr,param=[out.beta[0],out.beta[1]])
+dof = len(tempo)-2
+chir = chi/dof
+
 plt.clf()
 plt.errorbar(tempo,volt,yerr,np.zeros_like(yerr),fmt=None)
 plt.plot(tempo,volt,'ro')
-xin = np.arange(min(tempo),1.5*max(tempo),10)
+xin = np.arange(min(tempo),1.5*max(tempo),1)
 yin = fu1(xin,out.beta[0],out.beta[1])
 plt.plot(xin,yin,'b--')
 plt.ylabel(r"$D.d.p$ $(V)$ ")
@@ -158,26 +166,19 @@ plt.savefig("grafici/C3/RLtau.png",dpi=300)
 
 
 
-Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)} \pm \sage{round(out.sd_beta[1],2)}\mu s$ \\
-Non conoscendo a priori il valore di L non possiamo valutare l'accordo con il valore teorico: $\tau=\frac{L}{R}$.
 
-I dati graficati:
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/RLtau.png}
 \end{center}
 
-Otteniamo un valore: $\chi^2 = \sage{round(chi,2)} $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$, per un accordo perfetto.
+Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)} \pm \sage{round(out.sd_beta[1],2)}\ \mu s$. Il fit ha un $\chi^2 = \sage{round(chi,2)} $ con $d.o.f= \sage{dof}$. Il p-value associato è $0.83$.
+\\
 
+Valgono le considerazioni precedenti per quanto riguarda le incertezze. 
 
-\section{Corrente alternata}
-\subsection{Procedimento}
-Nella seconda parte dell'esperienza intendiamo misurare la risposta in frequenza (o funzione di trasferimento), definita come:
+\section{Corrente alternata: studio frequenza di taglio}
 
-$H\left(\omega \right) = \begin{cases}
-                          |H\left(\omega \right)| \\
-                          \text{fase}
-                         \end{cases}
-$  
+Nella seconda parte dell'esperienza intendiamo misurare la risposta in frequenza (o funzione di trasferimento).
 
 Pertanto misuriamo la ddp ai capi di $R$ e $C$ o $L$ in modo analogo alle prima parte dell'esperienza, e la distanza tra due picchi delle onde visualizzate a schermo per determinare l'angolo $\phi$ di sfasamento ($\delta \phi = 2 \pi \Delta t$).
 
@@ -185,47 +186,52 @@ Per ricavare il rapporto $\frac{V_{R}}{V_{o}}$, dobbiamo ricavare $V_R$. Trovand
 Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si ha $Z_{tot} = \sum Z_i$
 
 \begin{itemize}
-\item circuito RC $\rightarrow$ $Z=R-\frac{j}{\omega C}$
-\item circuito RL $\rightarrow$ $Z=R+j\omega L$
+\item circuito RC: $Z=R-\frac{j}{\omega C}$
+\item circuito RL: $Z=R+j\omega L$
 \end{itemize}  
 
-Allora: 
+Allora otteniamo la coppia di equazioni 
 
 $$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$ 
 
-
-\begin{itemize}
-\item circuito RC $\rightarrow$ $X=\frac{1}{\omega C}$
-\item circuito RL $\rightarrow$ $X=\omega L$
-\end{itemize}
-
-Mentre la fase risulta: 
 $$\phi = \arctan \frac{X}{R} $$
 
 
-\subsection{Circuito RC}
+
+Dove ad $X$ sostituiamo:
+\begin{itemize}
+\item Per il circuito RC: $X=\frac{1}{\omega C}$
+\item Per il circuito RL: $X=\omega L$
+\end{itemize}
+
+Per ricavare l'opportuna funzione di trasferimento.
+
+\subsection*{Circuito RC}
 
 
 \begin{center}
 
-\begin{tabular}{*{3}{c}}
-Frequenza ($Hz$) & $V_{out}/V_{in}$ & $\phi$ \\
+\begin{tabular}{*{4}{c}}
+Frequenza ($Hz$) & $V_{out}/V_{in}$ & $\phi\ (rad))$ & Delta ($\mu s$)\\
 \midrule
-50 & 0.08 & 1.54\\
-100 & 0.15 & 1.41\\
-200 & 0.30 & 1.41\\
-300 & 0.42 & 1.24\\
-400 & 0.52 & 1.08 \\
-1000 & 0.83 & 0.70\\
-1500 & 0.90 & 0.49\\
-2000 & 0.93 & 0.38\\
-4000 & 0.97 & 0.20 \\
+50 & 0.08 & 1.54 & 4900\\
+100 & 0.15 & 1.41 & 2240\\
+200 & 0.30 & 1.41 & 1120\\
+300 & 0.42 & 1.24 & 660\\
+400 & 0.52 & 1.08 & 430\\
+1000 & 0.83 & 0.70 & 112\\
+1500 & 0.90 & 0.49 & 52\\
+2000 & 0.93 & 0.38 & 30\\
+4000 & 0.97 & 0.20 & 8\\
+
 \end{tabular}
 \end{center}
 
-Lasciamo C come parametro libero, e interpoliamo i valori raccolti di $V_{out}$ e $V_{in}$ in funzione della frequenza:
+Lasciamo C come parametro da stimare, e interpoliamo i valori raccolti di $V_{out}$ e $V_{in}$ in funzione della frequenza, usando l'equazione:
 
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
+
+dove $V_{Ro} = V_{out}$ (tensione ai capi della resistenza) e $V_o = V_{in}$.
 
 %Fit DDP per RC
 \begin{sagesilent}
@@ -233,16 +239,17 @@ $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
 rcf = np.recfromcsv('dati/C3/RCfun.csv')
 freq = rcf['frequenza']
 freq = freq.astype(float)
+vin= rcf['v_in']
 volt = rcf['v_out']/rcf['v_in']
-yerr = 0.05
+yerr = 0.01
 xerr = 0
 
 var('x,C')
 def funz(x, C):
-    return 667/sqrt(667^2+(x*2*n(pi)*C)^(-2))
+    return 727/sqrt(727^2+(x*2*n(pi)*C)^(-2))
     
 def func(P,x):
-    return 667/sqrt(667^2+(x*2*n(pi)*P[0])^(-2))
+    return 727/sqrt(727^2+(x*2*n(pi)*P[0])^(-2))
     
 mymod = odr.Model(func)
 mydata = odr.RealData(freq,volt)
@@ -250,10 +257,11 @@ mydata = odr.RealData(freq,volt)
 myodr = odr.ODR(mydata, mymod, beta0=[0.0000001], maxit=5000)
 out = myodr.run()
 
-chi = chiquad(freq,volt,funz,ysigma=float(0.01),param=[out.beta[0]])
+chi = chiquad(freq,volt,funz,ysigma=float(yerr),param=[out.beta[0]])
 
 chir = chi/(len(freq)-1)
- 
+
+omega = 1/((727)*out.beta[0])
  
 plt.clf()
 
@@ -262,21 +270,27 @@ yin = funz(xin,out.beta[0])
 plt.semilogx(freq,volt,'ro')
 plt.errorbar(freq,volt,yerr,xerr,fmt=None)
 plt.plot(xin,yin,'b--')
-plt.ylabel(r"$D.d.p$ $(V)$ ")
-plt.xlabel(r"$Tempo$ $(\mu s)$")
+plt.ylabel(r"$\frac{V_{out}}{V_{in}}$ ")
+plt.xlabel(r"$\nu$ Frequenza $(Hz)$")
 plt.grid(True)
 plt.savefig("grafici/C3/RCddp.png",dpi=300)
  
 \end{sagesilent}
 
 
-Dal fit otteniamo: $C=365.42 \pm  6.11\ nF $ in ottimo accordo con il valore noto.
-
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/RCddp.png}
 \end{center}
 
-Su questo fit si ha un $\chi^2=\sage{round(chi,3)}$, e un $\tilde{\chi}^2 = \sage{round(chir,3)}$, a riflettere un ottimo accordo.
+Dal fit otteniamo $C=365.42 \pm  6.11\ nF $ e un $\chi^2 = \sage{round(chi,3)}$ con $d.o.f=\sage{len(freq)-1}$. p-value associato: 0.25 
+
+La frequenza di taglio è definita come $\omega_c = \frac{1}{RC}$ e per questo valore di C otteniamo $\omega_c = \sage{round(omega,2)}\ Hz$.
+
+L'errore $\sigma_v$ deriva dagli errori su Vout e Vin:
+
+$\sigma_V = \sqrt{\frac{\sigma_{out}^2}{V_{in}^2} + \frac{\sigma_{in}^2}{V_{in}^4} }$
+
+Per questa formula di propagazione, l'errore risulta irrilevante. Abbiamo posto quindi sovrastimato l'errore a 0.01.'
 
 %Fit Phi per RC
 \begin{sagesilent}
@@ -287,10 +301,10 @@ xerr= 0
 
 var('x,C')
 def funz(x, C):
-    return arctan(1/(x*2*n(pi)*677*C))
+    return arctan(1/(x*2*n(pi)*727*C))
     
 def func(P,x):
-    return arctan(1/(x*2*n(pi)*677*P[0]))
+    return arctan(1/(x*2*n(pi)*727*P[0]))
     
 mymod = odr.Model(func)
 mydata = odr.RealData(freq,deltaphi)
@@ -298,7 +312,7 @@ mydata = odr.RealData(freq,deltaphi)
 myodr = odr.ODR(mydata, mymod, beta0=[0.0000001], maxit=5000)
 out = myodr.run()
 
-chi = chiquad(freq,deltaphi,funz,ysigma=float(0.1),param=[out.beta[0]])
+chi = chiquad(freq,deltaphi,funz,ysigma=yerr,param=[out.beta[0]])
 
 chir = chi/(len(freq)-1)
  
@@ -314,11 +328,13 @@ plt.ylabel(r"$\phi (rad)$ ")
 plt.xlabel(r"$\nu$ Frequenza $(Hz)$")
 plt.grid(True)
 plt.savefig("grafici/C3/RCfase.png",dpi=300)
+
+omega = 1/(727*out.beta[0])
 out.pprint()
-omega = 1/(677*out.beta[0])
+
 \end{sagesilent}
 
-
+L'errore su $\phi$ è stato supposto pari al $6\%$ di $\phi$ stessa. !!
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/RCfase.png}
@@ -328,13 +344,10 @@ Ora interpolo i dati della $ \phi$ utilizzando la funzione:
 
 $$ \phi = \arctan \frac{1}{2\pi\nu C R} $$
 
-con C parametro libero. $C = 284.47 \pm 10.93\ nF$.
-Tramite il test del $\chi^2$ verifico l'accordo con i nostri dati, ottenendo un $\tilde{\chi}^2 = \sage{round(chir,3)}$, a riflettere una probabilità del $43\%$ di ottenere un $\tilde{\chi}^2$ maggiore; dunque il risultato è accettabile.
-\\
+Ricavo $C=264.90 \pm 10.1\ nF$.
+Ottengo un $\chi^2 = \sage{round(chi,3)}$ con $d.o.f= \sage{len(deltaphi)-1}$.   
 
-
-La frequenza di taglio si definisce come $\omega_c = \frac{1}{RC}$. Nel nostro caso $\omega_c = \sage{round(omega,2)}\ Hz$. 
-\\
+Per questo secondo valore di C, $\omega_c = \sage{round(omega,2)}\ Hz$. 
 
 \subsubsection{Considerazioni teoriche}
 Il comportamento del circuito varia a seconda di quanto la nostra frequenza $\omega$ si avvicina al valore della frequenza di taglio. \\
@@ -346,31 +359,29 @@ L'insieme dei fenomeni da noi osservati in questa secondo parte, ci permette di 
 \subsection{Circuito RL}
 \begin{center}
 
-\begin{tabular}{*{3}{c}}
-Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) & $\phi (rad)$ \\
+\begin{tabular}{*{4}{c}}
+Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) & $\phi (rad)$ & Delta ($\mu s$) \\
 \midrule
-1000& 0.47 & 0.19 \\
-2000 & 0.62 & 0.35\\
-3000 & 0.79 & 0.45\\
-4000 & 1.05 & 0.58\\
-6000 & 1.48 & 0.79\\
-8000 & 2.01 & 1.01\\
-10000 & 2.56 & 0.94\\
-15000 & 3.64 & 1.13\\
-20000 & 4.28 & 1.26\\
-30000 & 5.08 & 1.36\\
-50000 & 5.89 & 1.57\\
+1000& 0.47 & 0.19 & 30 \\
+2000 & 0.62 & 0.35 & 28\\
+3000 & 0.79 & 0.45 & 24\\
+4000 & 1.05 & 0.58 & 23\\
+6000 & 1.48 & 0.79 & 21\\
+8000 & 2.01 & 1.01 & 20\\
+10000 & 2.56 & 0.94 & 15\\
+15000 & 3.64 & 1.13 & 12\\
+20000 & 4.28 & 1.26 & 10 \\
+30000 & 5.08 & 1.36 & 7.2\\
+50000 & 5.89 & 1.57 & 5\\
 \end{tabular}
 \end{center}
+
 
 
 Anche questa volta interpoliamo i dati raccolti con la funzione:
 
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
 
-\begin{center}
- \includegraphics[scale=0.70]{grafici/C3/RLddp.png}
-\end{center}
 
 %Fit DDP per RL
 \begin{sagesilent}
@@ -386,7 +397,7 @@ xerr= 0
 var('x,L')
 
 def func(x, L):
-    return (667)/(np.sqrt((667+90)^2+(x*2*n(pi)*L)^2)-50)
+    return (767/(np.sqrt((767)^2+(x*2*n(pi)*L)^2)))
 
 def fu(P, x):
     return func(x, P[0])
@@ -397,7 +408,7 @@ mydata = odr.RealData(dati3['frequenza'], deltaV)
 myodr = odr.ODR(mydata, mymodel, beta0=[0.002],  maxit=1000)
 myout = myodr.run()
 
-chiquadrato = chiquad(np.array(dati3['frequenza']), deltaV, fu, ysigma=float(0.05), param=[myout.beta])
+chiquadrato = chiquad(np.array(dati3['frequenza']), deltaV, fu, ysigma=float(0.1), param=[myout.beta])
 
 plt.clf()
 plt.semilogx(dati3['frequenza'],deltaV , 'ro')
@@ -414,9 +425,20 @@ lstring = "%.4G" % (myout.beta[0]*1000)
 lerrorstring = "%.2G" % (myout.sd_beta[0]*1000)
 \end{sagesilent}
 
+\begin{center}
+ \includegraphics[scale=0.70]{grafici/C3/RLddp.png}
+\end{center}
 
-Da questo fit, otteniamo una $L=\sage{lstring}\pm\sage{lerrorstring}$ mH, e un $\chi^2 = \sage{round(chiquadrato,3)} $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
-\\
+
+
+Otteniamo $L=\sage{lstring}\pm\sage{lerrorstring} \ mH$.  Il fit ha un $\chi^2 = \sage{round(chiquadrato,3)}$ con $d.o.f=\sage{len(dati3['v_out']-1)} $ e un p-value$=$.  
+
+L'errore $\sigma_v$ deriva dagli errori su Vout e Vin:
+
+$\sigma_V = \sqrt{\frac{\sigma_{out}^2}{V_{in}^2} + \frac{\sigma_{in}^2}{V_{in}^4} }$
+
+Per questa formula di propagazione, l'errore risulta irrilevante. 
+%Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
 
 
 %Fit Phi per RL
@@ -430,10 +452,10 @@ xerr= 0
 
 var('x,L')
 def funz(x, L):
-    return arctan(x*2*n(pi)*L/677)
+    return arctan(x*2*n(pi)*L/767)
     
 def func(P,x):
-    return arctan(x*2*n(pi)*P[0]/677)
+    return arctan(x*2*n(pi)*P[0]/767)
     
 mymod = odr.Model(func)
 mydata = odr.RealData(freq,deltaphi)
@@ -441,7 +463,7 @@ mydata = odr.RealData(freq,deltaphi)
 myodr = odr.ODR(mydata, mymod, beta0=[0.012], maxit=1000)
 out = myodr.run()
 
-chi = chiquad(freq,deltaphi,funz,ysigma=float(0.1),param=[out.beta[0]])
+chi = chiquad(freq,deltaphi,funz,ysigma=yerr,param=[out.beta[0]])
 
 chir = chi/(len(freq)-1)
  
@@ -457,7 +479,7 @@ plt.xlabel(r"$\nu$ Frequenza $(Hz)$")
 plt.grid(True)
 plt.savefig("grafici/C3/RLfase.png",dpi=300)
 out.pprint()
-omega = 677/(out.beta[0])
+omega = 767/(out.beta[0])
 
 \end{sagesilent}
 
@@ -472,7 +494,11 @@ dove L è il parametro libero da stimare.
  \includegraphics[scale=0.70]{grafici/C3/RLfase.png}
 \end{center}
 
-$L=\sage{round(out.beta[0],4)}\pm\sage{round(out.sd_beta[0],5)}\ H$ e $\tilde{\chi}^2 = \sage{round(chir,2)}$ con D.o.f =$\sage{len(freq)-1}$
+L'errore su y è $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$. Abbiamo supposto $\sigma_{t}$ proporzionale al tempo. 
+
+L'errore su $\phi$ è stato supposto pari al $6\%$ di $\phi$ stessa. !!
+
+$L=\sage{round(out.beta[0],4)}\pm\sage{round(out.sd_beta[0],5)}\ H$. Il fit ha un $\chi^2 = \sage{round(chi,2)}$ con $d.o.f= \sage{len(freq)-1}$ e p-value:0.18.
 \\
 
 La frequenza di taglio viene definita come $\omega_c = R/L$. Usando la L di questo fit, $\omega_c = \sage{round(omega,2)}\ Hz$. 
