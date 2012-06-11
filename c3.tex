@@ -206,6 +206,12 @@ Dove ad $X$ sostituiamo:
 
 Per ricavare l'opportuna funzione di trasferimento.
 
+%Cosa ne dite? Scriviamo qualcosa? Tutta la nostra analisi degli errori è davvero poco lecita..ma è l'unica possibile. A meno che al posto di calcolare il chi-quadro, ci calcoliamo l'incertezza a posteriori.
+
+\subsubsection{Nota sugli errori}
+Tutte le misure di questa esperienza sono state effettuate osservando un display sul quale l'oscilloscopio rappresenta l'onda. La risoluzione (x,y) del display, dove x è l'asse temporale e y l'asse del potenziale, può essere variata a piacimento. 
+Questo comporta una certa difficoltà nell'analisi degli errori, in quanto è impossibile conoscere l'incertezza della misura. Abbiamo deciso di stimare gli errori mantendendo costante l'errore relativo.
+
 \subsection*{Circuito RC}
 
 
@@ -290,7 +296,7 @@ L'errore $\sigma_v$ deriva dagli errori su Vout e Vin:
 
 $\sigma_V = \sqrt{\frac{\sigma_{out}^2}{V_{in}^2} + \frac{\sigma_{in}^2}{V_{in}^4} }$
 
-Per questa formula di propagazione, l'errore risulta irrilevante. Abbiamo posto quindi sovrastimato l'errore a 0.01.'
+Per questa formula di propagazione, l'errore risulta irrilevante. Abbiamo posto quindi sovrastimato l'errore a 0.01.
 
 %Fit Phi per RC
 \begin{sagesilent}
@@ -315,7 +321,8 @@ out = myodr.run()
 chi = chiquad(freq,deltaphi,funz,ysigma=yerr,param=[out.beta[0]])
 
 chir = chi/(len(freq)-1)
- 
+
+ddof=len(freq)-len(out.beta) 
  
 plt.clf()
 
@@ -345,7 +352,7 @@ Ora interpolo i dati della $ \phi$ utilizzando la funzione:
 $$ \phi = \arctan \frac{1}{2\pi\nu C R} $$
 
 Ricavo $C=264.90 \pm 10.1\ nF$.
-Ottengo un $\chi^2 = \sage{round(chi,3)}$ con $d.o.f= \sage{len(deltaphi)-1}$.   
+Ottengo un $\chi^2 = \sage{round(chi,3)}$ con $d.o.f= \sage{len(deltaphi)-1}$ e p-value $=\sage{chdtrc(ddof,float(chi))}$
 
 Per questo secondo valore di C, $\omega_c = \sage{round(omega,2)}\ Hz$. 
 
@@ -356,7 +363,7 @@ Per $\omega \simeq \omega_c$, siamo nella transizione tra i due regimi e le impe
 
 L'insieme dei fenomeni da noi osservati in questa secondo parte, ci permette di affermare che il circuito RC da noi costruito agisce come un filtro passa-basso passivo, cioè un filtro che riduce le componenti alle frequenze superiori a quella di taglio (abbattendo l'ampiezza di $V_{out}$ all'aumentare della frequenza, come si vede nel grafico). Il più semplice filtro passa-basso è, infatti, un circuito RC. 
 
-\subsection{Circuito RL}
+\subsection*{Circuito RL}
 \begin{center}
 
 \begin{tabular}{*{4}{c}}
