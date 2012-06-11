@@ -134,9 +134,7 @@ in cui $\alpha$ è l'angolo al vertice del prisma, di $60°$, e $\delta$ l'angol
 Con tale procedura otteniamo i seguenti valori:
 
 \begin{sagesilent}
-
- #Fit per ricavare i parametri della relazione di Cauchy
-
+#Fit per ricavare i parametri della relazione di Cauchy
 
 dati = np.recfromcsv('dati/spettro-cauchy.csv')
 
@@ -145,42 +143,26 @@ n = dati['n']
 
 var('x,P')
 
-#Questa funzione serve solo al chiquadro e per il grafico
-def fun(x,a,b):
-    return a*x+b
-
-
-#Questa funzione serve per il fit fatto da odr
 def func(P,x):
     return P[0]*x+P[1]
-    
-mymodel = odr.Model(func)
 
-mydata = odr.RealData(l,n)
+odrfit, chi = fit_chiquad(l, n, func, init_guess=[1.,1.], ysigma=l*0.01)
 
-myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.], maxit=1000)
-myout = myodr.run()
+xin = np.arange(0.9*min(l),1.3*max(l),2*max(l)/10) 
+yin = func(odrfit.beta, xin)
 
-a = myout.beta[0]
-b = myout.beta[1]
-chiquadrato = chiquad(np.array(l), n, fun, ysigma=l*0.01, param=[a,b]) 
-
-   
 plt.clf()
 plt.plot(l,n,'ro')
-xin = np.arange(0.9*min(l),1.3*max(l),2*max(l)/10) 
-yin = fun(xin,myout.beta[0],myout.beta[1])
 plt.plot(xin,yin,'--')
 plt.grid(True,which="both")
 plt.savefig("grafici/spettro-cauchy.png", dpi=300)
- 
 
 \end{sagesilent}
 
 
-$$a = \sage{myout.beta[1]} \pm \sage{myout.sd_beta[1]}$$
-$$b = \sage{myout.beta[0]} \pm \sage{myout.sd_beta[0]}$$
-$$ \chi^ 2 = \sage{chiquadrato}$$
+$$a = \sage{odrfit.beta[1]} \pm \sage{odrfit.sd_beta[1]}$$
+$$b = \sage{odrfit.beta[0]} \pm \sage{odrfit.sd_beta[0]}$$
+$$ \chi^ 2 = \sage{chi}$$
 
 Dati raccolti
 
@@ -234,9 +216,9 @@ def stampa_dati(datiarr, header):
 \end{center}
 
 
-In cui l'errore su $n$ è dato dall'errore su $\delta = 0.0087 rad $ tramite la:
+In cui l'errore su $n$ è dato dall'errore su $\delta = 0.0087$ rad tramite la funzione:
 
-$$\sigma_n: \sage{derror}$$
+$$\sigma_n(\delta): \sage{derror}$$
 
 
 Dal fit otteniamo i seguenti parametri:
@@ -260,7 +242,8 @@ def fun(x,a,b):
 #Questa funzione serve per il fit fatto da odr
 def func(P,x):
     return P[0]*x+P[1]
-    
+
+
 mymodel = odr.Model(func)
 
 mydata = odr.RealData(l,n)
