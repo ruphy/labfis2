@@ -161,7 +161,7 @@ plt.clf()
 plt.plot(xin,yin,'k--')
 plt.grid(True,which="both")
 plt.errorbar(l,n,errorsarr,np.zeros_like(errorsarr),'b|')
-plt.plot(l,n,'ro')
+plt.plot(l,n,'r.')
 
 plt.xlabel(r"bubba")
 plt.xlabel(r"bubbagiu")
@@ -262,10 +262,10 @@ dati = ml.rec_append_fields(dati, "l", [round(x,0) for x in lcalc])
 dati = ml.rec_append_fields(dati, "errorl", [round(x,0) for x in errorl])
 dati = ml.rec_append_fields(dati, "lteorici", teorici)
 
-fastl = fast_callable(el, vars=[a, b, enne])
+fastl = fast_callable(el, vars=[enne, a, b])
 plt.clf()
 xin = np.arange(1.610, 1.639, 0.001)
-yin = fastl(nostraa, nostrab, xin)
+yin = fastl(xin, nostraa, nostrab)
 plt.plot(xin, yin, 'k--')
 plt.plot(ncalc, lcalc, 'ro')
 plt.errorbar(ncalc, lcalc, errorl, errorn, fmt=None)
@@ -273,6 +273,9 @@ plt.xlabel('n')
 plt.ylabel(r'$\lambda$ (nm)')
 plt.grid(True)
 plt.savefig("grafici/C3-lambda-n.png", dpi=300)
+
+chiquad = chiquad(ncalc, lcalc, fastl, param=[nostraa, nostrab])
+
 \end{sagesilent}
 
 $$\sigma_\lambda \sage{sqrt((dif[0]*sigma_a)**2+(dif[1]*sigma_b)**2)}$$
@@ -292,5 +295,10 @@ Utilizzando le formule qui sopra per il calcolo:\footnote{Nota: durante il calco
 
 
 Le $\lambda$ ottenute dall'elaborazione sono in ottimo accordo con le lunghezze d'onda corrispondenti nello spettro del Neon. Dei valori tabulati per tale elemento si è scelto di affiancare, per il confronto con i nostri dati, quelle con intensità maggiore, talvolta a scapito di un accordo ideale. Il test del ${\chi}^2$ conferma l'ipotesi fatta:
+
+$$\chi^2 = \sage{chiquad}$$
+
+per una probabilità del $\sage{chdtrc(len(ncalc)-2,float(chiquad))*100} \%$.
+
 
 %inserire test chi quadro valori attesi-teorici etc
