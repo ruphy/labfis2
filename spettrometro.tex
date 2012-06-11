@@ -276,7 +276,7 @@ plt.ylabel(r'$\lambda$ (nm)')
 plt.grid(True)
 plt.savefig("grafici/C3-lambda-n.png", dpi=300)
 
-chiquad = chiquad(ncalc, lcalc, fastl, param=[nostraa, nostrab])
+chiquad = chiquad(ncalc, lcalc, fastl, param=[nostraa, nostrab], ysigma=errorl)
 
 \end{sagesilent}
 
@@ -296,11 +296,11 @@ Utilizzando le formule qui sopra per il calcolo:\footnote{Nota: durante il calco
 
 
 
-Le $\lambda$ ottenute dall'elaborazione sono in ottimo accordo con le lunghezze d'onda corrispondenti nello spettro del Neon. Dei valori tabulati per tale elemento si è scelto di affiancare, per il confronto con i nostri dati, quelle con intensità maggiore, talvolta a scapito di un accordo ideale. Il test del ${\chi}^2$ conferma l'ipotesi fatta:
+Le $\lambda$ ottenute dall'elaborazione sono in ottimo accordo con le lunghezze d'onda corrispondenti nello spettro del Neon. Dei valori tabulati per tale elemento si è scelto di affiancare, per il confronto con i nostri dati, quelle con intensità maggiore, talvolta a scapito di un accordo ideale. Il test del ${\chi}^2$ è però eccessivamente basso:
 
 $$\chi^2 = \sage{chiquad}$$
 
-per una probabilità del $\sage{chdtrc(len(ncalc)-2,float(chiquad))*100} \%$.
+per una ovvia probabilità del $\sage{chdtrc(len(ncalc)-2,float(chiquad))*100} \%$.
 
 
 %inserire test chi quadro valori attesi-teorici etc
