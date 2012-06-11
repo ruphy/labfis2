@@ -148,7 +148,7 @@ n = \frac{sin(\frac{\alpha + \delta}{2})}{sin(\frac{\alpha}{2})}
 \end{equation}
 in cui $\alpha$ è l'angolo al vertice del prisma, di $60°$, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.\\
 
-Dati raccolti
+Dati raccolti:
 
 \begin{center}
  \sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$ & $\delta$ & $\sigma_n$")}
@@ -257,18 +257,23 @@ s_l = sqrt(dif[0]*sigma_a +dif[1]*sigma_b)
 #print errorsarr
 #print lcalc
 #print errorl
+
+teorici = dati['teorici']
+dati2 = ml.rec_drop_fields(dati, "teorici")
+print dati2.dtype
 dati = ml.rec_append_fields(dati, "n", ncalc)
 dati = ml.rec_append_fields(dati, "error_n", errorsarr)
 dati = ml.rec_append_fields(dati, "l", lcalc)
-#dati = ml.rec_append_fields(dati, "error_l", errorl)
-
+dati = ml.rec_append_fields(dati, "lteorici", teorici)
 \end{sagesilent}
 
 \begin{center}
-\sagestr{stampa_dati(dati, r"  $\delta$ & $n$ & $\sigma_n$ & $\lambda$  ") }
+\sagestr{stampa_dati(dati, r"  $\delta$ & $n$ & $\sigma_n$ & $\lambda$ & $\lambda$ teorici") }
 \end{center}
 
 
 Dal confronto con i valori tabulati otteniamo che l'accordo migliore è con lo spettro del neon. Infatti, come si può osservare:
+
+
 
 
