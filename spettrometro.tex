@@ -42,7 +42,7 @@ Per stabilire il passo del reticolo utilizziamo una sorgente di cui è nota la l
 d = \frac{n \lambda}{\sin(\frac{\theta_{dx}-\theta_{sx}}{2})}
 \end{equation}
 
-L'errore su d si ottiene dalla propagazione degli errori associati alla misura degli angoli. Si ha dunque:
+ Per le incertezze sugli angoli, sebbene la precisione dello strumento fosse di 20 secondi d'arco, si è preferito propagare come errore associato alle misure 5', corrispondenti a 1.4545 mrad, in quanto la lettura era spesso difficoltosa (a causa della scarsa luce) e sempre affetta da un leggero errore di parallasse. Si ha dunque:
 
 \begin{sagesilent}
 
@@ -94,18 +94,20 @@ Otteniamo $d=\sage{round(dmedia, 3)}\pm\sage{round(derrmedia, 3)}$ $\mu$m.
 \begin{sagesilent}
 #Ricaviamo lambda dai valori di theta
 dati = np.recfromcsv('dati/spettro-hg.csv')
- 
-var('deltatheta', 'd') 
 
-#lam(deltatheta)=d*((deltatheta)/2)/2
+var('deltatheta', 'd', 'sigmatheta') 
  
-#deltatheta = (dati['thetapiu']+dati['thetameno'])/2
+lam(deltatheta)=d*((deltatheta)/2)/2
  
-#lamvalutata = np.array([(lam(x).subs(d=dmedia) for x in deltatheta ])
+deltatheta = (dati['thetapiu']+dati['thetameno'])/2
+lamvalutata = np.array([lam(x).subs(d=dmedia) for x in deltatheta ])
+
  
-#differr=lam.diff()
-# sigmatheta=10*
- 
+differr=abs(lam.diff())
+errlam=differr*sigmatheta
+sigthetaval=10*0.0002909
+errlamval = np.array([errlam(x).subs(sigmatheta=sigthetaval) for x in deltatheta ])
+  
 \end{sagesilent}
 
 
@@ -198,7 +200,7 @@ Dati raccolti:
 \includegraphics[scale=0.75]{grafici/spettro-cauchy.png}
 \end{center}
 
-Per le incertezze sugli angoli, sebbene la precisione dello strumento fosse di un secondo d'arco, si è preferito propagare come errore associato alle misure 30'', corrispondenti a 8.730 mrad, in quanto la lettura era spesso difficoltosa (a causa della scarsa luce) e sempre affetta da un leggero errore di parallasse. La propagazione, infine, avviene secondo la legge:
+ La propagazione, infine, avviene secondo la legge:
 %In cui l'errore su $n$ è dato dall'errore su $\delta = \sage{sigmadel}$ rad tramite la funzione:
 
 $$\sigma_n(\delta): \sage{derror}$$
