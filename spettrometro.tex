@@ -208,11 +208,7 @@ Dal fit otteniamo i seguenti parametri:
 $$a = \sage{round(odrfit.beta[1],4)} \pm \sage{round(odrfit.sd_beta[1],5)}$$
 $$b = \sage{int(odrfit.beta[0])} \pm \sage{int(odrfit.sd_beta[0])}$$
 
-Effettuamo il test del ${\chi}^2$ per verificare la bontà delle ipotesi, ed otteniamo:
-
-$$ \chi^ 2 = \sage{chi}$$
-
-Probabilità $\sage{round(chiprob*100, 2)}\%$.
+Effettuamo il test del ${\chi}^2$ per verificare la bontà delle ipotesi, ed otteniamo un $ \chi^ 2 = \sage{round(chi, 3)}$, che corrisponde a una probabilità del $\sage{round(chiprob*100, 2)}\%$.
 
 
 \section*{Determinazione di una sorgente ignota}
