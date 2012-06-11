@@ -148,34 +148,26 @@ n = \frac{sin(\frac{\alpha + \delta}{2})}{sin(\frac{\alpha}{2})}
 \end{equation}
 in cui $\alpha$ è l'angolo al vertice del prisma, di $60°$, e $\delta$ l'angolo di deviazione minima. Nota: al denominatore del membro di destra si è trascurato di mettere $n_{aria}=1$.\\
 
-Con tale procedura otteniamo i seguenti valori:
-
-$$a = \sage{round(odrfit.beta[1], 3)} \pm \sage{odrfit.sd_beta[1]}$$
-$$b = \sage{odrfit.beta[0]} \pm \sage{odrfit.sd_beta[0]}$$
-$$ \chi^ 2 = \sage{chi}$$
-
 Dati raccolti
 
 \begin{center}
  \sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$ & $\delta$ & $\sigma_n$")}
 \end{center}
 
-
-In cui l'errore su $n$ è dato dall'errore su $\delta = 0.0087$ rad tramite la funzione:
+In cui l'errore su $n$ è dato dall'errore su $\delta = \sage{sigmadel}$ rad tramite la funzione:
 
 $$\sigma_n(\delta): \sage{derror}$$
 
-
 Dal fit otteniamo i seguenti parametri:
 
-$$a = \sage{odrfit.beta[1]} \pm \sage{odrfit.sd_beta[1]}$$
-$$b = \sage{odrfit.beta[0]} \pm \sage{odrfit.sd_beta[0]}$$
+$$a = \sage{round(odrfit.beta[1],4)} \pm \sage{round(odrfit.sd_beta[1],5)}$$
+$$b = \sage{int(odrfit.beta[0])} \pm \sage{int(odrfit.sd_beta[0])}$$
 
 Effettuamo il test del ${\chi}^2$ per verificare la bontà delle ipotesi, ed otteniamo:
 
 $$ \chi^ 2 = \sage{chi}$$
 
-Probabilità $\sage{chiprob}$.
+Probabilità $\sage{round(chiprob*100, 2)}\%$.
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/spettro-cauchy.png}
