@@ -229,52 +229,50 @@ $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
 
 \begin{sagesilent}
 
-rcf = np.recfromcsv('dati/C3/RCfun.csv',delimiter="\t")
-freq = rcf['frequenza']
-volt = rcf['v_out']/rcf['v_in']
+rcf = np.recfromcsv('dati/C3/RCfun.csv')
+freq = np.array(rcf['frequenza'])
+volt = np.array(rcf['v_out']/rcf['v_in'])
 yerr = 0.05
-xerr = 0
-
-print freq
-print volt
 
 var('x,C')
 def funz(x, C):
-    return 667/(((667)^2)+((1./x)^2*1/(2*pi*C)^2))^(1/2)
+    return func([C],x)
     
 def func(P,x):
-    return 667/(((667)^2)+((1./x)^2*1/(2*pi*P[0])^2))^(1/2)
+    return 667/np.sqrt( 667^2+ ((1./x)*(1/2*n(pi)*P[0]))**2  )
     
 mymod = odr.Model(func)
 mydata = odr.RealData(freq,volt)
 
-myodr = odr.ODR(mydata, mymod, beta0=[1.,1.], maxit=100)
-#out = myodr.run()
+myodr = odr.ODR(mydata, mymod, beta0=[20.], maxit=10000)
+out = myodr.run()
+out.pprint()
 
-#chi = chiquad(freq,volt,funz,ysigma=float(0.05),param=[out.beta[0]])
- 
+chi = chiquad(freq,volt,funz,ysigma=float(0.05),param=out.beta)
+print "Chi^2 = %.5f" % chi
  
 plt.clf()
 
 xin = np.arange(min(freq),1.5*max(freq),10)
-yin = funz(xin,out.beta[0])
+yin = func(out.beta, xin)
+
 plt.plot(xin,yin,'--')
+plt.plot(freq,volt,'ro')
 plt.ylabel(r"$D.d.p$ $(V)$ ")
 plt.xlabel(r"$Tempo$ $(\mu s)$")
 plt.grid(True)
 plt.savefig("grafici/C3/ddpcond.png",dpi=300)
 
- 
 \end{sagesilent}
 
 
-Dal fit otteniamo: $C=360 \cdot 10^{-9} F $ in ottimo accordo con il valore noto.
+Dal fit otteniamo: $C=\sage{out.beta[0]} \pm \sage{out.sd_beta[0]}$ in ottimo accordo con il valore noto.
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/ddpcond.png}
 \end{center}
 
-Su questo fit si ha un $\chi^2=0.637$, e un $\tilde{\chi}^2 = 0.091$, a riflettere un ottimo accordo.
+Su questo fit si ha un $\chi^2=\sage{round(chi,3)}$, e un $\tilde{\chi}^2 = 0.091$, a riflettere un ottimo accordo.
 
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/fasecap.png}
