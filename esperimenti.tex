@@ -123,7 +123,7 @@ def stampa_dati(datiarr, header):
   s += "%s \\\\" % (header)
   s += r"\midrule"
   for i in range(0, len(datiarr)):
-    a = ["%.3G" %x for x in datiarr[i]]
+    a = ["%.5G" %x for x in datiarr[i]]
     s += "%s \\\\" % join(a, "&")
   s += r"\end{tabular}"
   return s

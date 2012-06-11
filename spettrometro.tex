@@ -88,18 +88,20 @@ dati = np.recfromcsv('dati/spettro-cauchy.csv')
 var('n, alpha, x, P')
 var('delta', latex_name=r'\delta')
 var('sigma_delta', latex_name=r'\sigma_{\delta}')
-d(delta)=sin((alpha+delta)/2)/sin(alpha/2)
 
-derror = (d.diff())*sigma_delta
+enne(delta)=sin((alpha+delta)/2)/sin(alpha/2)
+
+derror = (enne.diff())*sigma_delta
 sigmadel=0.0087*0.5
 alpha_nostro=1.047
 
 def ret_error(dato):
   res = derror(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n']),
                     sigma_delta=sigmadel)
-  return abs(res[0])
-  
+  return round(abs(res[0]), 4)
+
 errorsarr = np.array([ret_error(dato) for dato in dati ])
+dcalc = np.array([enne(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n'])).n(digits=3) for dato in dati ])
 
 #
 # Calcolato l'errore, facciamo il fit
@@ -116,18 +118,18 @@ odrfit, chi, chiprob = fit_chiquad(l, n, func, init_guess=[1.,1.], ysigma=errors
 xin = np.arange(0.9*min(l),1.3*max(l),2*max(l)/10)
 yin = func(odrfit.beta, xin)
 
-dcalc = np.array([float(d(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n'])).n(digits=2) ) for dato in dati ])
-
 print dati
 print dcalc
 print errorsarr
+dati = rf.drop_fields(dati, 'n')
+dati = ml.rec_append_fields(dati, "n", dcalc)
 dati = ml.rec_append_fields(dati, "error_d", errorsarr)
 
 plt.clf()
-plt.plot(l,n,'ro')
 plt.plot(xin,yin,'k--')
 plt.grid(True,which="both")
-plt.errorbar(l,n,errorsarr,np.zeros_like(errorsarr),'bo')
+plt.errorbar(l,n,errorsarr,np.zeros_like(errorsarr),'b|')
+plt.plot(l,n,'ro')
 
 plt.grid(True,which="both")
 plt.savefig("grafici/spettro-cauchy.png", dpi=300)
@@ -151,7 +153,7 @@ in cui $\alpha$ è l'angolo al vertice del prisma, di $60°$, e $\delta$ l'angol
 Dati raccolti:
 
 \begin{center}
- \sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$ & $\delta$ & $\sigma_n$")}
+ \sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $\delta$ (rad) & $n$ & $\sigma_n$")}
 \end{center}
 
 \begin{center}
@@ -175,7 +177,7 @@ $$ \chi^ 2 = \sage{chi}$$
 Probabilità $\sage{round(chiprob*100, 2)}\%$.
 
 
-\section*{Determinazionedi una sorgente ignota}
+\section*{Determinazione di una sorgente ignota}
 Infine utilizziamo i procedimenti e i valori stimati nelle prime parti dell'esperienza  per determinare, mediante lo spettro, il gas corripondente alla sorgente ignota.\\
 
 Calcoliamo n dalla \ref{n}, ed utilizziamo tali valori per ricavare le lunghezze d'onda dalla \ref{Cauchy}, dove adesso sono noti i parametri a e b:
