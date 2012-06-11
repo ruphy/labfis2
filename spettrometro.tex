@@ -188,25 +188,17 @@ Calcoliamo n dalla \ref{n}, ed utilizziamo tali valori per ricavare le lunghezze
 
 
 \begin{sagesilent}
-
-
 dati = np.recfromcsv('dati/spettro-neon.csv')
 
 var('alpha')
 var('delta', latex_name=r'\delta')
 var('sigma_delta', latex_name=r'\sigma_{\delta}')
 
-
 n(delta) = sin((alpha+delta)/2)/sin(alpha/2)
 
 nerror = (n.diff())*sigma_delta
-sigmadel=0.0087
-alpha_nostro=1.047
 coeff1=9333.5
 coeff2=1.5919
-sigma_a = 0.000766
-sigma_b = 164.4
-
 
 def ret_error(dato):
   res = nerror(delta=dato['delta']).subs(alpha=alpha_nostro, sigma_delta=sigmadel)
@@ -220,6 +212,7 @@ ncalc = np.array([float(n(delta=dato['delta']).subs(alpha=alpha_nostro).n(digits
 
 var('a', 'b')
 var('enne', latex_name='n')
+var('sigma_a', 'sigma_b')
 
 l(enne)=sqrt(b/(enne-a))
 
@@ -227,49 +220,35 @@ lcalc= np.array([float(l(enne=dato,digits=4).subs(b=coeff1, a=coeff2)  ) for dat
 
 #Propagazione errori
 
-var('sigma_a', 'sigma_b')
-
 lerror(a,b)=sqrt(b/(enne-a))
 dif = lerror.diff()
-s_l = sqrt(dif[0]*sigma_a +dif[1]*sigma_b)
 
-#show(s_l)
 
-#dif=vector([lerror.diff(a), lerror.diff(b)])
+nostraa = odrfit.beta[1]
+nostrab = odrfit.beta[0]
+nostrasigmaa = odrfit.sd_beta[1]
+nostrasigmab = odrfit.sd_beta[0]
 
-#def errscal(dato):
- # errs = vector([sigma_a, sigma_b])
- # slam = vector([0, 0])
- # diffVal = dif(a=coeff1, b=coeff2, digits=4).subs(enne=dato)
-  
- # for i in range(0, len(dif)):
- #     slam[i] = (diffVal[i]*errs[i])
-    
- # return abs(slam)
+s_l = sqrt((dif[0]*sigma_a)**2+(dif[1]*sigma_b)**2).subs(a=nostraa, b=nostrab, sigma_a=nostrasigmaa, sigma_b=nostrasigmab)
 
-#print 'ncalc', ncalc
-#def errscal(dato):
-    #dato = s_l.subs(sigma_a=sigma_a, sigma_b=sigma_b, a=a, b=b, n=dato['n'])
-#    return dato
-#errorl = np.array([float(errscal(trick) ) for trick in ncalc ])
+def errscal(x):
+    return s_l.subs(enne=x)
 
-#print dati
-#print ncalc
-#print errorsarr
-#print lcalc
-#print errorl
+errorl = np.array([float(errscal(trick)) for trick in ncalc ])
 
 teorici = dati['teorici']
-dati2 = ml.rec_drop_fields(dati, "teorici")
-print dati2.dtype
-dati = ml.rec_append_fields(dati, "n", ncalc)
+dati = rf.drop_fields(dati, 'teorici')
+dati = rf.append_fields(dati, "n", ncalc)
 dati = ml.rec_append_fields(dati, "error_n", errorsarr)
 dati = ml.rec_append_fields(dati, "l", lcalc)
+dati = ml.rec_append_fields(dati, "errorl", errorl)
 dati = ml.rec_append_fields(dati, "lteorici", teorici)
 \end{sagesilent}
 
+$$\sigma_\lambda \sage{sqrt((dif[0]*sigma_a)**2+(dif[1]*sigma_b)**2)}$$
+
 \begin{center}
-\sagestr{stampa_dati(dati, r"  $\delta$ & $n$ & $\sigma_n$ & $\lambda$ & $\lambda$ teorici") }
+\sagestr{stampa_dati(dati, r"$\delta$ & $n$ & $\sigma_n$ & $\lambda$ & $\sigma_\lambda$& $\lambda$ teorici") }
 \end{center}
 
 
