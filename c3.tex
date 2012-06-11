@@ -22,7 +22,7 @@ La resistenza equivalente sul circuito è quindi:
 
 \subsubsection{Nota sugli errori}
 Tutte le misure di questa esperienza sono state effettuate osservando un display sul quale l'oscilloscopio rappresenta l'onda. La risoluzione (x,y) del display, dove x è l'asse temporale e y l'asse del potenziale, può essere variata a piacimento. 
-Questo comporta una certa difficoltà nell'analisi degli errori, in quanto è impossibile conoscere l'incertezza della misura. Abbiamo ritenuto di stimare gli errori mantendendo costante l'errore relativo.
+Questo comporta una certa difficoltà nell'analisi degli errori. Per superarla, abbiamo notato che l'incertezza di ogni misura sulla misura stessa è un valore che rimane costante nel tempo, perchè abbiamo sempre cercato di non variare la dimensione dell'onda sullo schermo. Questo valore è tra il $4\%$ e l'$8\%$ del valore della singola misura. 
 
 
 \section{Corrente impulsata: Studio del $\tau$ del circuito}
@@ -98,7 +98,7 @@ plt.savefig("grafici/C3/RCtau.png",dpi=300)
 
 Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)}\pm \sage{round(out.sd_beta[1],2)}\ \mu s$.
 Valore atteso: $\tau=RC=266.8\ \mu s$, con R=$727\ \Omega$.
-L'errore è l'incertezza della misura del tempo e del potenziale, letti sul display dell'oscilloscopio. Per quanto riguarda il tempo, l'errore è stata assunto trascurabile poichè abbiamo campionato usando la griglia dell'oscilloscopio; per quanto riguarda il potenziale, abbiamo stimato un'errore percentuale del 8\%, che è circa il rapporto tra l'incertezza dello strumento e il valore della misura. L'incertezza sulla misura non è costante, perchè abbiamo variato più volte la risoluzione dello strumento al fine di ottenere dati più precisi.
+L'errore è l'incertezza della misura del tempo e del potenziale, letti sul display dell'oscilloscopio. Per quanto riguarda il tempo, l'errore è stata assunto trascurabile poichè abbiamo campionato usando la griglia dell'oscilloscopio; per quanto riguarda il potenziale, abbiamo stimato un'errore percentuale del 8\%, che è circa il rapporto tra l'incertezza dello strumento e il valore della misura. 
 \\
 Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$:
 
@@ -289,7 +289,7 @@ L'errore $\sigma_v$ deriva dagli errori su $V_{out}$ e $V_{in}$:
 
 $\sigma_V = \sqrt{\frac{\sigma_{out}^2}{V_{in}^2} + \frac{\sigma_{in}^2}{V_{in}^4} }$
 
-Per questa formula di propagazione, l'errore risulta irrilevante. Abbiamo posto quindi sovrastimato l'errore a 0.01.
+Per questa formula di propagazione, l'errore risulta irrilevante. %Nei calcoli l'ho posto a 0.01 volt che scriviamo?'
 
 %Fit Phi per RC
 \begin{sagesilent}
@@ -334,19 +334,20 @@ out.pprint()
 
 \end{sagesilent}
 
-L'errore su $\phi$ è stato supposto pari al $6\%$ di $\phi$ stessa. !!
-
-\begin{center}
- \includegraphics[scale=0.70]{grafici/C3/RCfase.png}
-\end{center}
 
 Ora interpolo i dati della $ \phi$ utilizzando la funzione:
 
 $$ \phi = \arctan \frac{1}{2\pi\nu C R} $$
 
+
+\begin{center}
+ \includegraphics[scale=0.70]{grafici/C3/RCfase.png}
+\end{center}
+
+
 Ricavo $C=264.90 \pm 10.1\ nF$.
 Ottengo un $\chi^2 = \sage{round(chi,3)}$ con $d.o.f= \sage{len(deltaphi)-1}$ e p-value $=\sage{chdtrc(ddof,float(chi))}$
-
+L'errore su y è $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$. Abbiamo supposto $\sigma_{t}$ proporzionale al tempo (è l'incertezza sulla lettura) e pari al $6\%$.
 Per questo secondo valore di C, $\omega_c = \sage{round(omega,2)}\ Hz$. 
 
 \subsubsection{Considerazioni teoriche}
@@ -431,15 +432,7 @@ lerrorstring = "%.2G" % (myout.sd_beta[0]*1000)
 
 
 
-Otteniamo $L=\sage{lstring}\pm\sage{lerrorstring} \ mH$.  Il fit ha un $\chi^2 = \sage{round(chiquadrato,3)}$ con $d.o.f=\sage{len(dati3['v_out']-1)} $ e un p-value$=$.  
-
-L'errore $\sigma_v$ deriva dagli errori su Vout e Vin:
-
-$\sigma_V = \sqrt{\frac{\sigma_{out}^2}{V_{in}^2} + \frac{\sigma_{in}^2}{V_{in}^4} }$
-
-Per questa formula di propagazione, l'errore risulta irrilevante. 
-%Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
-
+Otteniamo $L=\sage{lstring}\pm\sage{lerrorstring} \ mH$.  Non ha senso calcolare il $\chi^2$, poichè la funzione di fit non è in buon accordo con i nostri dati. Sospettiamo la presenza di impedenze ignote che abbiamo trascurato.
 
 %Fit Phi per RL
 \begin{sagesilent}
@@ -494,10 +487,8 @@ dove L è il parametro libero da stimare.
  \includegraphics[scale=0.70]{grafici/C3/RLfase.png}
 \end{center}
 
-L'errore su y è $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$. Abbiamo supposto $\sigma_{t}$ proporzionale al tempo (è l'incertezza sulla lettura) e pari al $6\%$.
 
-$L=\sage{round(out.beta[0],4)}\pm\sage{round(out.sd_beta[0],5)}\ H$. Il fit ha un $\chi^2 = \sage{round(chi,2)}$ con $d.o.f= \sage{len(freq)-1}$ e p-value:0.18.
-\\
+$L=\sage{round(out.beta[0],4)}\pm\sage{round(out.sd_beta[0],5)}\ H$. Il fit ha un $\chi^2 = \sage{round(chi,2)}$ con $d.o.f= \sage{len(freq)-1}$ e p-value:0.18. Per l'analisi degli errori, valgono le considerazioni fatte in precedenza per il circuito RC.\\
 
 La frequenza di taglio viene definita come $\omega_c = R/L$. Usando la L di questo fit, $\omega_c = \sage{round(omega,2)}\ Hz$. 
 \\
