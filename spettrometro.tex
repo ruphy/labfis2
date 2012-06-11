@@ -156,8 +156,11 @@ plt.plot(l,n,'ro')
 plt.plot(xin,yin,'--')
 plt.grid(True,which="both")
 plt.savefig("grafici/spettro-cauchy.png", dpi=300)
-
 \end{sagesilent}
+
+\begin{center}
+ \includegraphics[scale=0.75]{grafici/spettro-cauchy.png}
+\end{center}
 
 
 $$a = \sage{odrfit.beta[1]} \pm \sage{odrfit.sd_beta[1]}$$
@@ -330,7 +333,8 @@ ncalc = np.array([float(n(delta=dato['delta']).subs(alpha=alpha_nostro).n(digits
 
 #Determinazione delle lambda incongite
 
-var('a', 'b', 'enne')
+var('a', 'b')
+var('enne', latex_name='n')
 
 l(enne)=sqrt(b/(enne-a))
 
@@ -338,11 +342,13 @@ lcalc= np.array([float(l(enne=dato,digits=4).subs(b=coeff1, a=coeff2)  ) for dat
 
 #Propagazione errori
 
-#var('sigma_a', 'sigma_b')
+var('sigma_a', 'sigma_b')
 
-#lerror(a,b)=sqrt(b/(enne-a))
+lerror(a,b)=sqrt(b/(enne-a))
+dif = lerror.diff()
+s_l = sqrt(dif[0]*sigma_a +dif[1]*sigma_b)
 
-#dif = lerror.differentiate()
+#show(s_l)
 
 #dif=vector([lerror.diff(a), lerror.diff(b)])
 
@@ -357,10 +363,10 @@ lcalc= np.array([float(l(enne=dato,digits=4).subs(b=coeff1, a=coeff2)  ) for dat
  # return abs(slam)
 
 #print 'ncalc', ncalc
-
+#def errscal(dato):
+    #dato = s_l.subs(sigma_a=sigma_a, sigma_b=sigma_b, a=a, b=b, n=dato['n'])
+#    return dato
 #errorl = np.array([float(errscal(trick) ) for trick in ncalc ])
-
-
 
 #print dati
 #print ncalc
