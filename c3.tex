@@ -346,7 +346,7 @@ $$ \phi = \arctan \frac{1}{2\pi\nu C R} $$
 
 
 Ricavo $C=264.90 \pm 10.1\ nF$.
-Ottengo un $\chi^2 = \sage{round(chi,3)}$ con $d.o.f= \sage{len(deltaphi)-1}$ e p-value $=\sage{chdtrc(ddof,float(chi))}$
+Ottengo un $\chi^2 = \sage{round(chi,3)}$ con $d.o.f= \sage{len(deltaphi)-1}$ e p-value $=\sage{round(chdtrc(ddof,float(chi)),3)}$
 L'errore su y è $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$. Abbiamo supposto $\sigma_{t}$ proporzionale al tempo (è l'incertezza sulla lettura) e pari al $6\%$.
 Per questo secondo valore di C, $\omega_c = \sage{round(omega,2)}\ Hz$. 
 
@@ -392,7 +392,7 @@ dati3 = np.recfromcsv('dati/C3/RLfun.csv',delimiter="\t")
 dati3 = np.sort(dati3)
 
 deltaV = dati3['v_out']/dati3['v_in']
-yerr = 0.1
+yerr = 0.05
 xerr= 0
 
 var('x,L')
@@ -421,7 +421,7 @@ plt.grid(True)
 plt.ylabel(r"$\frac{V_{out}}{V_{in}}$ ")
 plt.xlabel(r"Frequenza $\nu$ - $(Hz)$")
 plt.savefig("grafici/C3/RLddp.png", dpi=300)
-
+omega = 767/myout.beta[0]
 lstring = "%.4G" % (myout.beta[0]*1000)
 lerrorstring = "%.2G" % (myout.sd_beta[0]*1000)
 \end{sagesilent}
@@ -432,7 +432,10 @@ lerrorstring = "%.2G" % (myout.sd_beta[0]*1000)
 
 
 
-Otteniamo $L=\sage{lstring}\pm\sage{lerrorstring} \ mH$.  Non ha senso calcolare il $\chi^2$, poichè la funzione di fit non è in buon accordo con i nostri dati. Sospettiamo la presenza di impedenze ignote che abbiamo trascurato.
+Otteniamo $L=\sage{lstring}\pm\sage{lerrorstring} \ H$.  Non ha senso calcolare il $\chi^2$, poichè la funzione di fit non è in buon accordo con i nostri dati. Sospettiamo la presenza di impedenze ignote che abbiamo trascurato.
+
+
+La frequenza di taglio viene definita come $\omega_c = R/L$. Usando la L di questo fit, $\omega_c = \sage{round(omega,2)}\ Hz$. 
 
 %Fit Phi per RL
 \begin{sagesilent}
@@ -477,7 +480,7 @@ omega = 767/(out.beta[0])
 \end{sagesilent}
 
 
-Interpolo nuovamente i dati, considerando $\phi$, utilizzando la funzione:
+Interpolo i dati della $\phi$, utilizzando la funzione:
 
 $$ \phi = \arctan \frac{2\pi\nu L}{R} $$
 
@@ -488,7 +491,7 @@ dove L è il parametro libero da stimare.
 \end{center}
 
 
-$L=\sage{round(out.beta[0],4)}\pm\sage{round(out.sd_beta[0],5)}\ H$. Il fit ha un $\chi^2 = \sage{round(chi,2)}$ con $d.o.f= \sage{len(freq)-1}$ e p-value:0.18. Per l'analisi degli errori, valgono le considerazioni fatte in precedenza per il circuito RC.\\
+$L=20.2\pm0.01\ mH$. Il fit ha un $\chi^2 = \sage{round(chi,2)}$ con $d.o.f= \sage{len(freq)-1}$ e p-value:0.18. Per l'analisi degli errori, valgono le considerazioni fatte in precedenza per il circuito RC.\\
 
 La frequenza di taglio viene definita come $\omega_c = R/L$. Usando la L di questo fit, $\omega_c = \sage{round(omega,2)}\ Hz$. 
 \\
@@ -499,4 +502,5 @@ Per $\omega = \omega_c$, essendo in transizione tra i due regime, si ha un compo
 
 L'insieme dei fenomeni da noi osservati in questa secondo parte, ci permette di affermare che il circuito RL da noi costruito agisce come un filtro passa-alto passivo, cioè un filtro che riduce le componenti alle frequenze inferiori a quella di taglio (abbattendo l'ampiezza di $V_{out}$ al diminuire della frequenza , come si vede nel grafico). Il più semplice filtro passa-alto è, infatti, un circuito RL. 
 
-
+\subsubsection{Nota sulle differenze dei valori}
+Non ci è chiara la ragione per la quale le C differe
