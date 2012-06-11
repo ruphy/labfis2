@@ -158,7 +158,8 @@ Dati raccolti:
 \includegraphics[scale=0.75]{grafici/spettro-cauchy.png}
 \end{center}
 
-In cui l'errore su $n$ è dato dall'errore su $\delta = \sage{sigmadel}$ rad tramite la funzione:
+Per le incertezze sugli angoli, sebbene la precisione dello strumento fosse di un secondo d'arco, si è preferito propagare come errore associato alle misure 30", corrispondenti a 0.00873 rad, in quanto la lettura era spesso difficoltosa (a causa della scarsa luce) e sempre affetta da un leggero errore di parallasse. La propagazione, infine, avviene secondo la legge:
+%In cui l'errore su $n$ è dato dall'errore su $\delta = \sage{sigmadel}$ rad tramite la funzione:
 
 $$\sigma_n(\delta): \sage{derror}$$
 
@@ -272,8 +273,10 @@ dati = ml.rec_append_fields(dati, "lteorici", teorici)
 \end{center}
 
 
-Dal confronto con i valori tabulati otteniamo che l'accordo migliore è con lo spettro del neon. Infatti, come si può osservare:
+%Dal confronto con i valori tabulati otteniamo che l'accordo migliore è con lo spettro del neon. Infatti, come si può osservare:
 
 
 
+Le $\lambda$ ottenute dall'elaborazione sono in ottimo accordo con le lunghezze d'onda corrispondenti nello spettro del Neon. Dei valori tabulati per tale elemento si è scelto di affiancare, per il confronto con i nostri dati, quelle con intensità maggiore, talvolta a scapito di un accordo ideale. Il test del ${\chi}^2$ conferma l'ipotesi fatta:
 
+%inserire test chi quadro valori attesi-teorici etc
