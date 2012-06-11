@@ -8,16 +8,15 @@ A tal fine costruiamo un circuito con i seguenti elementi:
 \end{center}
 
 \begin{itemize}
-  \item Generatore di onde
-  \item Un condensatore di capacità 367 $nF$
+  \item Generatore di onde di R= 50 $\Omega$
+  \item Un condensatore di capacità 367 $nF$, misurata con il multimetro
   \item Un'induttore di induttanza sconosciuta, e resistenza 40 $\Omega$.
   \item Un oscilloscopio con due sonde
-  \item Una resistenza di 667 $\Omega$ 
+  \item Una resistenza di 677 $\Omega$ 
 \end{itemize}
 
-\section{Corrente impulsata}
+\section{Corrente impulsata: Studio del $\tau$ del circuito}
 \subsection{Procedimento}
-
 
 Per simulare l'apertura e la chiusura del circuito impostiamo nel generatore la modalità onda quadra. Colleghiamo la prima sonda all'ingresso del circuito, subito prima del condensatore: in tal modo l'oscilloscopio confronta il segnale in ingresso con la messa a terra, e visualizza a schermo la differenza di potenziale, restituendo sul display l'onda quadra prodotta dal generatore.  
 Analogamente una seconda sonda, posta ai capi della resistenza, visualizza la forma dell'onda caratteristica della carica o della scarica del condensatore/induttore. \\
@@ -49,7 +48,7 @@ $$V_R = \varepsilon e^{-t/\tau}$$
 
 
 
-%Qui
+%Tau per RC
 \begin{sagesilent}
 
 rct = np.recfromcsv('dati/C3/RCtau.csv')
@@ -73,23 +72,23 @@ chi = chiquad(tempo,volt,fu1,ysigma=float(0.4),param=[out.beta[0],out.beta[1]])
  
 plt.clf()
 plt.errorbar(tempo,volt,yerr,np.zeros_like(yerr),'ro')
-xin = np.arange(min(tempo),1.5*max(tempo),10)
+xin = np.arange(0,1000,10)
 yin = fu1(xin,out.beta[0],out.beta[1])
 plt.plot(xin,yin,'--')
 plt.ylabel(r"$D.d.p$ $(V)$ ")
 plt.xlabel(r"$Tempo$ $(\mu s)$")
 plt.grid(True)
-plt.savefig("grafici/C3/rct.png",dpi=300)
+plt.savefig("grafici/C3/RCtau.png",dpi=300)
 
 \end{sagesilent}
 
 
 \begin{center}
- \includegraphics[scale=0.70]{grafici/C3/rct.png}
+ \includegraphics[scale=0.70]{grafici/C3/RCtau.png}
 \end{center}
 
-Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)}\pm \sage{round(out.sd_beta[1],2)} \mu s$.
-Valore atteso: $\tau=RC=248.5 \mu s$
+Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)}\pm \sage{round(out.sd_beta[1],2)}\ \mu s$.
+Valore atteso: $\tau=RC=266.8\ \mu s$, con R=$727\ \Omega$
 
 Nella misura abbiamo riscontrato un errore $\sigma_y= 0.4\ V$.
 Per verificare l'accordo tra la legge e la distribuzione dei valori osservati operiamo il test del $\chi^2$:
@@ -122,7 +121,7 @@ Interpoliamo i dati raccolti con la curva caratteristica della carica del circui
 
 $$V_R = \varepsilon \left( 1-e^{-t/\tau} \right)$$
 
-%Qui
+%Tau per RL
 \begin{sagesilent}
  
 rlt = np.recfromcsv('dati/C3/RLtau.csv')
@@ -153,7 +152,7 @@ plt.plot(xin,yin,'b--')
 plt.ylabel(r"$D.d.p$ $(V)$ ")
 plt.xlabel(r"$Tempo$ $(\mu s)$")
 plt.grid(True)
-plt.savefig("grafici/C3/rlt.png",dpi=300)
+plt.savefig("grafici/C3/RLtau.png",dpi=300)
 
 \end{sagesilent}
 
@@ -164,7 +163,7 @@ Non conoscendo a priori il valore di L non possiamo valutare l'accordo con il va
 
 I dati graficati:
 \begin{center}
- \includegraphics[scale=0.70]{grafici/C3/rlt.png}
+ \includegraphics[scale=0.70]{grafici/C3/RLtau.png}
 \end{center}
 
 Otteniamo un valore: $\chi^2 = \sage{round(chi,2)} $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$, per un accordo perfetto.
@@ -228,9 +227,10 @@ Lasciamo C come parametro libero, e interpoliamo i valori raccolti di $V_{out}$ 
 
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
 
+%Fit DDP per RC
 \begin{sagesilent}
 
-rcf = np.recfromcsv('dati/C3/RCfun.csv',delimiter="\t")
+rcf = np.recfromcsv('dati/C3/RCfun.csv')
 freq = rcf['frequenza']
 freq = freq.astype(float)
 volt = rcf['v_out']/rcf['v_in']
@@ -265,8 +265,7 @@ plt.plot(xin,yin,'b--')
 plt.ylabel(r"$D.d.p$ $(V)$ ")
 plt.xlabel(r"$Tempo$ $(\mu s)$")
 plt.grid(True)
-np.set_printoptions(precision=4)
-plt.savefig("grafici/C3/ddpcond.png",dpi=300)
+plt.savefig("grafici/C3/RCddp.png",dpi=300)
  
 \end{sagesilent}
 
@@ -274,12 +273,12 @@ plt.savefig("grafici/C3/ddpcond.png",dpi=300)
 Dal fit otteniamo: $C=365.42 \pm  6.11\ nF $ in ottimo accordo con il valore noto.
 
 \begin{center}
- \includegraphics[scale=0.70]{grafici/C3/ddpcond.png}
+ \includegraphics[scale=0.70]{grafici/C3/RCddp.png}
 \end{center}
 
 Su questo fit si ha un $\chi^2=\sage{round(chi,3)}$, e un $\tilde{\chi}^2 = \sage{round(chir,3)}$, a riflettere un ottimo accordo.
 
-
+%Fit Phi per RC
 \begin{sagesilent}
 
 deltaphi= rcf['frequenza']*rcf['tempo']*2*n(pi)*10^(-6)
@@ -314,7 +313,7 @@ plt.plot(xin,yin,'b--')
 plt.ylabel(r"$\phi (rad)$ ")
 plt.xlabel(r"$\nu$ Frequenza $(Hz)$")
 plt.grid(True)
-plt.savefig("grafici/C3/fasecap.png",dpi=300)
+plt.savefig("grafici/C3/RCfase.png",dpi=300)
 out.pprint()
 omega = 1/(677*out.beta[0])
 \end{sagesilent}
@@ -322,7 +321,7 @@ omega = 1/(677*out.beta[0])
 
 
 \begin{center}
- \includegraphics[scale=0.70]{grafici/C3/fasecap.png}
+ \includegraphics[scale=0.70]{grafici/C3/RCfase.png}
 \end{center}
 
 Ora interpolo i dati della $ \phi$ utilizzando la funzione:
@@ -334,7 +333,11 @@ Tramite il test del $\chi^2$ verifico l'accordo con i nostri dati, ottenendo un 
 \\
 
 
-La frequenza di taglio si definisce come $\omega_c = \frac{1}{RC}$. Nel nostro caso $\omega_c = \sage{round(omega,2)}\ Hz$. Il comportamento del circuito varia a seconda di quanto la nostra frequenza $\omega$ si avvicina al valore della frequenza di taglio. \\
+La frequenza di taglio si definisce come $\omega_c = \frac{1}{RC}$. Nel nostro caso $\omega_c = \sage{round(omega,2)}\ Hz$. 
+\\
+
+\subsubsection{Considerazioni teoriche}
+Il comportamento del circuito varia a seconda di quanto la nostra frequenza $\omega$ si avvicina al valore della frequenza di taglio. \\
 Per frequenze molto basse il carattere capacitivo dell'impedenza domina e pertanto la caduta di potenziale si trova tutta ai capi del condensatore, e la fase $\phi \simeq -\frac{\pi}{2}$. Viceversa per frequenze molto alte, domina il comportamento resistivo e lo sfasamento diviene: $ \phi \simeq 0$. \\  
 Per $\omega \simeq \omega_c$, siamo nella transizione tra i due regimi e le impedenze si equivalgono. La fase diviene: $ \phi \simeq -\pi/4$.  \\
 
@@ -361,53 +364,38 @@ Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) & $\phi (rad)$ \\
 \end{center}
 
 
-\begin{center}
- \includegraphics[scale=0.70]{grafici/C3/ddpindu.png}
-\end{center}
-
 Anche questa volta interpoliamo i dati raccolti con la funzione:
 
 $$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
 
-La stima di L risulta in ottimo accordo con quella realizzata nella prima parte dell'esperienza.
-($L=1.2$ mH)
+\begin{center}
+ \includegraphics[scale=0.70]{grafici/C3/RLddp.png}
+\end{center}
 
-Il test del $\chi^2$ conferma la validità delle ipotesi fatte ($\chi^2 = 0.089$).
-
-Interpolo nuovamente i dati, considerando $\phi$, utilizzando la funzione:
-
-$$ \phi = \arctan \frac{2\pi\nu L}{R} $$
-
-dove L è il parametro libero da stimare.
-
+%Fit DDP per RL
 \begin{sagesilent}
 
 #Fit del ddp in funzione della frequenza per l'induttore
-dati3 = load("sobj/C3-Induttore2.sobj", verbose=False)
+dati3 = np.recfromcsv('dati/C3/RLfun.csv',delimiter="\t")
 dati3 = np.sort(dati3)
 
-#dati3 = dati3[dati3['frequenza'] > 4500]
 deltaV = dati3['v_out']/dati3['v_in']
+yerr = 0.1
+xerr= 0
 
-var('x,L,a')
+var('x,L')
 
 def func(x, L):
     return (667)/(np.sqrt((667+90)^2+(x*2*n(pi)*L)^2)-50)
 
 def fu(P, x):
     return func(x, P[0])
-
-ntuple = list((dati3['frequenza'][i], deltaV[i]) for i in range(0, len(deltaV)))
-fit = find_fit(ntuple, func, parameters=[L], initial_guess=[0.002], variables=[x],solution_dict=True)
  
 import scipy.odr as odr
 mymodel = odr.Model(fu)
 mydata = odr.RealData(dati3['frequenza'], deltaV)
 myodr = odr.ODR(mydata, mymodel, beta0=[0.002],  maxit=1000)
 myout = myodr.run()
-
-
-#(pars, errors, hes) = odr.odr(fu, [0.002, 50], deltaV, dati3['frequenza'])
 
 chiquadrato = chiquad(np.array(dati3['frequenza']), deltaV, fu, ysigma=float(0.05), param=[myout.beta])
 
@@ -416,7 +404,7 @@ plt.semilogx(dati3['frequenza'],deltaV , 'ro')
 xsp = np.arange(0, 500000, 500)
 ysp = func(xsp, myout.beta[0])
 plt.plot(xsp, ysp, 'b--')
-
+plt.errorbar(dati3['frequenza'],deltaV,yerr,xerr,fmt=None)
 plt.grid(True)
 plt.ylabel(r"$\frac{V_{out}}{V_{in}}$ ")
 plt.xlabel(r"Frequenza $\nu$ - $(Hz)$")
@@ -426,36 +414,40 @@ lstring = "%.4G" % (myout.beta[0]*1000)
 lerrorstring = "%.2G" % (myout.sd_beta[0]*1000)
 \end{sagesilent}
 
-\begin{center}
- \includegraphics[scale=0.70]{grafici/C3/faseindu.png}
-\end{center}
 
-rlt = np.recfromcsv('dati/C3/RLfun.csv')
-deltaphi= rcf['frequenza']*rcf['tempo']*2*n(pi)*10^(-6)
+Da questo fit, otteniamo una $L=\sage{lstring}\pm\sage{lerrorstring}$ mH, e un $\chi^2 = \sage{round(chiquadrato,3)} $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
+\\
+
+
+%Fit Phi per RL
+\begin{sagesilent}
+
+rlf = np.recfromcsv('dati/C3/RLfun.csv',delimiter="\t")
+freq = rlf['frequenza']
+deltaphi= rlf['frequenza']*rlf['delta']*2*n(pi)*10^(-6)
 yerr = deltaphi*0.06
 xerr= 0
 
-var('x,C')
+var('x,L')
 def funz(x, L):
-    return arctan(x*2*n(pi)*677/L)
+    return arctan(x*2*n(pi)*L/677)
     
 def func(P,x):
-    return arctan(x*2*n(pi)*677/P[0])
+    return arctan(x*2*n(pi)*P[0]/677)
     
 mymod = odr.Model(func)
 mydata = odr.RealData(freq,deltaphi)
 
-myodr = odr.ODR(mydata, mymod, beta0=[0.0001], maxit=5000)
+myodr = odr.ODR(mydata, mymod, beta0=[0.012], maxit=1000)
 out = myodr.run()
 
 chi = chiquad(freq,deltaphi,funz,ysigma=float(0.1),param=[out.beta[0]])
 
 chir = chi/(len(freq)-1)
  
- 
 plt.clf()
 
-xin = np.arange(min(freq),1.5*max(freq),10)
+xin = np.arange(0.5*min(freq),1.5*max(freq),10)
 yin = funz(xin,out.beta[0])
 plt.semilogx(freq,deltaphi,'ro')
 plt.errorbar(freq,deltaphi,yerr,xerr,fmt=None)
@@ -463,15 +455,33 @@ plt.plot(xin,yin,'b--')
 plt.ylabel(r"$\phi (rad)$ ")
 plt.xlabel(r"$\nu$ Frequenza $(Hz)$")
 plt.grid(True)
-plt.savefig("grafici/C3/fasecap.png",dpi=300)
+plt.savefig("grafici/C3/RLfase.png",dpi=300)
 out.pprint()
-omega = 1/(677*out.beta[0])
+omega = 677/(out.beta[0])
 
-Da questo fit, otteniamo una $L=\sage{lstring}\pm\sage{lerrorstring}$ mH, e un $\chi^2 = \sage{round(chiquadrato,3)} $, considerando una $\sigma_{y_i} = 2 \pi \nu_i \sigma_{t}$, dove  per $\sigma_t = 2 \mu s$. L'incertezza sulla frequenza è trascurabile, e per questo motivo abbiamo propagato l'incertezza solo su $\sigma_t$. Poichè $\sigma_{y_i}$ è proporzionale alla frequenza, l'incertezza della misura di $\phi$ sulle frequenze più elevate diviene dunque rilevante rendendo possibile accettare un $\chi^2$ così piccolo, pur per un fit che, graficamente, non sembra in buon accordo. Il grafico è inoltre logaritmico, e accentua questo effetto. Le stesse considerazioni valgono per il grafico della $\phi$ per il circuito RC.
+\end{sagesilent}
+
+
+Interpolo nuovamente i dati, considerando $\phi$, utilizzando la funzione:
+
+$$ \phi = \arctan \frac{2\pi\nu L}{R} $$
+
+dove L è il parametro libero da stimare.
+
+\begin{center}
+ \includegraphics[scale=0.70]{grafici/C3/RLfase.png}
+\end{center}
+
+$L=\sage{round(out.beta[0],4)}\pm\sage{round(out.sd_beta[0],5)}\ H$ e $\tilde{\chi}^2 = \sage{round(chir,2)}$ con D.o.f =$\sage{len(freq)-1}$
 \\
 
-La frequenza di taglio viene definita come $\omega_c = R/L$. Nel nostro caso $\omega_c = 55\ Khz$. Il comportamento del nostro circuito varia a seconda di quanto la nostra frequenza $\omega$ si avvicina al valore della frequenza di taglio. \\
+La frequenza di taglio viene definita come $\omega_c = R/L$. Usando la L di questo fit, $\omega_c = \sage{round(omega,2)}\ Hz$. 
+\\
+\subsubsection{Considerazioni teoriche}
+Il comportamento del nostro circuito varia a seconda di quanto la nostra frequenza $\omega$ si avvicina al valore della frequenza di taglio. \\
 Per frequenze molto basse il carattere resistivo dell'impedenza domina e pertanto la caduta di potenziale si trova solo ai capi della resistenza; per cui $ \phi \simeq 0$. Viceversa per frequenze molto alte, domina il comportamento induttivo, e lo sfasamento prodotto è simile a quello che introdurrebbe nel circuito un componente puramente induttivo ($\phi \simeq \frac{\pi}{2}$).  \\
 Per $\omega = \omega_c$, essendo in transizione tra i due regime, si ha un comportamento intermedio e la fase diviene: $ \phi = \pi/4$. \\
 
 L'insieme dei fenomeni da noi osservati in questa secondo parte, ci permette di affermare che il circuito RL da noi costruito agisce come un filtro passa-alto passivo, cioè un filtro che riduce le componenti alle frequenze inferiori a quella di taglio (abbattendo l'ampiezza di $V_{out}$ al diminuire della frequenza , come si vede nel grafico). Il più semplice filtro passa-alto è, infatti, un circuito RL. 
+
+
