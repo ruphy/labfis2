@@ -54,7 +54,7 @@ var('lam', latex_name=r'\lambda')
 var('sigma_dtheta', latex_name=r'\sigma_{\Delta\theta}')
 d(dtheta)=n*lam/(sin(dtheta))
 derror = (d.diff())*sigma_dtheta
-sigmadth=2*0.0087
+sigmadth=2*0.00087
 
 dfasterror = fast_float(derror)
 
@@ -116,7 +116,7 @@ Noto il passo del reticolo, possiamo determinare le lunghezze d'onda dello spett
 
 dati = np.recfromcsv('dati/spettro-cauchy.csv')
 
-sigmadel=0.0087*0.5
+sigmadel=0.0002909*5
 alpha_nostro=1.047
 
 # Calcolo dell'errore
@@ -226,59 +226,51 @@ Calcoliamo n dalla \ref{n}, ed utilizziamo tali valori per ricavare le lunghezze
 \begin{sagesilent}
 dati = np.recfromcsv('dati/spettro-neon.csv')
 
-var('alpha')
+var('alpha', 'a', 'b', 'sigma_a', 'sigma_b')
 var('delta', latex_name=r'\delta')
 var('sigma_delta', latex_name=r'\sigma_{\delta}')
-
-n(delta) = sin((alpha+delta)/2)/sin(alpha/2)
-
-nerror = (n.diff())*sigma_delta
-coeff1=9333.5
-coeff2=1.5919
-
-def ret_error(dato):
-  res = nerror(delta=dato['delta']).subs(alpha=alpha_nostro, sigma_delta=sigmadel)
-  return abs(res[0])
-  
-errorsarr = np.array([ret_error(dato) for dato in dati ])
-
-ncalc = np.array([float(n(delta=dato['delta']).subs(alpha=alpha_nostro).n(digits=2) ) for dato in dati ])
-
-#Determinazione delle lambda incongite
-
-var('a', 'b')
 var('enne', latex_name='n')
-var('sigma_a', 'sigma_b')
-
-l(enne)=sqrt(b/(enne-a))
-
-lcalc= np.array([float(l(enne=dato,digits=4).subs(b=coeff1, a=coeff2)  ) for dato in ncalc ])
-
-#Propagazione errori
-
-lerror(a,b)=sqrt(b/(enne-a))
-dif = lerror.diff()
-
 
 nostraa = odrfit.beta[1]
 nostrab = odrfit.beta[0]
 nostrasigmaa = odrfit.sd_beta[1]
 nostrasigmab = odrfit.sd_beta[0]
 
+en(delta) = sin((alpha+delta)/2)/sin(alpha/2)
+nerror = (en.diff())*sigma_delta
+
+el(a,b)=sqrt(b/(enne-a))
+dif = el.diff()
+
+# Propagazione errori
 s_l = sqrt((dif[0]*sigma_a)**2+(dif[1]*sigma_b)**2).subs(a=nostraa, b=nostrab, sigma_a=nostrasigmaa, sigma_b=nostrasigmab)
+s_n = nerror.subs(alpha=alpha_nostro, sigma_delta=sigmadel)
 
-def errscal(x):
-    return s_l.subs(enne=x)
+#Determinazione dei parametri incongiti
 
-errorl = np.array([float(errscal(trick)) for trick in ncalc ])
+ncalc = np.array([en(delta=dato['delta']).subs(alpha=alpha_nostro) for dato in dati ])
+lcalc= np.array([el(b=nostrab, a=nostraa).subs(enne=dato) for dato in ncalc ])
+
+errorl = np.array([s_l(enne=trick) for trick in ncalc ], dtype=float)
+errorn = np.array([s_n(delta=delt) for delt in dati['delta']], dtype=float).flatten()
 
 teorici = dati['teorici']
 dati = rf.drop_fields(dati, 'teorici')
-dati = rf.append_fields(dati, "n", ncalc)
-dati = ml.rec_append_fields(dati, "error_n", errorsarr)
-dati = ml.rec_append_fields(dati, "l", lcalc)
-dati = ml.rec_append_fields(dati, "errorl", errorl)
+dati = rf.append_fields(dati, "n", [round(x, 4) for x in ncalc])
+dati = ml.rec_append_fields(dati, "error_n", [round(x, 4) for x in errorn])
+dati = ml.rec_append_fields(dati, "l", [round(x,0) for x in lcalc])
+dati = ml.rec_append_fields(dati, "errorl", [round(x,0) for x in errorl])
 dati = ml.rec_append_fields(dati, "lteorici", teorici)
+
+fastl = fast_callable(el, vars=[a, b, enne])
+plt.clf()
+xin = np.arange(1.610, 1.639, 0.001)
+yin = fastl(nostraa, nostrab, xin)
+plt.plot(xin, yin, 'k--')
+plt.plot(ncalc, lcalc, 'ro')
+plt.errorbar(ncalc, lcalc, errorl, errorn, fmt=None)
+plt.grid(True)
+plt.savefig("grafici/C3-lambda-n.png", dpi=300)
 \end{sagesilent}
 
 $$\sigma_\lambda \sage{sqrt((dif[0]*sigma_a)**2+(dif[1]*sigma_b)**2)}$$
@@ -286,9 +278,12 @@ $$\sigma_\lambda \sage{sqrt((dif[0]*sigma_a)**2+(dif[1]*sigma_b)**2)}$$
 Utilizzando le formule qui sopra per il calcolo:\footnote{Nota: durante il calcolo della derivata, viene raccolto un segno negativo dal calcolatore nel termine $(a-n)$, che sarà sempre negativo in situazioni fisiche, ma che fa comparire un segno negativo sotto radice, apparentemente altresì inspiegabile.}
 
 \begin{center}
-\sagestr{stampa_dati(dati, r"$\delta$ & $n$ & $\sigma_n$ & $\lambda$ & $\sigma_\lambda$& $\lambda$ teorici") }
+\sagestr{stampa_dati(dati, r"$\delta$ (rad) & $n$ & $\sigma_n$ & $\lambda$ (nm) & $\sigma_\lambda$ (nm) & $\lambda$ teorici") }
 \end{center}
 
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C3-lambda-n.png}
+\end{center}
 
 %Dal confronto con i valori tabulati otteniamo che l'accordo migliore è con lo spettro del neon. Infatti, come si può osservare:
 
