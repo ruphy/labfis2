@@ -42,7 +42,9 @@ Per stabilire il passo del reticolo utilizziamo una sorgente di cui è nota la l
 d = \frac{n \lambda}{\sin(\frac{\theta_{dx}-\theta_{sx}}{2})}
 \end{equation}
 
- Per le incertezze sugli angoli, sebbene la precisione dello strumento fosse di 20 secondi d'arco, si è preferito propagare come errore associato alle misure 5', corrispondenti a 1.4545 mrad, in quanto la lettura era spesso difficoltosa (a causa della scarsa luce) e sempre affetta da un leggero errore di parallasse. Si ha dunque:
+Per le incertezze sugli angoli, sebbene la precisione dello strumento fosse di 20 secondi d'arco, si è preferito propagare come errore associato alle misure 5', corrispondenti a 1.4545 mrad, in quanto la lettura era spesso difficoltosa (a causa della scarsa luce) e sempre affetta da un leggero errore di parallasse.
+
+Si ha dunque:
 
 \begin{sagesilent}
 
@@ -109,11 +111,16 @@ differr=abs(lam.diff())
 errlam=(differr*sigmatheta).subs(sigmatheta=sigthetaval)
 errlamval = np.array([errlam(x).subs(d=dmedia) for x in deltatheta ])
   
+teoriche = [579.07, 546.07, 435.83, 404.66]
+
 dati = rf.drop_fields(dati, 'thetapiu')
 dati = ml.rec_append_fields(dati, 'deltatheta', deltatheta)
 dati = rf.drop_fields(dati, 'thetameno')
 dati = ml.rec_append_fields(dati, 'lam', [round(x, 0) for x in lamvalutata])
 dati = ml.rec_append_fields(dati, 'errlam', [round(x, 1) for x in errlamval])
+dati = ml.rec_append_fields(dati, 'teolam', teoriche)
+
+chiqua = sum(((lamvalutata-teoriche)/errlamval)**2)
 \end{sagesilent}
 
 Noto il passo del reticolo, possiamo determinare le lunghezze d'onda dello spettro del mercurio, secondo la legge:
@@ -121,9 +128,9 @@ Noto il passo del reticolo, possiamo determinare le lunghezze d'onda dello spett
 $$\lambda=\frac{d}{n}\sin\Big(\frac{\theta_+ - \theta_-}{2}\Big)$$
 
 \begin{center}
-\sagestr{stampa_dati(dati, r'$\Delta\theta$ (rad) & $\lambda$ (nm) & $\sigma_\lambda$ (nm)' )}
+\sagestr{stampa_dati(dati, r'$\Delta\theta$ (rad) & $\lambda$ (nm) & $\sigma_\lambda$ (nm) & $\lambda$ teoriche (nm)' )}
 \end{center}
-
+Un veloce conto sul $\chi^2$ ci mostra che questo è uguale a $\sage{round(chiqua, 2)}$, per una probabilità di verifica della legge del $\sage{round(chdtrc(len(teoriche),float(chiqua))*100, 2)}\%$.
 
 \section*{Prisma}
 
