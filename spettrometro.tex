@@ -1,43 +1,4 @@
-%INIZIALIZZAZIONE e LIBRERIE
-\begin{sagesilent}
-#Importo librerie necessarie
-import numpy as np
-from scipy import odr
-import matplotlib.pyplot as plt
-import matplotlib.mlab as ml
-
-#classica funzione chiquadrato, non cancellare
-def chiquad(xdata, ydata, yfunc, ysigma = (), param=()):
-    yteo = yfunc(xdata, *param)
-    ddof = len(xdata) - 1 - len(param)
-    if (np.isscalar(ysigma)):
-        ys = np.ones_like(xdata)*ysigma
-    else:
-        ys = ysigma
- 
-    if (len(ys)):
-        return sum(((ydata-yteo)/ys)**2)
-    else:
-        return sum((ydata-yteo)**2/yteo)
-
-        
-#Funzione stampadati
-def stampa_dati(datiarr, header):
-  s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
-  s += r"}{|c}}"
-  s += "%s \\\\" % (header)
-  s += r"\midrule"
-  for i in range(0, len(datiarr)):
-    a = ["%.3G" %x for x in datiarr[i]]
-    s += "%s \\\\" % join(a, "&")
-  s += r"\end{tabular}"
-  return s
-        
-\end{sagesilent}
-
-
-
-\chapter{ Spettrometro (O3)}
+\chapter{Spettrometro (O3)}
 
 
 \section*{Reticolo}
@@ -117,6 +78,64 @@ Otteniamo $d=\sage{round(media, 3)}\pm\sage{errmedia.n(digits=2)}$ $\mu$m.
 \section*{Prisma}
 
 
+\begin{sagesilent}
+#Fit per ricavare i parametri della relazione di Cauchy
+
+dati = np.recfromcsv('dati/spettro-cauchy.csv')
+
+# Calcolo dell'errore
+
+var('n, alpha, x, P')
+var('delta', latex_name=r'\delta')
+var('sigma_delta', latex_name=r'\sigma_{\delta}')
+d(delta)=sin((alpha+delta)/2)/sin(alpha/2)
+
+derror = (d.diff())*sigma_delta
+sigmadel=0.0087*0.5
+alpha_nostro=1.047
+
+def ret_error(dato):
+  res = derror(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n']),
+                    sigma_delta=sigmadel)
+  return abs(res[0])
+  
+errorsarr = np.array([ret_error(dato) for dato in dati ])
+
+#
+# Calcolato l'errore, facciamo il fit
+#
+
+l = 1./(dati['l']**2)
+n = dati['n']
+
+def func(P,x):
+    return P[0]*x+P[1]
+
+odrfit, chi, chiprob = fit_chiquad(l, n, func, init_guess=[1.,1.], ysigma=errorsarr)
+
+xin = np.arange(0.9*min(l),1.3*max(l),2*max(l)/10)
+yin = func(odrfit.beta, xin)
+
+dcalc = np.array([float(d(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n'])).n(digits=2) ) for dato in dati ])
+
+print dati
+print dcalc
+print errorsarr
+dati = ml.rec_append_fields(dati, "error_d", errorsarr)
+
+plt.clf()
+plt.plot(l,n,'ro')
+plt.plot(xin,yin,'k--')
+plt.grid(True,which="both")
+plt.errorbar(l,n,errorsarr,np.zeros_like(errorsarr),'bo')
+
+plt.grid(True,which="both")
+plt.savefig("grafici/spettro-cauchy.png", dpi=300)
+
+\end{sagesilent}
+
+$$Prob = \sage{chiprob} $$ 
+
 Nella seconda parte dell'esperienza intendiamo verificare la legge di Cauchy:
 \begin{equation}
 n = a + \frac{b}{\lambda^2}
@@ -133,89 +152,19 @@ in cui $\alpha$ è l'angolo al vertice del prisma, di $60°$, e $\delta$ l'angol
 
 Con tale procedura otteniamo i seguenti valori:
 
-\begin{sagesilent}
-#Fit per ricavare i parametri della relazione di Cauchy
-
-dati = np.recfromcsv('dati/spettro-cauchy.csv')
-
-l = 1./(dati['l']**2)
-n = dati['n']
-
-var('x,P')
-
-def func(P,x):
-    return P[0]*x+P[1]
-
-odrfit, chi = fit_chiquad(l, n, func, init_guess=[1.,1.], ysigma=l*0.01)
-
-xin = np.arange(0.9*min(l),1.3*max(l),2*max(l)/10) 
-yin = func(odrfit.beta, xin)
-
-plt.clf()
-plt.plot(l,n,'ro')
-plt.plot(xin,yin,'--')
-plt.grid(True,which="both")
-plt.savefig("grafici/spettro-cauchy.png", dpi=300)
-\end{sagesilent}
-
 \begin{center}
  \includegraphics[scale=0.75]{grafici/spettro-cauchy.png}
 \end{center}
 
 
-$$a = \sage{odrfit.beta[1]} \pm \sage{odrfit.sd_beta[1]}$$
+$$a = \sage{round(odrfit.beta[1], 3)} \pm \sage{odrfit.sd_beta[1]}$$
 $$b = \sage{odrfit.beta[0]} \pm \sage{odrfit.sd_beta[0]}$$
 $$ \chi^ 2 = \sage{chi}$$
 
 Dati raccolti
 
-\begin{sagesilent}
-
-
-import numpy as np
-import matplotlib.mlab as ml
-
-dati = np.recfromcsv('dati/spettro-cauchy.csv')
-
-var('n, alpha')
-var('delta', latex_name=r'\delta')
-var('sigma_delta', latex_name=r'\sigma_{\delta}')
-
-d(delta)=sin((alpha+delta)/2)/sin(alpha/2)
-
-derror = (d.diff())*sigma_delta
-sigmadel=0.0087
-alpha_nostro=1.047
-
-
-def ret_error(dato):
-  res = derror(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n']),
-                    sigma_delta=sigmadel)
-  return abs(res[0])
-  
-errorsarr = np.array([ret_error(dato) for dato in dati ])
-
-dcalc = np.array([float(d(delta=dato['delta']).subs(alpha=alpha_nostro, n=int(dato['n'])).n(digits=2) ) for dato in dati ])
-
-print dati
-print dcalc
-print errorsarr
-dati = ml.rec_append_fields(dati, "error_d", errorsarr)
-
-def stampa_dati(datiarr, header):
-  s = r"\begin{tabular}{c*{" + "%d" % (len(datiarr.dtype)-1)
-  s += r"}{|c}}"
-  s += "%s \\\\" % (header)
-  s += r"\midrule"
-  for i in range(0, len(datiarr)):
-    a = ["%.3G" %x for x in datiarr[i]]
-    s += "%s \\\\" % join(a, "&")
-  s += r"\end{tabular}"
-  return s
-\end{sagesilent}
-
 \begin{center}
-\sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$ & $\delta$ & $\sigma_n$")}
+% \sagestr{stampa_dati(dati, r"$\lambda$ (nm) & $n$ & $\delta$ & $\sigma_n$")}
 \end{center}
 
 
@@ -226,60 +175,12 @@ $$\sigma_n(\delta): \sage{derror}$$
 
 Dal fit otteniamo i seguenti parametri:
 
-\begin{sagesilent}
- #Fit per ricavare i parametri della relazione di Cauchy
-
-
-dati = np.recfromcsv('dati/spettro-cauchy.csv')
-
-l = 1./(dati['l']**2)
-n = dati['n']
-
-var('x,P')
-
-#Questa funzione serve solo al chiquadro e per il grafico
-def fun(x,a,b):
-    return a*x+b
-
-
-#Questa funzione serve per il fit fatto da odr
-def func(P,x):
-    return P[0]*x+P[1]
-
-
-mymodel = odr.Model(func)
-
-mydata = odr.RealData(l,n)
-
-myodr = odr.ODR(mydata, mymodel, beta0=[1.,1.],  maxit=5000)
-myout = myodr.run()
-
-a = myout.beta[0]
-b = myout.beta[1]
-chiquadrato = chiquad(np.array(l), n, fun, ysigma=errorsarr, param=[a,b]) 
-
-   
-plt.clf()
-plt.plot(l,n,'ro')
-xin = np.arange(0.9*min(l),1.3*max(l),2*max(l)/10) 
-yin = fun(xin,myout.beta[0],myout.beta[1])
-plt.plot(xin,yin,'--')
-
-plt.errorbar(l,n,errorsarr,np.zeros_like(errorsarr),'bo')
-
-plt.grid(True,which="both")
-plt.savefig("grafici/spettro-cauchy.png", dpi=300)
- 
-
-\end{sagesilent}
-
-
-$$a = \sage{myout.beta[1]} \pm \sage{myout.sd_beta[1]}$$
-$$b = \sage{myout.beta[0]} \pm \sage{myout.sd_beta[0]}$$
+$$a = \sage{odrfit.beta[1]} \pm \sage{odrfit.sd_beta[1]}$$
+$$b = \sage{odrfit.beta[0]} \pm \sage{odrfit.sd_beta[0]}$$
 
 Effettuamo il test del ${\chi}^2$ per verificare la bontà delle ipotesi, ed otteniamo:
 
-$$ \chi^ 2 = \sage{chiquadrato}$$
+$$ \chi^ 2 = \sage{chi}$$
 
 
 

@@ -74,6 +74,7 @@ import numpy as np
 from scipy import odr
 import matplotlib.pyplot as plt
 import matplotlib.mlab as ml
+from scipy.special import chdtrc
 
 #classica funzione chiquadrato, non cancellare
 def chiquad(xdata, ydata, yfunc, ysigma = (), param=()):
@@ -110,7 +111,9 @@ def fit_chiquad(xdata, ydata, yfunc, init_guess, ysigma = ()):
     else:
         chiquad = sum((ydata-yteo)**2/yteo)
 
-    return (myout, chiquad)
+    prob = chdtrc(ddof,float(chiquad))
+    
+    return (myout, chiquad, prob)
         
 #Funzione stampadati
 def stampa_dati(datiarr, header):
@@ -131,12 +134,12 @@ def stampa_dati(datiarr, header):
 %\include{c1}
 %\include{c2}
 % \include{c3}
-\include{c4}
+% \include{c4}
  %\include{c1}
 % \include{c2}
 % \include{c3}
 
-% \include{spettrometro}
+\include{spettrometro}
  %\include{c1}
 % \include{c2}
 %\include{c4}
