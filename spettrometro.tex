@@ -80,11 +80,32 @@ Per i nostri dati:
 \end{center}
 
 \begin{sagesilent}
-media = np.average(dati['d'], weights=1./dati['error_d']**2)
-errmedia = 1./np.sqrt(sum(1./dati['error_d']**2))
+dmedia = np.average(dati['d'], weights=1./dati['error_d']**2)
+derrmedia = 1./np.sqrt(sum(1./dati['error_d']**2))
 \end{sagesilent}
 
-Otteniamo $d=\sage{round(media, 3)}\pm\sage{round(errmedia, 3)}$ $\mu$m.
+Otteniamo $d=\sage{round(dmedia, 3)}\pm\sage{round(derrmedia, 3)}$ $\mu$m.
+
+\subparagraph*{Determinazione di lunghezze d'onda incognite}
+
+\begin{sagesilent}
+ #Ricaviamo lambda dai valori di theta
+ dati = np.recfromcsv('dati/spettro-hg.csv')
+ 
+ var('deltatheta', 'd') 
+ 
+ lam(deltatheta)=d*((deltatheta)/2)/2
+ 
+ deltatheta = (dati['thetapiu']+dati['thetameno'])2
+ lamvalutata = np.array([(lam(x).subs(d=dmedia) for x in deltatheta ])
+ 
+ differr=lam.diff()
+ sigmatheta=10*
+ 
+\end{sagesilent}
+
+
+Noto il passo del reticolo, possiamo determinare le lunghezze d'onda dello spettro del mercurio, secondo la legge:
 
 
 \section*{Prisma}
