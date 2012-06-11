@@ -163,7 +163,7 @@ Non conoscendo a priori il valore di L non possiamo valutare l'accordo con il va
 
 I dati graficati:
 \begin{center}
- \includegraphics[scale=0.70]{grafici/C3/rlt.png}
+%  \includegraphics[scale=0.70]{grafici/C3/rlt.png}
 \end{center}
 
 Otteniamo un valore: $\chi^2 = \sage{round(chi,2)} $. Dati 7 gradi di libertà, $\tilde{\chi}^2 = 0.05$, per un accordo perfetto.
@@ -248,10 +248,10 @@ def func(P,x):
 mymod = odr.Model(func)
 mydata = odr.RealData(freq,volt)
 
-myodr = odr.ODR(mydata, mymod, beta0=[20.,16.], maxit=5000)
-out = myodr.run()
+myodr = odr.ODR(mydata, mymod, beta0=[1.,1.], maxit=100)
+#out = myodr.run()
 
-chi = chiquad(freq,volt,funz,ysigma=float(0.05),param=[out.beta[0]])
+#chi = chiquad(freq,volt,funz,ysigma=float(0.05),param=[out.beta[0]])
  
  
 plt.clf()
