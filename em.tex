@@ -74,10 +74,10 @@ plt.plot(xin,yin,'b--')
 plt.grid(True)
 
 #trovo minimo dai parametri x=-b/2*a
-min = -myout.beta[1]/(2*myout.beta[0]) 
+min1 = -myout.beta[1]/(2*myout.beta[0]) 
 
 #stampo minimo su grafico
-s = repr(round(min,2))+" $(Hz)$"
+s = repr(round(min1,2))+" $(Hz)$"
 plt.text(680,0.70,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/prova.png",dpi=300)
