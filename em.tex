@@ -53,7 +53,6 @@ volt = batch2['vout']
 yerr = batch2['errv']
 
 
-
 def funz(x,a,b,c):
     return a*x^2+b*x+c
 
@@ -80,7 +79,7 @@ min1 = -myout.beta[1]/(2*myout.beta[0])
 s = repr(round(min1,2))+" $(Hz)$"
 plt.text(680,0.70,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
-plt.savefig("grafici/prova.png",dpi=300)
+plt.savefig("grafici/EM/38.png",dpi=300)
 
 \end{sagesilent}
 
