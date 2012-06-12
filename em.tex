@@ -258,27 +258,48 @@ plt.savefig("grafici/EM/28.png",dpi=300)
 \includegraphics[scale=0.75]{grafici/EM/28.png}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subparagraph*{Calcolo di c}
+\subsection*{Calcolo di c}
 
 A questo punto fittiamo i valori di $\omega$ raccolti al variare di $l$, lunghezza del condensatore, per ricavare $c$ secondo la relazione:
 
 \begin{equation}
- LC = l \epsilon_{0} \mu_{0} \frac{n^2 h ln\frac{R_{int}}{R_{ext}}}{ln \frac{b}{a}}
+ LC = \frac{1}{{\omega}^2} = l \epsilon_{0} \mu_{0} \frac{n^2 h log(\frac{R_{int}}{R_{ext}})}{log (\frac{b}{a})}
 \end{equation}
+
+\begin{segesilent}
+
+#Fit per il calcolo di c
+
+omega=[min1, min2, min3, min4, min5]
+elle=[28, 32, 34, 38, 40]
+
+omegavar=1/omega**2 
+
+def funz(x,a):
+    return a*x
+
+def func(P,x):
+    return funz(x,P[0])
+
+mymod = odr.Model(func)
+mydata = odr.RealData(elle,omegavar)
+myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
+myout = myfit.run()
+
+plt.clf()
+xin = np.arange(min(freq)-10,max(freq)+10,1)
+yin = func(myout.beta,xin)
+plt.plot(elle,omegavar,'ro')
+#plt.errorbar(,volt,yerr,np.zeros_like(yerr),fmt=None)
+plt.plot(xin,yin,'b--')
+plt.grid(True)
+
+plt.savefig("grafici/EM/misurac.png",dpi=300)
+
+%se riesci metti anche l'errore :) ti voglio bene!
+
+\end{segesilent}
+
 
 \chapter{Analisi con capacità parassite in serie}
 \chapter{Analisi con capacità parassite in parallelo}
