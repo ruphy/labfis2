@@ -1,4 +1,60 @@
-\chapter{Dati}
+
+
+\chapter{Dati geometrici}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\midrule
+\textit{Solenoide} & $n$ & $R_{int}$ & $R_{ext}$ & $R_{medio}$ & $l_{circonferenza}$ & $h$ & $A_{sezione}$  \\
+		   & 322 & 0,05	 & 0,0937  & 0,07185 & 0,451446864 & 0,0225 &	0,00098325 \\
+ \midrule
+\end{tabular}
+\end{center}
+
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\midrule
+\textit{Capacità} & $R_{int}$ (cm) & $R_{ext}$ (cm) & $lunghezza$ (cm) & $spessore piastre$ (cm)\\
+   & 5.89 & 3.546  & 40  & 0.31 \\
+%?? nel file ods ci sono altre misure per gli stessi campi!
+ \midrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Misura della lunghezza d'onda del laser}
+
+Misuriamo c dalla relazione:
+\begin{equation}
+ c=\frac{1}{sqrt{LC}}
+\end{equation}
+pertanto misuriamo la frequenza di risonanza di un cricuito RLC, per differenti configurazioni.
+
+
+\begin{comment}
+Costruiamo un circuito RLC. Nota: il condensatore risente molto delle fluttuazioni, per cui lo colleghiamo a terra, per ridurle il più possibile.
+
+Frequenze di risonanza intorno ai 500 kH (nota: è un minimo -> potenziale ai capi di LC)
+\end{comment}
+
+\subparagraph*{Configurazione 1}
+\begin{sagesilent}
+#Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
+
+dati = np.recfromcsv('dati/em-parabola1.csv')
+
+
+\end{sagesilent}
+
+
+
+\begin{comment}
+\begin{center}
+\sagestr{stampa_dati(dati, r'$\omega$ (rad) & $\V_{out}$ (nm) & $\sigma_{V_{out}}$ (nm)' )}
+\end{center}
+\end{comment}
+
+
+
 \chapter{Analisi con capacità parassite in serie}
 \chapter{Analisi con capacità parassite in parallelo}
 
