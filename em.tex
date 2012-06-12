@@ -52,6 +52,7 @@ Frequenze di risonanza intorno ai 500 kH (nota: è un minimo -> potenziale ai ca
 \subparagraph*{l=40 cm}
 
 
+
 \begin{comment}
 \begin{center}
 \sagestr{stampa_dati(dati, r'$\omega$ (rad) & $\V_{out}$ (nm) & $\sigma_{V_{out}}$ (nm)' )}
@@ -76,7 +77,6 @@ volt = batch2['vout']
 yerr = batch2['errv']
 
 
-
 def funz(x,a,b,c):
     return a*x^2+b*x+c
 
@@ -89,7 +89,7 @@ myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
 myout = myfit.run()
 
 plt.clf()
-xin = np.arange(min(freq),max(freq),1)
+xin = np.arange(min(freq)-10,max(freq)+10,1)
 yin = func(myout.beta,xin)
 plt.plot(freq,volt,'ro')
 plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
@@ -103,18 +103,173 @@ min1 = -myout.beta[1]/(2*myout.beta[0])
 s = repr(round(min1,2))+" $(Hz)$"
 plt.text(680,0.70,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
-plt.savefig("grafici/prova.png",dpi=300)
+plt.savefig("grafici/EM/38.png",dpi=300)
 
 \end{sagesilent}
 
-\includegraphics[scale=0.75]{grafici/prova.png}
-
+\includegraphics[scale=0.75]{grafici/EM/38.png}
 
 \subparagraph*{l=34 cm}
 
+\begin{sagesilent}
+ #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
+
+#Carico file
+raw = np.recfromcsv('dati/EM/par34.csv')
+
+#Seleziono dati per il fit
+batch1 = raw[raw['freq']>680]
+batch2 = batch1[batch1['freq']< 760]
+
+#Carico negli array i dati giusti
+freq = batch2['freq']
+volt = batch2['vout']
+yerr = batch2['errv']
+
+
+def funz(x,a,b,c):
+    return a*x^2+b*x+c
+
+def func(P,x):
+    return funz(x,P[0],P[1],P[2])
+
+mymod = odr.Model(func)
+mydata = odr.RealData(freq,volt)
+myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
+myout = myfit.run()
+
+plt.clf()
+xin = np.arange(min(freq)-10,max(freq)+10,1)
+yin = func(myout.beta,xin)
+plt.plot(freq,volt,'ro')
+plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
+plt.plot(xin,yin,'b--')
+plt.grid(True)
+
+#trovo minimo dai parametri x=-b/2*a
+min3 = -myout.beta[1]/(2*myout.beta[0])
+
+
+#stampo minimo su grafico
+s = repr(round(min3,2))+" $(Hz)$"
+plt.text(680,2,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+
+plt.savefig("grafici/EM/34.png",dpi=300)
+\end{sagesilent}
+
+\includegraphics[scale=0.75]{grafici/EM/34.png}
+
 \subparagraph*{l=32 cm}
 
+\begin{sagesilent}
+ #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
+
+#Carico file
+raw = np.recfromcsv('dati/EM/par32.csv')
+
+#Seleziono dati per il fit
+batch1 = raw[raw['freq']>700]
+batch2 = batch1[batch1['freq']< 760]
+
+#Carico negli array i dati giusti
+freq = batch2['freq']
+volt = batch2['vout']
+yerr = batch2['errv']
+
+
+def funz(x,a,b,c):
+    return a*x^2+b*x+c
+
+def func(P,x):
+    return funz(x,P[0],P[1],P[2])
+
+mymod = odr.Model(func)
+mydata = odr.RealData(freq,volt)
+myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
+myout = myfit.run()
+
+plt.clf()
+xin = np.arange(min(freq)-10,max(freq)+10,1)
+yin = func(myout.beta,xin)
+plt.plot(freq,volt,'ro')
+plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
+plt.plot(xin,yin,'b--')
+plt.grid(True)
+
+#trovo minimo dai parametri x=-b/2*a
+min4 = -myout.beta[1]/(2*myout.beta[0]) 
+
+#stampo minimo su grafico
+s = repr(round(min4,2))+" $(Hz)$"
+plt.text(725,1.6,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+
+plt.savefig("grafici/EM/32.png",dpi=300)
+\end{sagesilent}
+
+\includegraphics[scale=0.75]{grafici/EM/32.png}
+
 \subparagraph*{l=28 cm}
+
+\begin{sagesilent}
+ #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
+
+#Carico file
+raw = np.recfromcsv('dati/EM/par28.csv')
+
+#Seleziono dati per il fit
+batch1 = raw[raw['freq']>740]
+batch2 = batch1[batch1['freq']<800]
+
+#Carico negli array i dati giusti
+freq = batch2['freq']
+volt = batch2['vout']
+yerr = batch2['errv']
+
+
+def funz(x,a,b,c):
+    return a*x^2+b*x+c
+
+def func(P,x):
+    return funz(x,P[0],P[1],P[2])
+
+mymod = odr.Model(func)
+mydata = odr.RealData(freq,volt)
+myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
+myout = myfit.run()
+
+plt.clf()
+xin = np.arange(min(freq)-10,max(freq)+10,1)
+yin = func(myout.beta,xin)
+plt.plot(freq,volt,'ro')
+plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
+plt.plot(xin,yin,'b--')
+plt.grid(True)
+
+#trovo minimo dai parametri x=-b/2*a
+min5 = -myout.beta[1]/(2*myout.beta[0]) 
+
+#stampo minimo su grafico
+s = repr(round(min5,2))+" $(Hz)$"
+plt.text(770,1.2,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+
+plt.savefig("grafici/EM/28.png",dpi=300)
+\end{sagesilent}
+
+\includegraphics[scale=0.75]{grafici/EM/28.png}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \subparagraph*{Calcolo di c}
