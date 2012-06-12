@@ -42,7 +42,9 @@ Per stabilire il passo del reticolo utilizziamo una sorgente di cui è nota la l
 d = \frac{n \lambda}{\sin(\frac{\theta_{dx}-\theta_{sx}}{2})}
 \end{equation}
 
- Per le incertezze sugli angoli, sebbene la precisione dello strumento fosse di 20 secondi d'arco, si è preferito propagare come errore associato alle misure 5', corrispondenti a 1.4545 mrad, in quanto la lettura era spesso difficoltosa (a causa della scarsa luce) e sempre affetta da un leggero errore di parallasse. Si ha dunque:
+Per le incertezze sugli angoli, sebbene la precisione dello strumento fosse di 20 secondi d'arco, si è preferito propagare come errore associato alle misure 5', corrispondenti a 1.4545 mrad, in quanto la lettura era spesso difficoltosa (a causa della scarsa luce) e sempre affetta da un leggero errore di parallasse.
+
+Si ha dunque:
 
 \begin{sagesilent}
 
@@ -95,24 +97,40 @@ Otteniamo $d=\sage{round(dmedia, 3)}\pm\sage{round(derrmedia, 3)}$ $\mu$m.
 #Ricaviamo lambda dai valori di theta
 dati = np.recfromcsv('dati/spettro-hg.csv')
 
-var('deltatheta', 'd', 'sigmatheta') 
+var('d', 'sigmatheta') 
+var('deltatheta', latex_name=r'\Delta\theta')
+
+sigthetaval=10*0.0002909
  
-lam(deltatheta)=d*((deltatheta)/2)/2
- 
-deltatheta = (dati['thetapiu']+dati['thetameno'])/2
+lam(deltatheta)=d*(sin(deltatheta))*1000/2
+
+deltatheta = (dati['thetapiu']-dati['thetameno'])/2
 lamvalutata = np.array([lam(x).subs(d=dmedia) for x in deltatheta ])
 
- 
 differr=abs(lam.diff())
-errlam=differr*sigmatheta
-sigthetaval=10*0.0002909
-errlamval = np.array([errlam(x).subs(sigmatheta=sigthetaval) for x in deltatheta ])
+errlam=(differr*sigmatheta).subs(sigmatheta=sigthetaval)
+errlamval = np.array([errlam(x).subs(d=dmedia) for x in deltatheta ])
   
-\end{sagesilent}
+teoriche = [579.07, 546.07, 435.83, 404.66]
 
+dati = rf.drop_fields(dati, 'thetapiu')
+dati = ml.rec_append_fields(dati, 'deltatheta', deltatheta)
+dati = rf.drop_fields(dati, 'thetameno')
+dati = ml.rec_append_fields(dati, 'lam', [round(x, 0) for x in lamvalutata])
+dati = ml.rec_append_fields(dati, 'errlam', [round(x, 1) for x in errlamval])
+dati = ml.rec_append_fields(dati, 'teolam', teoriche)
+
+chiqua = sum(((lamvalutata-teoriche)/errlamval)**2)
+\end{sagesilent}
 
 Noto il passo del reticolo, possiamo determinare le lunghezze d'onda dello spettro del mercurio, secondo la legge:
 
+$$\lambda=\frac{d}{n}\sin\Big(\frac{\theta_+ - \theta_-}{2}\Big)$$
+
+\begin{center}
+\sagestr{stampa_dati(dati, r'$\Delta\theta$ (rad) & $\lambda$ (nm) & $\sigma_\lambda$ (nm) & $\lambda$ teoriche (nm)' )}
+\end{center}
+Un veloce conto sul $\chi^2$ ci mostra che questo è uguale a $\sage{round(chiqua, 2)}$, per una probabilità di verifica della legge del $\sage{round(chdtrc(len(teoriche),float(chiqua))*100, 2)}\%$.
 
 \section*{Prisma}
 
@@ -165,8 +183,8 @@ plt.grid(True,which="both")
 plt.errorbar(l,n,errorsarr,np.zeros_like(errorsarr),'b|')
 plt.plot(l,n,'r.')
 
-plt.xlabel(r"bubba")
-plt.xlabel(r"bubbagiu")
+plt.ylabel(r"n")
+plt.xlabel(r"$1/\lambda^2$")
 plt.grid(True,which="both")
 plt.savefig("grafici/spettro-cauchy.png", dpi=300)
 
