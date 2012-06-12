@@ -27,7 +27,20 @@ Misuriamo c dalla relazione:
 \begin{equation}
  c=\frac{1}{sqrt{LC}}
 \end{equation}
-pertanto misuriamo la frequenza di risonanza di un cricuito RLC, per differenti configurazioni.
+pertanto misuriamo la frequenza di risonanza di un cicuito RLC, per differenti configurazioni del circuito.
+
+\subparagraph*{C ed L}
+Nella prima parte dell'esperienza abbiamo verificato che i valori di capacità ed induttanza calcolati a partire dai parametri geometrici corrispondessero effettivamente a quelli misurati in laboratorio. 
+Per tanto, in entrambi i circuiti, calcoliamo algebricamente i valori di V e $V_[0]$ per cui $t = \tau$. Inseriamo tali valori e misuriamo i tempo di scarica. Dalla stima del tempo caratteristico ricaviamo L e C. La capacità risulta in accordo, ed è stimata intorno ai $4.38$ nF, l'induttanza invece risulta:
+
+\begin{center}
+\begin{tabular}{c c}
+$L_{geometrico}$  & 0.000293\\
+$L_{misurato}$ & 0.000325\\
+\end{tabular}
+\end{center}
+
+Visto che è presente una discrepanza tra i valori misurati e quelli geometrici, dovuto a capacità parassite, d'ora in avanti lavoreremo con una induttanza equivalente (modificando un parametro geometrico per ottenere l'accordo): $N_{eq} = 339$
 
 
 \begin{comment}
@@ -36,7 +49,7 @@ Costruiamo un circuito RLC. Nota: il condensatore risente molto delle fluttuazio
 Frequenze di risonanza intorno ai 500 kH (nota: è un minimo -> potenziale ai capi di LC)
 \end{comment}
 
-\subparagraph*{Configurazione 1}
+\subparagraph*{L=40 cm}
 \begin{sagesilent}
 #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
 
@@ -53,7 +66,13 @@ dati = np.recfromcsv('dati/em-parabola1.csv')
 \end{center}
 \end{comment}
 
+\subparagraph*{L=38 cm}
 
+\subparagraph*{L=34 cm}
+
+\subparagraph*{L=32 cm}
+
+\subparagraph*{L=28 cm}
 
 \chapter{Analisi con capacità parassite in serie}
 \chapter{Analisi con capacità parassite in parallelo}
