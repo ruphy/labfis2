@@ -66,7 +66,7 @@ myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
 myout = myfit.run()
 
 plt.clf()
-xin = np.arange(min(freq),max(freq),1)
+xin = np.arange(min(freq)-10,max(freq)+10,1)
 yin = func(myout.beta,xin)
 plt.plot(freq,volt,'ro')
 plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
@@ -93,8 +93,8 @@ plt.savefig("grafici/EM/38.png",dpi=300)
 raw = np.recfromcsv('dati/EM/par34.csv')
 
 #Seleziono dati per il fit
-batch1 = raw[raw['freq']>675]
-batch2 = batch1[batch1['freq']< 695]
+batch1 = raw[raw['freq']>680]
+batch2 = batch1[batch1['freq']< 760]
 
 #Carico negli array i dati giusti
 freq = batch2['freq']
@@ -114,7 +114,7 @@ myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
 myout = myfit.run()
 
 plt.clf()
-xin = np.arange(min(freq),max(freq),1)
+xin = np.arange(min(freq)-10,max(freq)+10,1)
 yin = func(myout.beta,xin)
 plt.plot(freq,volt,'ro')
 plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
@@ -122,11 +122,12 @@ plt.plot(xin,yin,'b--')
 plt.grid(True)
 
 #trovo minimo dai parametri x=-b/2*a
-min1 = -myout.beta[1]/(2*myout.beta[0]) 
+min3 = -myout.beta[1]/(2*myout.beta[0])
+
 
 #stampo minimo su grafico
-s = repr(round(min1,2))+" $(Hz)$"
-plt.text(680,0.70,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+s = repr(round(min3,2))+" $(Hz)$"
+plt.text(680,2,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/34.png",dpi=300)
 \end{sagesilent}
@@ -139,8 +140,8 @@ plt.savefig("grafici/EM/34.png",dpi=300)
 raw = np.recfromcsv('dati/EM/par32.csv')
 
 #Seleziono dati per il fit
-batch1 = raw[raw['freq']>675]
-batch2 = batch1[batch1['freq']< 695]
+batch1 = raw[raw['freq']>700]
+batch2 = batch1[batch1['freq']< 760]
 
 #Carico negli array i dati giusti
 freq = batch2['freq']
@@ -160,7 +161,7 @@ myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
 myout = myfit.run()
 
 plt.clf()
-xin = np.arange(min(freq),max(freq),1)
+xin = np.arange(min(freq)-10,max(freq)+10,1)
 yin = func(myout.beta,xin)
 plt.plot(freq,volt,'ro')
 plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
@@ -168,11 +169,11 @@ plt.plot(xin,yin,'b--')
 plt.grid(True)
 
 #trovo minimo dai parametri x=-b/2*a
-min1 = -myout.beta[1]/(2*myout.beta[0]) 
+min4 = -myout.beta[1]/(2*myout.beta[0]) 
 
 #stampo minimo su grafico
-s = repr(round(min1,2))+" $(Hz)$"
-plt.text(680,0.70,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+s = repr(round(min4,2))+" $(Hz)$"
+plt.text(725,1.6,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/32.png",dpi=300)
 \end{sagesilent}
@@ -185,8 +186,8 @@ plt.savefig("grafici/EM/32.png",dpi=300)
 raw = np.recfromcsv('dati/EM/par28.csv')
 
 #Seleziono dati per il fit
-batch1 = raw[raw['freq']]
-batch2 = batch1[batch1['freq']]
+batch1 = raw[raw['freq']>740]
+batch2 = batch1[batch1['freq']<800]
 
 #Carico negli array i dati giusti
 freq = batch2['freq']
@@ -206,7 +207,7 @@ myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
 myout = myfit.run()
 
 plt.clf()
-xin = np.arange(min(freq),max(freq),1)
+xin = np.arange(min(freq)-10,max(freq)+10,1)
 yin = func(myout.beta,xin)
 plt.plot(freq,volt,'ro')
 plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
@@ -214,19 +215,24 @@ plt.plot(xin,yin,'b--')
 plt.grid(True)
 
 #trovo minimo dai parametri x=-b/2*a
-min1 = -myout.beta[1]/(2*myout.beta[0]) 
+min5 = -myout.beta[1]/(2*myout.beta[0]) 
 
 #stampo minimo su grafico
-s = repr(round(min1,2))+" $(Hz)$"
-plt.text(680,0.70,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+s = repr(round(min5,2))+" $(Hz)$"
+plt.text(770,1.2,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/28.png",dpi=300)
 \end{sagesilent}
 
 
 
-\includegraphics[scale=0.75]{grafici/prova.png}
+\includegraphics[scale=0.75]{grafici/EM/38.png}
 
+\includegraphics[scale=0.75]{grafici/EM/34.png}
+
+\includegraphics[scale=0.75]{grafici/EM/32.png}
+
+\includegraphics[scale=0.75]{grafici/EM/28.png}
 
 \begin{comment}
 \begin{center}
