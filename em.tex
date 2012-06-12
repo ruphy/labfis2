@@ -16,7 +16,7 @@
 \midrule
 \textit{Capacità} & $R_{int}$ (cm) & $R_{ext}$ (cm) & $lunghezza$ (cm) & $spessore piastre$ (cm)\\
    & 5.89 & 3.546  & 40  & 0.31 \\
-%?? nel file ods ci sono altre misure per gli stessi campi!
+
  \midrule
 \end{tabular}
 \end{center}
@@ -27,7 +27,20 @@ Misuriamo c dalla relazione:
 \begin{equation}
  c=\frac{1}{sqrt{LC}}
 \end{equation}
-pertanto misuriamo la frequenza di risonanza di un cricuito RLC, per differenti configurazioni.
+pertanto misuriamo la frequenza di risonanza di un cicuito RLC, per differenti configurazioni del circuito.
+
+\subparagraph*{C ed L}
+Nella prima parte dell'esperienza abbiamo verificato che i valori di capacità ed induttanza calcolati a partire dai parametri geometrici corrispondessero effettivamente a quelli misurati in laboratorio. 
+Per tanto, in entrambi i circuiti, calcoliamo algebricamente i valori di V e $V_[0]$ per cui $t = \tau$. Inseriamo tali valori e misuriamo i tempo di scarica. Dalla stima del tempo caratteristico ricaviamo L e C. La capacità risulta in accordo, ed è stimata intorno ai $4.38$ nF, l'induttanza invece risulta:
+
+\begin{center}
+\begin{tabular}{c c}
+$L_{geometrico}$  & 0.000293\\
+$L_{misurato}$ & 0.000325\\
+\end{tabular}
+\end{center}
+
+Visto che è presente una discrepanza tra i valori misurati e quelli geometrici, dovuto a capacità parassite, d'ora in avanti lavoreremo con una induttanza equivalente (modificando un parametro geometrico per ottenere l'accordo): $N_{eq} = 339$
 
 
 \begin{comment}
@@ -36,6 +49,7 @@ Costruiamo un circuito RLC. Nota: il condensatore risente molto delle fluttuazio
 Frequenze di risonanza intorno ai 500 kH (nota: è un minimo -> potenziale ai capi di LC)
 \end{comment}
 
+<<<<<<< HEAD
 \subparagraph*{Configurazione 1}
 %40
 \begin{sagesilent}
@@ -86,6 +100,20 @@ plt.savefig("grafici/EM/40.png",dpi=300)
 
 
 %38
+=======
+\subparagraph*{l=40 cm}
+
+
+
+\begin{comment}
+\begin{center}
+\sagestr{stampa_dati(dati, r'$\omega$ (rad) & $\V_{out}$ (nm) & $\sigma_{V_{out}}$ (nm)' )}
+\end{center}
+\end{comment}
+
+\subparagraph*{l=38 cm}
+
+>>>>>>> 6deb5081be090edc0346cca3678d1244ba955e43
 \begin{sagesilent}
 #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
 
@@ -132,8 +160,10 @@ plt.savefig("grafici/EM/38.png",dpi=300)
 
 \end{sagesilent}
 
+\includegraphics[scale=0.75]{grafici/EM/38.png}
 
-%34
+\subparagraph*{l=34 cm}
+
 \begin{sagesilent}
  #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
 
@@ -180,7 +210,10 @@ plt.text(715,1.5,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 plt.savefig("grafici/EM/34.png",dpi=300)
 \end{sagesilent}
 
-%32
+\includegraphics[scale=0.75]{grafici/EM/34.png}
+
+\subparagraph*{l=32 cm}
+
 \begin{sagesilent}
  #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
 
@@ -226,7 +259,10 @@ plt.text(725,1.6,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 plt.savefig("grafici/EM/32.png",dpi=300)
 \end{sagesilent}
 
-%28
+\includegraphics[scale=0.75]{grafici/EM/32.png}
+
+\subparagraph*{l=28 cm}
+
 \begin{sagesilent}
  #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
 
@@ -272,23 +308,51 @@ plt.text(765,1.5,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 plt.savefig("grafici/EM/28.png",dpi=300)
 \end{sagesilent}
 
+\includegraphics[scale=0.75]{grafici/EM/28.png}
 
 \includegraphics[scale=0.75]{grafici/EM/40.png}
 
-\includegraphics[scale=0.75]{grafici/EM/38.png}
+\subsection*{Calcolo di c}
 
-\includegraphics[scale=0.75]{grafici/EM/34.png}
+A questo punto fittiamo i valori di $\omega$ raccolti al variare di $l$, lunghezza del condensatore, per ricavare $c$ secondo la relazione:
 
-\includegraphics[scale=0.75]{grafici/EM/32.png}
+\begin{equation}
+ LC = \frac{1}{{\omega}^2} = l \epsilon_{0} \mu_{0} \frac{n^2 h log(\frac{R_{int}}{R_{ext}})}{log (\frac{b}{a})}
+\end{equation}
 
-\includegraphics[scale=0.75]{grafici/EM/28.png}
+\begin{segesilent}
 
-\begin{comment}
-\begin{center}
-\sagestr{stampa_dati(dati, r'$\omega$ (rad) & $\V_{out}$ (nm) & $\sigma_{V_{out}}$ (nm)' )}
-\end{center}
-\end{comment}
+#Fit per il calcolo di c
 
+omega=[min1, min2, min3, min4, min5]
+elle=[28, 32, 34, 38, 40]
+
+omegavar=1/omega**2 
+
+def funz(x,a):
+    return a*x
+
+def func(P,x):
+    return funz(x,P[0])
+
+mymod = odr.Model(func)
+mydata = odr.RealData(elle,omegavar)
+myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
+myout = myfit.run()
+
+plt.clf()
+xin = np.arange(min(freq)-10,max(freq)+10,1)
+yin = func(myout.beta,xin)
+plt.plot(elle,omegavar,'ro')
+#plt.errorbar(,volt,yerr,np.zeros_like(yerr),fmt=None)
+plt.plot(xin,yin,'b--')
+plt.grid(True)
+
+plt.savefig("grafici/EM/misurac.png",dpi=300)
+
+%se riesci metti anche l'errore :) ti voglio bene!
+
+\end{segesilent}
 
 
 \chapter{Analisi con capacità parassite in serie}
