@@ -49,10 +49,12 @@ Costruiamo un circuito RLC. Nota: il condensatore risente molto delle fluttuazio
 Frequenze di risonanza intorno ai 500 kH (nota: è un minimo -> potenziale ai capi di LC)
 \end{comment}
 
-<<<<<<< HEAD
 \subparagraph*{Configurazione 1}
-%40
+
+\subparagraph*{l=40 cm}
+
 \begin{sagesilent}
+
  #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
 
 #Carico file
@@ -98,12 +100,7 @@ plt.savefig("grafici/EM/40.png",dpi=300)
  
 \end{sagesilent}
 
-
-%38
-=======
-\subparagraph*{l=40 cm}
-
-
+\includegraphics[scale=0.75]{grafici/EM/40.png}
 
 \begin{comment}
 \begin{center}
@@ -113,7 +110,6 @@ plt.savefig("grafici/EM/40.png",dpi=300)
 
 \subparagraph*{l=38 cm}
 
->>>>>>> 6deb5081be090edc0346cca3678d1244ba955e43
 \begin{sagesilent}
 #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
 
@@ -150,10 +146,10 @@ plt.plot(xin,yin,'b--')
 plt.grid(True)
 
 #trovo minimo dai parametri x=-b/2*a
-min1 = -myout.beta[1]/(2*myout.beta[0]) 
+min2 = -myout.beta[1]/(2*myout.beta[0]) 
 
 #stampo minimo su grafico
-s = repr(round(min1,2))+" $(Hz)$"
+s = repr(round(min2,2))+" $(Hz)$"
 plt.text(685,1.00,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/38.png",dpi=300)
@@ -310,7 +306,7 @@ plt.savefig("grafici/EM/28.png",dpi=300)
 
 \includegraphics[scale=0.75]{grafici/EM/28.png}
 
-\includegraphics[scale=0.75]{grafici/EM/40.png}
+
 
 \subsection*{Calcolo di c}
 
@@ -320,11 +316,12 @@ A questo punto fittiamo i valori di $\omega$ raccolti al variare di $l$, lunghez
  LC = \frac{1}{{\omega}^2} = l \epsilon_{0} \mu_{0} \frac{n^2 h log(\frac{R_{int}}{R_{ext}})}{log (\frac{b}{a})}
 \end{equation}
 
-\begin{segesilent}
+\begin{sagesilent}
 
 #Fit per il calcolo di c
 
-omega=[min1, min2, min3, min4, min5]
+omega=np.array([min1, min2, min3, min4, min5])
+omega.astype(float)
 elle=[28, 32, 34, 38, 40]
 
 omegavar=1/omega**2 
@@ -337,11 +334,11 @@ def func(P,x):
 
 mymod = odr.Model(func)
 mydata = odr.RealData(elle,omegavar)
-myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
+myfit = odr.ODR(mydata,mymod,beta0=[1.,1.],maxit=1000)
 myout = myfit.run()
 
 plt.clf()
-xin = np.arange(min(freq)-10,max(freq)+10,1)
+xin = np.arange(min(omegavar),max(omegavar),0.001)
 yin = func(myout.beta,xin)
 plt.plot(elle,omegavar,'ro')
 #plt.errorbar(,volt,yerr,np.zeros_like(yerr),fmt=None)
@@ -350,11 +347,12 @@ plt.grid(True)
 
 plt.savefig("grafici/EM/misurac.png",dpi=300)
 
+
+\end{sagesilent}
+
+\includegraphics[scale=0.75]{grafici/EM/misurac.png}
+
 %se riesci metti anche l'errore :) ti voglio bene!
-
-\end{segesilent}
-
-
 \chapter{Analisi con capacità parassite in serie}
 \chapter{Analisi con capacità parassite in parallelo}
 
