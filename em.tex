@@ -37,6 +37,54 @@ Frequenze di risonanza intorno ai 500 kH (nota: è un minimo -> potenziale ai ca
 \end{comment}
 
 \subparagraph*{Configurazione 1}
+%40
+\begin{sagesilent}
+ #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
+
+#Carico file
+raw = np.recfromcsv('dati/EM/40.csv')
+
+#Seleziono dati per il fit
+batch1 = raw[raw['freq']>640]
+batch2 = batch1[batch1['freq']< 695]
+
+#Carico negli array i dati giusti
+freq = batch2['freq']
+volt = batch2['vout']
+yerr = batch2['errv']
+
+
+def funz(x,a,b,c):
+    return a*x^2+b*x+c
+
+def func(P,x):
+    return funz(x,P[0],P[1],P[2])
+
+mymod = odr.Model(func)
+mydata = odr.RealData(freq,volt)
+myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
+myout = myfit.run()
+
+plt.clf()
+xin = np.arange(min(freq)-10,max(freq)+10,1)
+yin = func(myout.beta,xin)
+plt.plot(freq,volt,'ro')
+plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
+plt.plot(xin,yin,'b--')
+plt.grid(True)
+
+#trovo minimo dai parametri x=-b/2*a
+min1 = -myout.beta[1]/(2*myout.beta[0]) 
+
+#stampo minimo su grafico
+s = repr(round(min1,2))+" $(Hz)$"
+plt.text(675,1.00,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+
+plt.savefig("grafici/EM/40.png",dpi=300)
+ 
+\end{sagesilent}
+
+
 %38
 \begin{sagesilent}
 #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
@@ -78,7 +126,7 @@ min1 = -myout.beta[1]/(2*myout.beta[0])
 
 #stampo minimo su grafico
 s = repr(round(min1,2))+" $(Hz)$"
-plt.text(680,0.70,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+plt.text(685,1.00,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/38.png",dpi=300)
 
@@ -127,7 +175,7 @@ min3 = -myout.beta[1]/(2*myout.beta[0])
 
 #stampo minimo su grafico
 s = repr(round(min3,2))+" $(Hz)$"
-plt.text(680,2,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+plt.text(715,1.5,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/34.png",dpi=300)
 \end{sagesilent}
@@ -219,12 +267,13 @@ min5 = -myout.beta[1]/(2*myout.beta[0])
 
 #stampo minimo su grafico
 s = repr(round(min5,2))+" $(Hz)$"
-plt.text(770,1.2,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
+plt.text(765,1.5,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/28.png",dpi=300)
 \end{sagesilent}
 
 
+\includegraphics[scale=0.75]{grafici/EM/40.png}
 
 \includegraphics[scale=0.75]{grafici/EM/38.png}
 
