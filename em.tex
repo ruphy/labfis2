@@ -16,7 +16,7 @@
 \midrule
 \textit{Capacità} & $R_{int}$ (cm) & $R_{ext}$ (cm) & $lunghezza$ (cm) & $spessore piastre$ (cm)\\
    & 5.89 & 3.546  & 40  & 0.31 \\
-%?? nel file ods ci sono altre misure per gli stessi campi!
+
  \midrule
 \end{tabular}
 \end{center}
@@ -49,7 +49,17 @@ Costruiamo un circuito RLC. Nota: il condensatore risente molto delle fluttuazio
 Frequenze di risonanza intorno ai 500 kH (nota: è un minimo -> potenziale ai capi di LC)
 \end{comment}
 
-\subparagraph*{L=40 cm}
+\subparagraph*{l=40 cm}
+
+
+\begin{comment}
+\begin{center}
+\sagestr{stampa_dati(dati, r'$\omega$ (rad) & $\V_{out}$ (nm) & $\sigma_{V_{out}}$ (nm)' )}
+\end{center}
+\end{comment}
+
+\subparagraph*{l=38 cm}
+
 \begin{sagesilent}
 #Fit per stimare i parametri -> Frequenza di risonanza: -b/2a
 
@@ -100,19 +110,20 @@ plt.savefig("grafici/prova.png",dpi=300)
 \includegraphics[scale=0.75]{grafici/prova.png}
 
 
-\begin{comment}
-\begin{center}
-\sagestr{stampa_dati(dati, r'$\omega$ (rad) & $\V_{out}$ (nm) & $\sigma_{V_{out}}$ (nm)' )}
-\end{center}
-\end{comment}
+\subparagraph*{l=34 cm}
 
-\subparagraph*{L=38 cm}
+\subparagraph*{l=32 cm}
 
-\subparagraph*{L=34 cm}
+\subparagraph*{l=28 cm}
 
-\subparagraph*{L=32 cm}
 
-\subparagraph*{L=28 cm}
+\subparagraph*{Calcolo di c}
+
+A questo punto fittiamo i valori di $\omega$ raccolti al variare di $l$, lunghezza del condensatore, per ricavare $c$ secondo la relazione:
+
+\begin{equation}
+ LC = l \epsilon_{0} \mu_{0} \frac{n^2 h ln\frac{R_{int}}{R_{ext}}}{ln \frac{b}{a}}
+\end{equation}
 
 \chapter{Analisi con capacità parassite in serie}
 \chapter{Analisi con capacità parassite in parallelo}
