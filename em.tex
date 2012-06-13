@@ -1,11 +1,11 @@
+\chapter{EM}
 
-
-\chapter{Dati geometrici}
+\subsection{Dati geometrici}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 \midrule
 \textit{Solenoide} & $n$ & $diametro_{int}$ & $diametro_{ext}$ & $diametro_{medio}$ & $l_{circonferenza}$ & $h$ & $A_{sezione}$  \\
-		   & 322 & 0,05	 & 0,0937  & 0,07185 & 0,451446864 & 0,0225 &	0,00098325 \\
+		   & 322 & 0,05	 & 0,0937  & 0,0718 & 0,451 & 0,0225 &	0,000983 \\
  \midrule
 \end{tabular}
 \end{center}
@@ -15,17 +15,16 @@
 \begin{tabular}{|c|c|c|c|c|}
 \midrule
 \textit{Capacità} & $R_{int}$ (cm) & $R_{ext}$ (cm) & $lunghezza$ (cm) & $spessore piastre$ (cm)\\
-   & 5.89 & 3.546  & 40  & 0.31 \\
+   & 3.58 & 4.18  & 40  & 0.31 \\
 
  \midrule
 \end{tabular}
 \end{center}
 
-\subsubsection{Misura della lunghezza d'onda del laser}
 
 Misuriamo c dalla relazione:
 \begin{equation}
- c=\frac{1}{sqrt{LC}}
+ c=\frac{1}{\sqrt{LC}}
 \end{equation}
 pertanto misuriamo la frequenza di risonanza di un cicuito RLC, per differenti configurazioni del circuito.
 
@@ -326,7 +325,8 @@ Prendiamo $y = \omega^{-2}$ e $x=l_c$, linearizzando quindi il nostro problema.
 
 freq=np.array([min1, min2, min3, min4, min5])*1000*2*n(pi)
 freq.astype(float)
-k = (339**2)*0.0225*(ln(0.0937/0.05)/ln(2.773/2.083))
+#2.773/2.083
+k = (339**2)*0.0225*(ln(0.0937/0.05)/ln(418/358))
 elle=[0.40,0.38,0.34,0.32,0.28]
 
 omegavar=1/(freq)**2 
@@ -354,7 +354,8 @@ plt.plot(xin,yin,'b--')
 plt.grid(True)
 m = myout.beta[0]
 c = sqrt(k/myout.beta[0])
-er = 0.5*sqrt(k)* m**(-3/2) * myout.sd_beta[0]  
+er = sqrt(k)* m**(-3/2) * myout.sd_beta[0]  
+erc = sqrt((1/0.0000264585)/(4*k*m) + er^2)
 par = myout.beta[1]*2*n(pi)/(339^2*0.0225*ln(9.37/5))
 plt.savefig("grafici/EM/misurac.png",dpi=300)
 
@@ -365,7 +366,7 @@ plt.savefig("grafici/EM/misurac.png",dpi=300)
 
 Dal fit ricaviamo i seguenti valori:
 
-$\sage{round(c,1)} \pm \sage{round(er,1)}\ m \cdot s^{-1}$ 
+$\sage{round(c,1)} \pm \sage{round(erc,1)}\ m \cdot s^{-1}$ 
 
 L'errore è stato ricavato tramite la seguente formula di propagazione:
 $\sigma_c = \frac{\sqrt(k)\sigma_m}{m^{3/2}}$
