@@ -29,22 +29,26 @@ def stampa_dati(wa, header):
 
 \section{Risposta in frequenza del multimetro}
 
+Studiamo la risposta in frequenza del multimetro al variare della frequenza in ingresso. \\
+Un generatore di onde sinusoidali fornisce la corrente in ingresso nel circuito; per avere informazioni circa l'efficacia della risposta del multimetro posizioniamo una sonda all'ingresso del circuito, la cui lettura fornisce il valore "vero" della tensione ai capi della resistenza, un amperometro che misuri la corrente che scorre nel circuito, ed il multimetro palmare in modalità voltmetro, la cui lettura verrà confrontata con quella dell'oscilloscopio. Nella banda $True\ RMS$ il rapporto tra le due letture sarà circa uno.
+Si osserva che nel range di efficenza del multimetro, questi risulta più preciso dell'oscilloscopio, che, di contro, ha però una banda di bassante molto ampia.\\
 
+
+Il primo grafico illustra la lettura dell'intensità di corrente in funzione della frequenza. L'errore è dato dalla sensibilità dello strumento: $\sigma_i = 0.1\ mA$.\\
+
+
+Il secondo grafico, che mostra i limiti operativi del multimetro rispetto la frequenza, da cui si evince che il nostro multimetro opera nella banda di $True\ RMS$, fino a  $1000\ Hz$.    \\
+L'errore sulla lettura del multimetro è la sensibilità dello strumento: $\sigma_{mu} = 0.005\ V$. Per stimare l'errore su $V_{RM}$ abbiamo usato la deviazione standard, assumendo quindi che $V_{RMS}$ dovrebbe rimanere costante. 
+Indi per cui, la propagazione degli errori risulta:
+$$\sigma_r = \sqrt{\frac{\sigma_{mu}^2}{V_{RMS}^2} + \frac{\sigma_{rms}^2}{V_{RMS}^4}}$$
 
 \begin{center}
 %\includegraphics[scale=0.75]{grafici/C2/cv.png} 
 \end{center}
 
-Per il grafico in alto,che mostra la lettura dell'intensità di corrente in funzione della frequenza, l'errore è dato dalla sensibilità dello strumento: $\sigma_i = 0.1\ mA$.
-\
-
-Il secondo grafico, che mostra i limiti operativi del multimetro rispetto la frequenza, L'errore sulla lettura dal multimetro è la sensibilità dello strumento: $\sigma_{mu} = 0.005\ V$. Per stimare l'errore su $V_{RM}$ abbiamo usato la deviazione standard, assumendo quindi che $V_{RMS}$ dovrebbe rimanere costante. 
-Indi per cui, la propagazione degli errori risulta:
-$$\sigma_r = \sqrt{\frac{\sigma_{mu}^2}{V_{RMS}^2} + \frac{\sigma_{rms}^2}{V_{RMS}^4}}$$
-
 %E' giusto pensare che rimanga costante?f'
 
-In nostro multimetro opera nella banda di $True\ RMS$, fino a  $1000\ Hz$.   
+
 
 %Quesiti:
 %
