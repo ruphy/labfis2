@@ -93,7 +93,7 @@ plt.grid(True)
 min1 = -myout.beta[1]/(2*myout.beta[0]) 
 
 #stampo minimo su grafico
-s = repr(round(min1,2))+" $(Hz)$"
+s = repr(round(min1,2))+" $(KHz)$"
 plt.text(675,1.00,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/40.png",dpi=300)
@@ -149,7 +149,7 @@ plt.grid(True)
 min2 = -myout.beta[1]/(2*myout.beta[0]) 
 
 #stampo minimo su grafico
-s = repr(round(min2,2))+" $(Hz)$"
+s = repr(round(min2,2))+" $(KHz)$"
 plt.text(685,1.00,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/38.png",dpi=300)
@@ -200,7 +200,7 @@ min3 = -myout.beta[1]/(2*myout.beta[0])
 
 
 #stampo minimo su grafico
-s = repr(round(min3,2))+" $(Hz)$"
+s = repr(round(min3,2))+" $(KHz)$"
 plt.text(715,1.5,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/34.png",dpi=300)
@@ -244,14 +244,15 @@ plt.plot(freq,volt,'ro')
 plt.errorbar(freq,volt,yerr,np.zeros_like(yerr),fmt=None)
 plt.plot(xin,yin,'b--')
 plt.grid(True)
+myout.pprint()
 
 #trovo minimo dai parametri x=-b/2*a
 min4 = -myout.beta[1]/(2*myout.beta[0]) 
-
+sd4 = sqrt(myout.sd_beta[1]**2/(2*myout.beta[0])**2 +(myout.beta[1]*myout.sd_beta[0])**2)/(2*myout.beta[0]**4)
 #stampo minimo su grafico
-s = repr(round(min4,2))+" $(Hz)$"
+s = repr(round(min4,2))+" $(KHz)$"
 plt.text(725,1.6,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
-
+print sd4
 plt.savefig("grafici/EM/32.png",dpi=300)
 \end{sagesilent}
 
@@ -298,7 +299,7 @@ plt.grid(True)
 min5 = -myout.beta[1]/(2*myout.beta[0]) 
 
 #stampo minimo su grafico
-s = repr(round(min5,2))+" $(Hz)$"
+s = repr(round(min5,2))+" $(KHz)$"
 plt.text(765,1.5,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 
 plt.savefig("grafici/EM/28.png",dpi=300)
@@ -311,10 +312,14 @@ plt.savefig("grafici/EM/28.png",dpi=300)
 \subsection*{Calcolo di c}
 
 A questo punto fittiamo i valori di $\omega$ raccolti al variare di $l$, lunghezza del condensatore, per ricavare $c$ secondo la relazione:
-
 \begin{equation}
- LC = \frac{1}{{\omega}^2} = l \epsilon_{0} \mu_{0} \frac{n^2 h log(\frac{R_{int}}{R_{ext}})}{log (\frac{b}{a})}
+ LC =\displaystyle \frac{1}{{\omega}^2} = l_c \cdot \epsilon_{0}\cdot \mu_{0}\cdot \frac{N^2 \cdot h \cdot log(\frac{R_{int}}{R_{ext}})}{log (\frac{b}{a})}
 \end{equation}
+
+Dove m è il coefficente angolare della retta. Nella funzione q rappresenta le capacità parassite presenti nel sistema e supposte in parallelo. Infatti:
+$$L(C+C_p) = \frac{1}{\omega^2}$$
+
+Prendiamo $y = \omega^{-2}$ e $x=l_c$, linearizzando quindi il nostro problema. 
 
 \begin{sagesilent}
 
@@ -322,7 +327,7 @@ A questo punto fittiamo i valori di $\omega$ raccolti al variare di $l$, lunghez
 
 freq=np.array([min1, min2, min3, min4, min5])*1000*2*n(pi)
 freq.astype(float)
-k = 2*339^2*0.0225*(ln(0.0937/0.05)/ln(2.945/1.773))
+k = (339**2)*0.0225*(ln(0.0937/0.05)/ln(2.773/2.083))
 elle=[0.40,0.38,0.34,0.32,0.28]
 
 omegavar=1/(freq)**2 
@@ -337,28 +342,38 @@ mymod = odr.Model(func)
 mydata = odr.RealData(elle,omegavar)
 myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
 myout = myfit.run()
+myout.pprint()
 
 plt.clf()
 #np.arange crea un array. Le proprietà dell'array sono (valore_min,valore_massimo,passo). come valore min e #max gli passo i valori min e max di omegavar che è la nostra x. In questo modo la funzione sarà contenuta 
 
-xin = np.arange(0,max(elle)*1.2,0.01)
+xin = np.arange(0.8*min(elle),max(elle)*1.2,0.01)
 yin = func(myout.beta,xin)
 plt.plot(elle,omegavar,'ro')
 #plt.errorbar(,volt,yerr,np.zeros_like(yerr),fmt=None)
 plt.plot(xin,yin,'b--')
 plt.grid(True)
-
-
+m = myout.beta[0]
 c = sqrt(k/myout.beta[0])
-
+er = 0.5*sqrt(k)* m**(-3/2) * myout.sd_beta[0]  
+par = myout.beta[1]*2*n(pi)/(339^2*0.0225*ln(9.37/5))
 plt.savefig("grafici/EM/misurac.png",dpi=300)
 
 \end{sagesilent}
 
 \includegraphics[scale=0.75]{grafici/EM/misurac.png}
 
-$\sage{c}$
-\chapter{Analisi con capacità parassite in serie}
-\chapter{Analisi con capacità parassite in parallelo}
 
+Dal fit ricaviamo i seguenti valori:
 
+$\sage{round(c,1)} \pm \sage{round(er,1)}\ m \cdot s^{-1}$ 
+
+L'errore è stato ricavato tramite la seguente formula di propagazione:
+$\sigma_c = \frac{\sqrt(k)\sigma_m}{m^{3/2}}$
+
+Per ricavare c, abbiamo diviso il coeff. angolare m per il coefficente geometrico k:
+$$ k = \displaystyle \frac{N^2 \cdot h \cdot ln(R_e/R_i)}{ln(b/a)}$$
+
+$c =\displaystyle \sqrt{\frac{k}{m}} = \sqrt{\frac{1}{\mu_0 \cdot \epsilon_0 }}$
+
+Il valore della capacità parassita è $5.4\cdot 10^{-17} F$.
