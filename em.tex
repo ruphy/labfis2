@@ -304,9 +304,9 @@ plt.text(765,1.5,s,fontsize=12,bbox=dict(facecolor='red',alpha=0.1))
 plt.savefig("grafici/EM/28.png",dpi=300)
 \end{sagesilent}
 
+
+
 \includegraphics[scale=0.75]{grafici/EM/28.png}
-
-
 
 \subsection*{Calcolo di c}
 
@@ -320,39 +320,44 @@ A questo punto fittiamo i valori di $\omega$ raccolti al variare di $l$, lunghez
 
 #Fit per il calcolo di c
 
-omega=np.array([min1, min2, min3, min4, min5])
-omega.astype(float)
-elle=[28, 32, 34, 38, 40]
+freq=np.array([min1, min2, min3, min4, min5])*1000*2*n(pi)
+freq.astype(float)
+k = 2*339^2*0.0225*(ln(0.0937/0.05)/ln(2.945/1.773))
+elle=[0.40,0.38,0.34,0.32,0.28]
 
-omegavar=1/omega**2 
+omegavar=1/(freq)**2 
 
-def funz(x,a):
-    return a*x
+def funz(x,a,c):
+    return a*x+c
 
 def func(P,x):
-    return funz(x,P[0])
+    return funz(x,P[0],P[1])
 
 mymod = odr.Model(func)
 mydata = odr.RealData(elle,omegavar)
-myfit = odr.ODR(mydata,mymod,beta0=[1.,1.],maxit=1000)
+myfit = odr.ODR(mydata,mymod,beta0=[1.,1.,1.],maxit=1000)
 myout = myfit.run()
 
 plt.clf()
-xin = np.arange(min(omegavar),max(omegavar),0.001)
+#np.arange crea un array. Le proprietà dell'array sono (valore_min,valore_massimo,passo). come valore min e #max gli passo i valori min e max di omegavar che è la nostra x. In questo modo la funzione sarà contenuta 
+
+xin = np.arange(0,max(elle)*1.2,0.01)
 yin = func(myout.beta,xin)
 plt.plot(elle,omegavar,'ro')
 #plt.errorbar(,volt,yerr,np.zeros_like(yerr),fmt=None)
 plt.plot(xin,yin,'b--')
 plt.grid(True)
 
-plt.savefig("grafici/EM/misurac.png",dpi=300)
 
+c = sqrt(k/myout.beta[0])
+
+plt.savefig("grafici/EM/misurac.png",dpi=300)
 
 \end{sagesilent}
 
 \includegraphics[scale=0.75]{grafici/EM/misurac.png}
 
-%se riesci metti anche l'errore :) ti voglio bene!
+$\sage{c}$
 \chapter{Analisi con capacità parassite in serie}
 \chapter{Analisi con capacità parassite in parallelo}
 
