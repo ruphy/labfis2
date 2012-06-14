@@ -8,7 +8,6 @@ import scipy.optimize as opt
 \chapter{Microonde}
 
 \section{Riflessione}
-% \begin{comment}
 \begin{sagesilent}
 #Fit: coeff ang = 1
 
@@ -46,9 +45,7 @@ plt.savefig("grafici/microonde-riflessione.png", dpi=300)
 #dati = ml.rec_append_fields(dati, "n", [round(x,3) for x in dcalc])
 #dati = ml.rec_append_fields(dati, "error_d", [round(x, 3) for x in errorsarr])
 
-
 \end{sagesilent}
-% \end{comment}
 
 
 Intendiamo verificare la legge di Cartesio utillizando una lastra di metallo come superficie riflettente, posizionandola su un supporto magnetico sul goniometro.
@@ -58,7 +55,7 @@ sin(\theta_{incidente}) = sin(\theta_{rifratto})
 \end{equation}
 
 \begin{center}
-%\sagestr{stampa_dati(dati, r'$\theta_{inc}$ (rad) & $\theta_{rif}$ (rad) ' )}
+\sagestr{stampa_dati(dati, r'$\theta_{inc}$ (rad) & $\theta_{rif}$ (rad) ' )}
 \end{center}
 
 
@@ -96,7 +93,7 @@ d = n\frac{\lambda}{2}
 \sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ (rad) & $\lambda$ (cm)' )}
 \end{center}
 
-%Otteniamo una lambda media: $$ \sage{lmedia} \pm \sage{errlam}$$
+% Otteniamo una lambda media: $$ \sage{lmedia} \pm \sage{errlam}$$
 
 %Dal confronto con la $\lambda$ (2.85 cm) teorica otteniamo: $\lambda_{teo} - \lambda_{cal} || = \sage{confronto} < 2 \sigma ( = 2 \sage{errlam} $
 
@@ -215,7 +212,7 @@ dati = np.recfromcsv('dati/MICROONDE/bragg.csv')
 plt.clf()
 plt.plot(dati['theta'], dati['volt'],'ro')
 
-plt.savefig("grafici/microonde-bragg.png")
+plt.savefig("grafici/microonde-bragg.png", dpi=300)
 
 \end{sagesilent}
 
