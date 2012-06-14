@@ -8,7 +8,7 @@ import scipy.optimize as opt
 \chapter{Microonde}
 
 \section{Riflessione}
-\begin{comment}
+% \begin{comment}
 \begin{sagesilent}
 #Fit: coeff ang = 1
 
@@ -21,7 +21,7 @@ errang = 2*3.14/180
 def func(P,x):
     return P[0]*x+P[1]
 
-odrfit, chi, chiprob = fit_chiquad(incidente, rifratto, func, init_guess=[1.,0.], ysigma=errang)
+odrfit, chi, chiprob = fit_chiquad(incidente, rifratto, func, init_guess=[1.,0.], ysigma=float(errang))
 
 
 # Plot
@@ -48,7 +48,7 @@ plt.savefig("grafici/microonde-riflessione.png", dpi=300)
 
 
 \end{sagesilent}
-\end{comment}
+% \end{comment}
 
 
 Intendiamo verificare la legge di Cartesio utillizando una lastra di metallo come superficie riflettente, posizionandola su un supporto magnetico sul goniometro.
