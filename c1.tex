@@ -21,11 +21,11 @@ L'obiettivo del nostro esperimento è misurare la validità della legge di Ohm p
 
 Al fine di misurare corrente e potenziale, colleghiamo al nostro circuito due multimetri digitali. Il primo, che ha la funzione di voltmetro, lo poniamo ai capi della nostra resistenza collegato in parallelo; il secondo, in modalità amperometro, è posto in serie subito dopo la resistenza. 
 
-Di seguito, gli strumenti con la loro precisione:
+Di seguito, gli strumenti utilizzati:
 \begin{itemize}
 \item Voltmetro (multimetro portatile)
 \item Amperometro (multimetro da banco)
-\item Generatore da banco, resistenza interna ignota.
+\item Generatore da banco, resistenza interna $r_i = 50 \Omega$.
 \end{itemize}
 
 
@@ -77,7 +77,7 @@ Corrente1($nA$) & Potenziale1($mV$) & Corrente2($nA$) & Potenziale2($mV$)\\
 \
 
 Parametri trovati dal fit: \
-$R= 5099 \pm 0.3 \ \Omega$
+$R= 5099.1 \pm 0.3 \ \Omega$
 
 $q = -0.113 \pm 0.147\ mV$
 
@@ -91,8 +91,8 @@ $q = 0.72 \pm 1.35\cdot 10^{-1} \ mV $
 
 \section{Serie e Parallelo}
 
-L'incertezza sulla misura è quello dello strumento. Nel caso dell'amperometro $\sigma_a = 0.0001\ A$ , per il voltmetro
-$sigma_v = 0.001\ V$ per le misure in serie, e $sigma_v = 0.01\ V$ per le misure in parallelo.
+L'incertezza sulla misura è quella dello strumento. Nel caso dell'amperometro $\sigma_a = 0.0001\ A$ , per il voltmetro
+$\sigma_V = 0.001\ V$ per le misure in serie, e $\sigma_V = 0.01\ V$ per le misure in parallelo.
 \\
 
 \begin{sagesilent}
@@ -217,7 +217,7 @@ Colleghiamo una piccola lampada a filamento al circuito, e verifichiamo che il s
 
 \includegraphics[scale=0.75]{grafici/C1/lampa.png}
 
-La lampadina ha un comportamento non-ohmico nel momento in cui il filamento si scalda sufficientemente e inizia ad emettere luce ($500mV$).
+La lampadina ha un comportamento non-ohmico nel momento in cui il filamento si scalda sufficientemente e inizia ad emettere luce ($500mV$), superato un certo valore di V si ha di nuovo un comportamento ohmico, come si può ben osservare dal grafico.
 
 
 \section{Partitore resistivo}

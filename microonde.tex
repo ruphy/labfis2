@@ -8,27 +8,143 @@ import scipy.optimize as opt
 \chapter{Microonde}
 
 \section{Riflessione}
+\begin{comment}
+\begin{sagesilent}
+#Fit: coeff ang = 1
 
-Obiettivo: verificare la legge di Cartesio utillizando la lastra di mettallo, posizionata su un supporto magnetico sul
-goniometro, come superficie riflettente
+dati = np.recfromcsv('dati/MICROONDE/cartesio.csv')
+
+incidente = dati['thetai']
+rifratto = dati ['thetar']
+errang = 2*3.14/180
+
+def func(P,x):
+    return P[0]*x+P[1]
+
+odrfit, chi, chiprob = fit_chiquad(incidente, rifratto, func, init_guess=[1.,0.], ysigma=errang)
+
+
+# Plot
+
+xin = np.arange(0.9*min(incidente),1.3*max(incidente),2*max(incidente)/10)
+yin = func(odrfit.beta, xin)
+
+plt.clf()
+plt.plot(xin,yin,'k--')
+plt.grid(True,which="both")
+plt.errorbar(incidente,rifratto,errang,np.zeros_like(errang),'b|')
+plt.plot(incidente,rifratto,'r.')
+
+plt.ylabel(r"$\theta_r$")
+plt.xlabel(r"$1/\theta_i$")
+plt.grid(True,which="both")
+plt.savefig("grafici/microonde-riflessione.png", dpi=300)
+
+
+# Rimettiamo i dati nell'array
+#dati = rf.drop_fields(dati, 'n')
+#dati = ml.rec_append_fields(dati, "n", [round(x,3) for x in dcalc])
+#dati = ml.rec_append_fields(dati, "error_d", [round(x, 3) for x in errorsarr])
+
+
+\end{sagesilent}
+\end{comment}
+
+
+Intendiamo verificare la legge di Cartesio utillizando una lastra di metallo come superficie riflettente, posizionandola su un supporto magnetico sul goniometro.
+
+\begin{equation}
+sin(\theta_{incidente}) = sin(\theta_{rifratto})
+\end{equation}
 
 \begin{center}
-\includegraphics[scale=0.75]{grafici/C2-1.png} 
+%\sagestr{stampa_dati(dati, r'$\theta_{inc}$ (rad) & $\theta_{rif}$ (rad) ' )}
 \end{center}
+
 
 \section{Misura della lunghezza d'onda}
-Obiettivo: posizionando emettitore e ricevitore ai capo del metro e muovendo il ricevitore lungo questo si osserva il
-passaggio alterno per massimi e minimi di intensità, partendo da un massimo di intensità e spostandosi di n minimi fino ad
-un altro massimo si può usare la formula
-$$d = n\frac{\lambda}{2}$$
-per ricavare la lunghezza d’onda.
+
+\begin{sagesilent}
+dati = np.recfromcsv('dati/MICROONDE/lambda.csv')
+
+#Calcolo la lunghezza d'onda:
+
+d = np.array(dati['distanza'])
+d.astype(float)
+n = np.array(dati['enne'])
+n.astype(float)
+lam = 2*d/n
+sigmad = 0.5
+errlam = 2/n*sigmad
+
+lmedia = np.average(lam)
+confronto = abs(2.85-lmedia)
+
+dati = ml.rec_append_fields(dati, 'lungonda', lam)
+
+\end{sagesilent}
+
+Se si pongono trasmettitore e ricevitore ad una distanza di $\frac{n \lambda}{2}$, si può osservare che essi generano onde stazionarie. Infatti le antenne delle due apparecchiature riflettono parzialmente le onde che ricevono, e se li si mette in una condizione tale per cui le onde riflesse hanno la stessa fase delle onde incidenti si osservano dei massimi, viceversa, se le fasi sono antagoniste, si avrà una condizione di nodo.
+Ricaviamo la lunghezza d'onda posizionando emettitore e ricevitore ai capi del metro, e muovendo il ricevitore lungo questo osserviamo  il passaggio alterno per massimi e minimi di intensità. Ricaviamo $\lambda$ dalla nota formula per le onde stazionarie:
+\begin{equation}
+d = n\frac{\lambda}{2}
+\label{d}
+\end{equation}
 
 
 \begin{center}
-\includegraphics[scale=0.75]{grafici/C2-2.png} 
+\sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ (rad) & $\lambda$ (cm)' )}
 \end{center}
 
+%Otteniamo una lambda media: $$ \sage{lmedia} \pm \sage{errlam}$$
+
+%Dal confronto con la $\lambda$ (2.85 cm) teorica otteniamo: $\lambda_{teo} - \lambda_{cal} || = \sage{confronto} < 2 \sigma ( = 2 \sage{errlam} $
+
+
 \section{Rifrazione attraverso un prisma}
+
+In questa parte dell'esperienza si verifica la legge di snell:
+\begin{equation}
+\frac{sin(\theta_{i})}{sin(\theta_{r})} = \frac{n_2}{n_1}
+\end{equation}
+A tal fine posizioniamo una pedana di polistirolo sul goniometro, e vi poniamo sopra un prisma, sempre di polistirolo, contenente "styrene pellets". Si verifica la legge per vari massimi di intensità (Nota: $n_1$ = 1).
+
+
+
+
+%Dati???
+
+\section{Polarizzazione}
+
+\begin{sagesilent}
+#Calcolo dell'intensità con la legge di Malus
+
+dati = np.recfromcsv('dati/MICROONDE/malus.csv')
+
+izero = 8.75
+errgamma=2*3.14/180
+gamma=dati['gamma']*3.14/180
+iteorico = izero*(cos(gamma))**2
+errintens = 2*izero*(cos(gamma))*(sin(gamma))*errgamma
+
+dati = ml.rec_append_fields(dati, 'iteo', iteorico)
+dati = ml.rec_append_fields(dati, 'erriteo', errintens)
+
+\end{sagesilent}
+
+
+Le microonde uscenti dal trasmettitore sono polarizzate linearmente, per cui soddisfano alla legge di Malus che lega l'intensità all'angolo tra la normale al ricevitore e la direzione dell'onda. Fissata una distanza, posizioniamo emettitore e ricevitore uno difronte all'altro e misuriamo la diminuzione d'intensità relativa al variare dell'angolo rispetto all'orizzontale di emettitore-ricevitore. Di seguito i dati letti sul multimetro a confronto con l'intensità teorica data dalla legge di Malus:
+
+\begin{equation}
+I = I_{0} cos^2 \gamma
+\end{equation}
+
+\begin{center}
+\sagestr{stampa_dati(dati, r'$I$ (Volt) & $\gamma$ (rad) & $I_{teorico}$ (Volt) & $\sigma_{I_{teo}}$ ' )}
+\end{center}
+
+Osservazione: in questo caso l'errore è propagato sulle intensità "teoriche", poiché gli angoli registrati, utilizzati per il calcolo delle intensità, erano affetti da una imprecisione di circa 2 gradi.
+
 
 \section{Interferenza da doppia fenditura}
 \begin{sagesilent}
@@ -44,7 +160,6 @@ def ff(x, a,w,t):
 #print dfen['angolo']
 pars, pcov = opt.curve_fit(ff, np.array(dfen['angolo']), np.array(dfen['volt']), p0=[500., 50., 1.])
 
-print n(ff(1, 1, 1, 1))
 print pcov
 
 print pars
@@ -58,17 +173,69 @@ plt.plot(dfen['angolo'], dfen['volt'], 'o--')
 plt.savefig("grafici/microonde-doppiafend.png")
 \end{sagesilent}
 
-\includegraphics[scale=0.75]{grafici/microonde-doppiafend.png}
 
-Preparazione: utilizzando un supporto magnetico sul goniometro, montare tra lastre di metallo in modo da avere due
-fenditure di circa 1,5 cm. Spostando il ricevitore si troveranno i massimi e i minimi di interferenza e si potrà verificare la
+Utilizzando un supporto magnetico sul goniometro, montiamo tre lastre di metallo in modo da avere due
+fenditure di circa 1,5 cm. Spostando il ricevitore si troviamo i massimi e i minimi di interferenza al fine di verificare la
 loro posizione rispetto alla previsione teorica: $d \sin(\theta) = n \lambda$ (per i massimi, con d distanza delle fenditure, $\theta$ angolo
 rispetto alla perpendicolare, n numero intero).
 
-\section{Specchio di Lloyd}
-L'obiettivo del nostro esperimento è misurare la velocità della luce $c$.
+\includegraphics[scale=0.75]{grafici/microonde-doppiafend.png}
 
-L'apparato di misurazione consiste principalmente in:
+\section{Specchio di Lloyd}
+
+\begin{sagesilent}
+#Calcolo della lunghezza d'onda
+
+dati = np.recfromcsv('dati/MICROONDE/lloyd.csv')
+
+d = dati['delta']
+enne = dati['n']
+
+lam = 2*d/enne
+
+
+dati = ml.rec_append_fields(dati, 'lung_onda', lam)
+
+\end{sagesilent}
+
+Posizioniamo emettitore e ricevitore a distanza di un circa un metro, uno dinnanzi all'altro. Su un secondo metro, perpendicolare alla direzione emettitore-ricevitore e passante per il goniometro, montiamo una lastra di metallo che funge da specchio: in tal modo generiamo un'interferenza dovuta alla differenza di cammino delle onde (una parte arriva direttamente al ricevitore, mentre altre onde percorrono il cammino dall'emettitore allo specchio e dallo specchio al ricevitore). Cerchiamo il minimo di intensità con lo specchio a distanza minima dal goniometro e raccogliamo i massimi di intensità al variare della distanza, per determinare $\lambda$ come in \ref{d}, dove d è però data:
+
+$$ d = \sqrt{l^2 + h^2} - \sqrt{l'^2 + h'^2} $$
+
+\begin{center}
+\sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ & $\lambda$ ' )}
+\end{center}
+
+\section{Diffrazione di Bragg}
+
+\begin{sagesilent}
+#Grafico dell'intensità in funzione dei gradi
+
+dati = np.recfromcsv('dati/MICROONDE/bragg.csv')
+plt.clf()
+plt.plot(dati['theta'], dati['volt'],'ro')
+
+plt.savefig("grafici/microonde-bragg.png")
+
+\end{sagesilent}
+
+
+Nell'ultima parte dell'esperimento ci proponiamo di verificare la legge di Bragg, 
+\begin{equation}
+n \lambda = 2 d \sin(\theta)
+\end{equation}
+la quale esprime analiticamente i fenomeni di interferenza causati dalla riflessione di onde su piani paralleli di un reticolo cristallino. Per riprodurre il fenomeno, facciamo incidere le microonde su un cubo di polistirolo su cui sono inserite su spaziature regolari delle sferette di acciaio.
+
+Nella formula:\\
+$\theta$ è l'angolo che il fascio incidente forma col piano cristallino\\
+$\lambda$ è la lunghezza d'onda della radiazione\\
+$d$ è la distanza tra due piani adiacenti\\
+$n$ indica l'ordine della diffrazione (tipicamente solo quello per n=1 è apprezzabile).\\
+
+La formula si spiega in maniera analitica considerando una differenza di cammino ottico pari a $2d\sin(\theta)$.
+
+
+\includegraphics[scale=0.75]{grafici/microonde-bragg.png}
 
 \section{Analisi dati}
 
