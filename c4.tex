@@ -200,7 +200,9 @@ $$\omega = 0.9262\pm 0.0016$$
 \end{center}
 
 Non solo, ma un circuito RLC provoca anche uno sfasamento del segnale, positivo prima della frequenza di risonanza $\omega_0$ e negativo dopo.
-Questo comportamento viene evidenziato perfettamente nella 
+Questo comportamento viene evidenziato perfettamente in questo plot, interpolato con la funzione:
+
+$$\phi=\text{arctan}\Big(\frac{\omega L -1/(\omega C)}{R}\Big)$$
 
 
 \begin{sagesilent}
@@ -210,8 +212,9 @@ Questo comportamento viene evidenziato perfettamente nella
 dati = np.recfromcsv("dati/C4/C4-sfasamento.csv")
 var('x,l,c,v,w')
 r = 300
-def f(x, l, w, v):
-    return (v*2*3.14*x*w)/( sqrt( (2*3.14*x*w)^2+(w*l/r)^2*((2*3.14*x)^2-w^2)^2 ) )
+def func(x, l, c, r):
+    num = -1*x*l-1./(c*x)
+    return np.arctan(num/r)
 
 f = dati['freq']
 p = dati['phi']
@@ -219,11 +222,12 @@ p = dati['phi']
 print fit
 
 plt.clf()
-#xin = np.arange(100, 100000, 10)
-#yin = f(xin, fit[l], fit[w], fit[v])
-#plt.semilogx(xin,yin, 'g--')
+
+xin = np.arange(10, 100000, 10)
+yin = func(xin, 0.176, 66800, 6045)
+
+plt.semilogx(xin,yin, 'g--')
 plt.semilogx(f, p, '.r')
-#plt.semilogx(dati['frequenza_hz'], dati['v_out__v_in'], '|b')
 
 plt.xlabel(r"$\omega$ [$rad/s$]")
 plt.ylabel(r"$V(\omega)$ [$rad$]")
@@ -238,3 +242,7 @@ plt.savefig("grafici/C4-sfasamento.png", dpi=300)
 \begin{center}
 \includegraphics[scale=0.75]{grafici/C4-sfasamento.png}
 \end{center}
+e ricaviamo i parametri
+$$L = 0.176\pm 0.05$$
+$$1/R = 1.6\times 10^{-4} \pm 5.39\times 10^{-5}$$
+$$1/C = 1.797\times 10^8\pm4.831\times 10^7$$
