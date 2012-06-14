@@ -320,13 +320,12 @@ Prendiamo $y = \omega^{-2}$ e $x=l_c$, linearizzando quindi il nostro problema.
 
 #Fit per il calcolo di c
 
-freq=np.array([min1, min2, min3, min4, min5])*1000*2*n(pi)
-freq.astype(float)
+freq= [min1, min2, min3, min4, min5]
 #2.773/2.083
 k = (339**2)*0.0225*(ln(0.0937/0.05)/ln(418/358))
 elle=[0.40,0.38,0.34,0.32,0.28]
 
-omegavar=1/(freq)**2 
+omegavar=1./(freq*1000*2*3.14)**2 
 
 def funz(x,a,c):
     return a*x+c
