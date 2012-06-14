@@ -8,19 +8,57 @@ import scipy.optimize as opt
 \chapter{Microonde}
 
 \section{Riflessione}
+\begin{comment}
+\begin{sagesilent}
+#Fit: coeff ang = 1
 
-Intendiamo verificare la legge di Cartesio utillizando una lastra di metallo come superficie rifelttente, posizionandola su un supporto magnetico sul goniometro.
+dati = np.recfromcsv('dati/MICROONDE/cartesio.csv')
+
+incidente = dati['thetai']
+rifratto = dati ['thetar']
+errang = 2*3.14/180
+
+def func(P,x):
+    return P[0]*x+P[1]
+
+odrfit, chi, chiprob = fit_chiquad(incidente, rifratto, func, init_guess=[1.,0.], ysigma=errang)
+
+
+# Plot
+
+xin = np.arange(0.9*min(incidente),1.3*max(incidente),2*max(incidente)/10)
+yin = func(odrfit.beta, xin)
+
+plt.clf()
+plt.plot(xin,yin,'k--')
+plt.grid(True,which="both")
+plt.errorbar(incidente,rifratto,errang,np.zeros_like(errang),'b|')
+plt.plot(incidente,rifratto,'r.')
+
+plt.ylabel(r"$\theta_r$")
+plt.xlabel(r"$1/\theta_i$")
+plt.grid(True,which="both")
+plt.savefig("grafici/microonde-riflessione.png", dpi=300)
+
+
+# Rimettiamo i dati nell'array
+#dati = rf.drop_fields(dati, 'n')
+#dati = ml.rec_append_fields(dati, "n", [round(x,3) for x in dcalc])
+#dati = ml.rec_append_fields(dati, "error_d", [round(x, 3) for x in errorsarr])
+
+
+\end{sagesilent}
+\end{comment}
+
+
+Intendiamo verificare la legge di Cartesio utillizando una lastra di metallo come superficie riflettente, posizionandola su un supporto magnetico sul goniometro.
 
 \begin{equation}
 sin(\theta_{incidente}) = sin(\theta_{rifratto})
 \end{equation}
 
-\begin{sagesilent}
-dati = np.recfromcsv('dati/MICROONDE/cartesio.csv')
-\end{sagesilent}
-
 \begin{center}
-\sagestr{stampa_dati(dati, r'$\theta_{inc}$ (rad) & $\theta_{rif}$ (rad) ' )}
+%\sagestr{stampa_dati(dati, r'$\theta_{inc}$ (rad) & $\theta_{rif}$ (rad) ' )}
 \end{center}
 
 
@@ -58,7 +96,7 @@ d = n\frac{\lambda}{2}
 \sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ (rad) & $\lambda$ (cm)' )}
 \end{center}
 
-Otteniamo una lambda media: $$ \sage{lmedia} \pm \sage{errlam}$$
+%Otteniamo una lambda media: $$ \sage{lmedia} \pm \sage{errlam}$$
 
 %Dal confronto con la $\lambda$ (2.85 cm) teorica otteniamo: $\lambda_{teo} - \lambda_{cal} || = \sage{confronto} < 2 \sigma ( = 2 \sage{errlam} $
 
@@ -71,6 +109,9 @@ In questa parte dell'esperienza si verifica la legge di snell:
 \end{equation}
 A tal fine posizioniamo una pedana di polistirolo sul goniometro, e vi poniamo sopra un prisma, sempre di polistirolo, contenente "styrene pellets". Si verifica la legge per vari massimi di intensità (Nota: $n_1$ = 1).
 
+
+
+
 %Dati???
 
 \section{Polarizzazione}
@@ -81,10 +122,13 @@ A tal fine posizioniamo una pedana di polistirolo sul goniometro, e vi poniamo s
 dati = np.recfromcsv('dati/MICROONDE/malus.csv')
 
 izero = 8.75
+errgamma=2*3.14/180
 gamma=dati['gamma']*3.14/180
 iteorico = izero*(cos(gamma))**2
+errintens = 2*izero*(cos(gamma))*(sin(gamma))*errgamma
 
 dati = ml.rec_append_fields(dati, 'iteo', iteorico)
+dati = ml.rec_append_fields(dati, 'erriteo', errintens)
 
 \end{sagesilent}
 
@@ -96,8 +140,10 @@ I = I_{0} cos^2 \gamma
 \end{equation}
 
 \begin{center}
-%\sagestr{stampa_dati(dati, r'$I$ (Volt) & $\gamma$ (rad) & $I_{teorico}$ (Volt) ' )}
+\sagestr{stampa_dati(dati, r'$I$ (Volt) & $\gamma$ (rad) & $I_{teorico}$ (Volt) & $\sigma_{I_{teo}}$ ' )}
 \end{center}
+
+Osservazione: in questo caso l'errore è propagato sulle intensità "teoriche", poiché gli angoli registrati, utilizzati per il calcolo delle intensità, erano affetti da una imprecisione di circa 2 gradi.
 
 
 \section{Interferenza da doppia fenditura}
@@ -152,10 +198,12 @@ dati = ml.rec_append_fields(dati, 'lung_onda', lam)
 
 \end{sagesilent}
 
-Posizioniamo emettitore e ricevitore a distanza di un circa un metro, uno dinnanzi all'altro. Su un secondo metro, perpendicolare alla direzione emettitore-ricevitore e passante per il goniometro, montiamo una lastra di metallo che funge da specchio: in tal modo generiamo un'interferenza dovuta alla differenza di cammino delle onde (una parte arriva direttamente al ricevitore, mentre altre onde percorrono il cammino dall'emettitore allo specchio e dallo specchio al ricevitore). Cerchiamo il minimo di intensità con lo specchio a distanza minima dal goniometro e raccogliamo i massimi di intensità al variare della distanza, per determinare $\lambda$ come in \ref{d}
+Posizioniamo emettitore e ricevitore a distanza di un circa un metro, uno dinnanzi all'altro. Su un secondo metro, perpendicolare alla direzione emettitore-ricevitore e passante per il goniometro, montiamo una lastra di metallo che funge da specchio: in tal modo generiamo un'interferenza dovuta alla differenza di cammino delle onde (una parte arriva direttamente al ricevitore, mentre altre onde percorrono il cammino dall'emettitore allo specchio e dallo specchio al ricevitore). Cerchiamo il minimo di intensità con lo specchio a distanza minima dal goniometro e raccogliamo i massimi di intensità al variare della distanza, per determinare $\lambda$ come in \ref{d}, dove d è però data:
+
+$$ d = \sqrt{l^2 + h^2} - \sqrt{l'^2 + h'^2} $$
 
 \begin{center}
-%\sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ & $\lambda$ ' )}
+\sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ & $\lambda$ ' )}
 \end{center}
 
 \section{Diffrazione di Bragg}
