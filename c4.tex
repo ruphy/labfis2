@@ -47,11 +47,11 @@ plt.savefig("grafici/C4-om.png",dpi=300)
 \end{sagesilent}
 
 Nel sotto, i parametri trovati dal fit sono stati:
-$$V_0 = 27.93\pm3.837$$
-$$R = 419 \pm 57.56$$
-$$C = 9.554\times10^{-8} \pm 1.3\times10^{-8}$$
-$$\omega_0 = 3.173\times10^4 \pm 84.57$$
-$$\gamma = 5896 \pm 471.8$$
+$$V_0 = 28\pm4$$
+$$R = 419 \pm 57$$
+$$C = 9.6\times10^{-8} \pm 1.3\times10^{-8}$$
+$$\omega_0 = 3.173\times10^4 \pm 85$$
+$$\gamma = 5900 \pm 470$$
 
 Dalla funzione:
 $$V(t) = RCV_0e^{-\gamma t}[\gamma cos(\omega t) + \omega sin(\omega t)]$$
@@ -61,7 +61,7 @@ In un grafico:
 
 
 \begin{center}
- \includegraphics[scale=0.75]{grafici/C4-om.png}
+%  \includegraphics[scale=0.75]{grafici/C4-om.png}
 \end{center}
 \subsection{Smorzamento critico}
 
@@ -94,9 +94,9 @@ plt.savefig("grafici/C4-sm-critico.png", dpi=300)
 Nello smorzamento critico, i parametri ricavati dal fit sull'equazione
 $$V(t) = Q_0R\gamma^2te^{-\gamma t}$$
 sono
-$$Q_0 = 0.001193\pm2.739\times10^{-5}$$
-$$R=8.62\times10^5\pm1.98\times10^4$$
-$$\gamma = 0.03345\pm4.202\times10^5$$
+$$Q_0 = 0.00119\pm2.7\times10^{-5}$$
+$$R=8.6\times10^5\pm2\times10^4$$
+$$\gamma = 0.03345\pm4.2\times10^5$$
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/C4-sm-critico.png}
@@ -132,10 +132,10 @@ plt.savefig("grafici/C4-sovrasmorzamento.png", dpi=300)
 \end{sagesilent}
 
 Per quanto riguarda il sovrasmorzamento, i parametri trovati dal fit sono stati:
-$$Q_0 = 0.0264\pm0.0003815$$
-$$R = 4.581\times10^5 \pm 6559$$
-$$\omega_0 = 0.03103 \pm 0.0009811$$
-$$\gamma = 0.2917 \pm 0.01839$$
+$$Q_0 = 0.0264\pm0.0004$$
+$$R = 4.581\times10^5 \pm 7\times10^3$$
+$$\omega_0 = 0.031 \pm 0.001$$
+$$\gamma = 0.29 \pm 0.018$$
 
 Dalla funzione:
 $$V(t) = Q_0R\frac{\omega_0}{2\beta}[e^{-(\gamma-\beta)t}-e^{-(\gamma+\beta)t}]$$
@@ -190,10 +190,10 @@ plt.savefig("grafici/C4-ris.png", dpi=300)
 Abbiamo fittato il grafico con la funzione
 $$V(t) = V_0\frac{\omega R/L}{\sqrt{(\omega R/L)^2 + (\omega^2-\omega_0^2)^2}}$$
 ottenendo
-$$R = 2100 \pm 9.2$$
-$$L = 0.0402 \pm 0.003$$
-$$C = 0.27\times 10^{-7} \pm 5.24 \times 10^{-9}$$
-$$\omega = 0.9262\pm 0.0016$$
+$$R = 2100 \pm 9$$
+$$L = 0.040 \pm 0.003$$
+$$C = 0.27\times 10^{-7} \pm 5 \times 10^{-9}$$
+$$\omega = 0.926\pm 0.002$$
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/C4-ris.png}
@@ -252,8 +252,8 @@ plt.savefig("grafici/C4-sfasamento.png", dpi=300)
 \end{center}
 e ricaviamo i parametri
 $$L = 0.176\pm 0.05$$
-$$1/R = 1.6\times 10^{-4} \pm 5.39\times 10^{-5}$$
-$$1/C = 1.797\times 10^8\pm4.831\times 10^7$$
+$$1/R = 1.6\times 10^{-4} \pm 5.4\times 10^{-5}$$
+$$1/C = 1.8\times 10^8\pm4.8\times 10^7$$
 
 Otteniamo dunque una frequenza di risonanza $\omega_0$ pari a
-$$\omega_0 = \frac{1}\sqrt{LC}} = 29200 \pm 6552\text{Hz}$$
+$$\omega_0 = \frac{1}{\sqrt{LC}} = 29200 \pm 6552\text{Hz}$$

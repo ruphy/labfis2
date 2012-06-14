@@ -120,8 +120,8 @@ gamma=dati['gamma']*3.14/180
 iteorico = izero*(cos(gamma))**2
 errintens = 2*izero*(cos(gamma))*(sin(gamma))*errgamma
 
-dati = ml.rec_append_fields(dati, 'iteo', iteorico)
-dati = ml.rec_append_fields(dati, 'erriteo', errintens)
+dati = ml.rec_append_fields(dati, 'iteo', [round(x, 1) for x in iteorico])
+dati = ml.rec_append_fields(dati, 'erriteo', [round(x, 2) for x in errintens])
 
 \end{sagesilent}
 
@@ -160,9 +160,10 @@ plt.clf()
 xin = np.arange(min(dfen['angolo']), 220, 1)
 print "now"
 yin = ff(xin, pars[0], pars[1], pars[2])
-plt.plot(dfen['angolo'], dfen['volt'], 'o--')
-
-plt.savefig("grafici/microonde-doppiafend.png")
+plt.plot(dfen['angolo'], dfen['volt'], 'o')
+plt.ylabel("Intensita'")
+plt.xlabel("Posizione angolare")
+plt.savefig("grafici/microonde-doppiafend.png", dpi=300)
 \end{sagesilent}
 
 
@@ -171,7 +172,9 @@ fenditure di circa 1,5 cm. Spostando il ricevitore si troviamo i massimi e i min
 loro posizione rispetto alla previsione teorica: $d \sin(\theta) = n \lambda$ (per i massimi, con d distanza delle fenditure, $\theta$ angolo
 rispetto alla perpendicolare, n numero intero).
 
+\begin{center}
 \includegraphics[scale=0.75]{grafici/microonde-doppiafend.png}
+\end{center}
 
 \section{Specchio di Lloyd}
 
@@ -186,16 +189,16 @@ enne = dati['n']
 lam = 2*d/enne
 
 
-dati = ml.rec_append_fields(dati, 'lung_onda', lam)
+dati = ml.rec_append_fields(dati, 'lung_onda', [round(x, 2) for x in lam])
 
 \end{sagesilent}
 
-Posizioniamo emettitore e ricevitore a distanza di un circa un metro, uno dinnanzi all'altro. Su un secondo metro, perpendicolare alla direzione emettitore-ricevitore e passante per il goniometro, montiamo una lastra di metallo che funge da specchio: in tal modo generiamo un'interferenza dovuta alla differenza di cammino delle onde (una parte arriva direttamente al ricevitore, mentre altre onde percorrono il cammino dall'emettitore allo specchio e dallo specchio al ricevitore). Cerchiamo il minimo di intensità con lo specchio a distanza minima dal goniometro e raccogliamo i massimi di intensità al variare della distanza, per determinare $\lambda$ come in \ref{d}, dove d è però data:
+Posizioniamo emettitore e ricevitore a distanza di un circa un metro, uno dinnanzi all'altro. Su un secondo metro, perpendicolare alla direzione emettitore-ricevitore e passante per il goniometro, montiamo una lastra di metallo che funge da specchio: in tal modo generiamo un'interferenza dovuta alla differenza di cammino delle onde (una parte arriva direttamente al ricevitore, mentre altre onde percorrono il cammino dall'emettitore allo specchio e dallo specchio al ricevitore). Cerchiamo il minimo di intensità con lo specchio a distanza minima dal goniometro e raccogliamo i massimi di intensità al variare della distanza, per determinare $\lambda$ come prima, dove d è però data:
 
 $$ d = \sqrt{l^2 + h^2} - \sqrt{l'^2 + h'^2} $$
 
 \begin{center}
-\sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ & $\lambda$ ' )}
+\sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ & $\lambda$ (cm)' )}
 \end{center}
 
 \section{Diffrazione di Bragg}
