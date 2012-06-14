@@ -50,12 +50,14 @@ plt.savefig("grafici/microonde-riflessione.png", dpi=300)
 
 Intendiamo verificare la legge di Cartesio utillizando una lastra di metallo come superficie riflettente, posizionandola su un supporto magnetico sul goniometro.
 
+\includegraphics[scale=0.75]{grafici/microonde-riflessione.png}
+
 \begin{equation}
 sin(\theta_{incidente}) = sin(\theta_{rifratto})
 \end{equation}
 
 \begin{center}
-\sagestr{stampa_dati(dati, r'$\theta_{inc}$ (rad) & $\theta_{rif}$ (rad) ' )}
+\sagestr{stampa_dati(dati, r'$\theta_{inc}$ (gradi) & $\theta_{rif}$ (gradi) ' )}
 \end{center}
 
 
@@ -131,7 +133,7 @@ I = I_{0} cos^2 \gamma
 \end{equation}
 
 \begin{center}
-\sagestr{stampa_dati(dati, r'$I$ (Volt) & $\gamma$ (rad) & $I_{teorico}$ (Volt) & $\sigma_{I_{teo}}$ ' )}
+\sagestr{stampa_dati(dati, r'$I$ (Volt) & $\gamma$ (gradi) & $I_{teorico}$ (Volt) & $\sigma_{I_{teo}}$ ')}
 \end{center}
 
 Osservazione: in questo caso l'errore è propagato sulle intensità "teoriche", poiché gli angoli registrati, utilizzati per il calcolo delle intensità, erano affetti da una imprecisione di circa 2 gradi.
@@ -158,7 +160,6 @@ plt.clf()
 xin = np.arange(min(dfen['angolo']), 220, 1)
 print "now"
 yin = ff(xin, pars[0], pars[1], pars[2])
-plt.plot(xin, yin)
 plt.plot(dfen['angolo'], dfen['volt'], 'o--')
 
 plt.savefig("grafici/microonde-doppiafend.png")
@@ -224,13 +225,8 @@ $d$ è la distanza tra due piani adiacenti\\
 $n$ indica l'ordine della diffrazione (tipicamente solo quello per n=1 è apprezzabile).\\
 
 La formula si spiega in maniera analitica considerando una differenza di cammino ottico pari a $2d\sin(\theta)$.
+Tuttavia il grafico ha dato un risultato non interpretabile. 
 
-
-%\includegraphics[scale=0.75]{grafici/microonde-bragg.png}
-
-\section{Analisi dati}
-
-\section{Allegato: dati}
 \begin{sagesilent}
 def stampa_dati(wa, header):
   s = r"\begin{tabular}{c*{" + "%d" % (len(wa.dtype)-1)
@@ -243,9 +239,4 @@ def stampa_dati(wa, header):
   s += r"\end{tabular}"
   return s
 \end{sagesilent}
-
-\begin{center}
-
-% \sagestr{stampa_dati(d, r"Frequenza (Hz) & I (mA) & Valore mu & $V_{rms}$ (V)")}
-\end{center}
 
