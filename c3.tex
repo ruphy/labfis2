@@ -104,6 +104,8 @@ Per verificare l'accordo tra la legge e la distribuzione dei valori osservati op
 Otteniamo $\chi^2 = \sage{round(chi,3)}$ con d.o.f = $\sage{len(tempo)-1}$\\
 Il p-value associato è $0.066$, maggiore della soglia di accettabilità di $0.05$.
 
+Ricaviamo il valore di $C$ da $\tau$: $C= 389 \pm 7 nF $. Il valore noto 367 nF non rientra all'interno delle due deviazioni standard. 
+
 \subsubsection{Circuito RL}
 Con un'onda quadra a 250 Hz, abbiamo raccolto i seguenti dati:
 
@@ -174,6 +176,9 @@ plt.savefig("grafici/C3/RLtau.png",dpi=300)
 Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)} \pm \sage{round(out.sd_beta[1],2)}\ \mu s$. Il fit ha un $\chi^2 = \sage{round(chi,2)} $ con $d.o.f= \sage{dof}$. Il p-value associato è $0.83$.
 \\
 
+$L = \tau*R = 12.0 \pm 0.4 mH$ 
+
+
 Valgono le considerazioni precedenti per quanto riguarda le incertezze. 
 
 \section{Corrente alternata: studio frequenza di taglio}
@@ -192,10 +197,14 @@ Trattandosi di circuiti RC e RL in cui le impedenze sono collegate in serie, si 
 
 Allora otteniamo la coppia di equazioni 
 
-$$V_{Ro} = Ri_o = \frac{V_o}{Z} = \frac{RV_o}{\sqrt{R^2+X^2}} $$ 
+$$I = \frac{V_o}{|Z|} = \frac{V_o}{\sqrt{R_{eq}^2+X^2}} $$ 
 
 $$\phi = \arctan \frac{X}{R} $$
 
+
+$\frac{V_{out }}{V_{in}} = \frac{IR}{V_o - IR_g}$
+
+con $R_g$ resistenza interna del generatore. 
 
 Dove ad $X$ sostituiamo:
 \begin{itemize}
@@ -226,14 +235,12 @@ Frequenza ($Hz$) & $V_{out}/V_{in}$ & $\phi\ (rad))$ & Delta ($\mu s$)\\
 \end{tabular}
 \end{center}
 
-Lasciamo C come parametro da stimare, e interpoliamo i valori raccolti di $V_{out}$ e $V_{in}$ in funzione della frequenza, usando l'equazione.
+Lasciamo C come parametro da stimare, e interpoliamo i valori raccolti di $V_{out}$ e $V_{in}$ in funzione della frequenza.
 
 $V_{in}$ è il valore del potenziale del circuito letto da una sonda posta prima della resistenza.
 $V_{out}$ è il valore letto dalla sonda posta prima dell'induttanza 
 
-$\frac{V_{out }}{V_{in}} = \frac{IR}{V_o - IR_g}$
-
-con $R_g$ resistenza interna del generatore. Da questa si ricava:
+Dalle formule precedentemente esposte si ricava:
 
 $$\frac{V_{out}}{V_{in}} = \frac{R}{\sqrt{R_{eq}^2 - R_g +(\omega C)^{-2}}}$$
 
