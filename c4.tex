@@ -1,4 +1,7 @@
 \chapter{C4}
+\section{Prima parte}
+
+In regime di corrente impulsata, cerchiamo di determinare i parametri $\gamma$ e $\omega_0$ del circuito.
 
 \begin{sagesilent}
 
@@ -6,22 +9,95 @@ import numpy as np
 from scipy import odr
 import matplotlib.pyplot as plt
 
-#Sottosmorzamento tempo-volt
 
 \end{sagesilent}
+\subsection{Sottosmorzamento}
+
+\begin{sagesilent}
+#Sottosmorzamento tempo-volt
+
+t =np.array([190,570,950,1520])
+picchi=np.array([520,-148,60,-24])
+
+def func(P,x):
+    print P
+    return 100*np.sin(x)
+    ial = P[0]*P[1]*P[2]*np.exp(-1*P[3]*x)*(P[3]*np.cos(P[4]*x)+P[4]*np.sin(P[4]*x))
+    print max(ial)
+    return ial
+    #return f(x, P[0], P[1], P[2], P[3], P[4])
+
+var('x,r,c,v,g, om')
+def f(x,r,c, v, g, om):
+    return r*c*v*exp(-g*x)*(g*cos(om*x)+om*sin(om*x))
+    
+
+richipars = [419., 9.554*10^-8, 27.93, 5896., 3.173*10^4]
+xin = np.arange(150,2000,0.1)
+
+yin = func(richipars, xin)
+
+plt.clf()
+plt.plot(t,picchi,'bo')
+plt.plot(xin,yin,'g--')
+plt.ylabel(r"$V(t)$ [volt]")
+plt.xlabel(r"Tempo [s]")
+plt.savefig("grafici/C4-om.png",dpi=300)
+ 
+\end{sagesilent}
+
+Nel sotto, i parametri trovati dal fit sono stati:
+$$V_0 = 27.93\pm3.837$$
+$$R = 419 \pm 57.56$$
+$$C = 9.554\times10^{-8} \pm 1.3\times10^{-8}$$
+$$\omega_0 = 3.173\times10^4 \pm 84.57$$
+$$\gamma = 5896 \pm 471.8$$
+
+Dalla funzione:
+$$V(t) = RCV_0e^{-\gamma t}[\gamma cos(\omega t) + \omega sin(\omega t)]$$
+ove
+$$\omega=\sqrt{\omega_0^2-\gamma^2}$$
+In un grafico:
 
 
+\begin{center}
+ \includegraphics[scale=0.75]{grafici/C4-om.png}
+\end{center}
+\subsection{Smorzamento critico}
 
 \begin{sagesilent}
 
 #Smorzamento critico tempo-volt
 dati = np.recfromcsv("dati/C4/C4-smorzamento.csv")
+t = dati['t']
+v = dati['v']
 
+def sovrasm(p, x):
+  gamma = p[2]
+  deway = p[0]*p[1]*(gamma**2)*x*np.exp(-1*(gamma)*x)
+  return deway
+  
+#(myout, chiquad, prob) = fit_chiquad(t, v, sottosm, [0.02, 500,0.031,0.29], v*0.04)
+#myout.pprint()
 
+richipars = [0.001193, 8.62*10^5, 0.033]
 
+plt.clf()
+xin = np.arange(2, 200)
+yin = sovrasm(richipars, xin)
+plt.plot(xin, yin, '--')
+plt.errorbar(t, v, v*0.04, fmt="g.")
+plt.xlabel('Tempo (s)')
+plt.ylabel('D.d.p (volt)')
+plt.savefig("grafici/C4-sm-critico.png", dpi=300)
 \end{sagesilent}
 
 
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C4-sm-critico.png}
+\end{center}
+
+\subsection{Sovrasmorzamento}
 \begin{sagesilent}
 #Sovrasmorzamento tempo-volt
 dati = np.recfromcsv("dati/C4/C4-sovrasmorzamento.csv")
@@ -29,30 +105,47 @@ t = dati['t']
 v = dati['v']
 
 def sottosm(p, x):
-  omega0 = p[1]
-  gamma = p[2]
-  #print gamma
-  #print omega0
-  beta = np.sqrt(gamma**2-omega0**2)
-  #print beta
-  print p
-  deway = p[0]*(omega0**2)*(np.exp((beta-gamma)*x) - np.exp((beta+gamma)*x))/(2*beta+0.1)
-  print deway
+  omega0 = p[2]
+  gamma = p[3]
+  beta = np.sqrt(abs(gamma**2-omega0**2))
+  deway = p[0]*p[1]*(omega0**2)*(np.exp(-1*(gamma-beta)*x) - np.exp(-1*(beta+gamma)*x))/(2*beta)
   return deway
   
-(myout, chiquad, prob) = fit_chiquad(t, v, sottosm, [500,0.031,0.29], v*0.04)
-myout.pprint()
+#(myout, chiquad, prob) = fit_chiquad(t, v, sottosm, [0.02, 500,0.031,0.29], v*0.04)
+#myout.pprint()
+
+richipars = [0.0266, 4.581*10^5, 0.031, 0.2917]
 
 plt.clf()
+xin = np.arange(2, 700)
+yin = sottosm(richipars, xin)
+plt.plot(xin, yin, '--')
 plt.errorbar(t, v, v*0.04, fmt="g.")
-plt.xlabel('tempo (s)')
+plt.xlabel('Tempo (s)')
 plt.ylabel('D.d.p (volt)')
 plt.savefig("grafici/C4-sovrasmorzamento.png", dpi=300)
 \end{sagesilent}
 
+Per quanto riguarda il sovrasmorzamento, i parametri trovati dal fit sono stati:
+$$Q_0 = 0.0264\pm0.0003815$$
+$$R = 4.581\times10^5 \pm 6559$$
+$$\omega_0 = 0.03103 \pm 0.0009811$$
+$$\gamma = 0.2917 \pm 0.01839$$
+
+Dalla funzione:
+$$V(t) = Q_0R\frac{\omega_0}{2\beta}[e^{-(\gamma-\beta)t}-e^{-(\gamma+\beta)t}]$$
+ove
+$$\beta=\sqrt{\gamma^2-\omega_0^2}$$
+In un grafico:
+
 \begin{center}
 \includegraphics[scale=0.75]{grafici/C4-sovrasmorzamento.png}
 \end{center}
+
+
+
+\section{Seconda parte}
+
 
 \begin{sagesilent}
 
@@ -76,7 +169,8 @@ plt.clf()
 xin = np.arange(100, 100000, 10)
 yin = f(xin, fit[l], fit[w], fit[v])
 plt.semilogx(xin,yin, 'g--')
-plt.semilogx(dati['frequenza_hz'], dati['v_out__v_in'], 'ok')
+plt.errorbar(dati['frequenza_hz'], dati['v_out__v_in'], yerr=dati['v_out__v_in']*0.02, fmt='.r')
+#plt.semilogx(dati['frequenza_hz'], dati['v_out__v_in'], '|b')
 
 plt.xlabel(r"$\omega$ [$rad/s$]")
 plt.ylabel(r"$V(\omega)$ [$rad$]")
@@ -88,45 +182,11 @@ plt.savefig("grafici/C4-ris.png", dpi=300)
   
 \end{sagesilent}
 
-\includegraphics[scale=0.75]{grafici/C4-ris.png}
-
-
-
-%Sottosmorzamento
-\begin{sagesilent}
- 
-om = 2*n(pi)*100
-t =np.array([190,570,950,1520])
-picchi=np.array([520,-148,60,-24])
-
-def func(P,x):
-    return P[0]*P[1]*P[2]*exp(-P[3]*t)*(P[3]*cos(om*x)+om*sin(100*x))
-
-#var('x,r,c,v,g')
-#def f(x,r,c, v, g):
-#    return r*c*v*exp(-g*t)*(g*cos(om*x)+om*sin(100*x))
-    
-plt.clf()
-plt.plot(t,picchi,'bo')
-
-mod = odr.Model(func)
-data = odr.RealData(t,picchi)
-done = odr.ODR(data, mod, beta0=[1.,1.,1.,1.],maxit=1000)
-sotto = done.run()
-
-#xin = np.arange(min(t),max(t),1)
-#yin = func(sotto.beta, xin)
-
-#plt.plot(xin,yin,'g--')
-plt.xlabel(r"$\omega$ [$rad/s$]")
-plt.ylabel(r"$V(\omega)$ [$rad$]")
-plt.savefig("grafici/C4-om.png",dpi=300)
- 
-\end{sagesilent}
-
 \begin{center}
- \includegraphics[scale=0.75]{grafici/C4-om.png}
+\includegraphics[scale=0.75]{grafici/C4-ris.png}
 \end{center}
+
+
 
 %Funzione di trasferimento del modulo
 % \begin{sagesilent}
