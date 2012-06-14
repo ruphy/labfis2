@@ -91,7 +91,12 @@ plt.xlabel('Tempo (s)')
 plt.ylabel('D.d.p (volt)')
 plt.savefig("grafici/C4-sm-critico.png", dpi=300)
 \end{sagesilent}
-
+Nello smorzamento critico, i parametri ricavati dal fit sull'equazione
+$$V(t) = Q_0R\gamma^2te^{-\gamma t}$$
+sono
+$$Q_0 = 0.001193\pm2.739\times10^{-5}$$
+$$R=8.62\times10^5\pm1.98\times10^4$$
+$$\gamma = 0.03345\pm4.202\times10^5$$
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/C4-sm-critico.png}
@@ -145,7 +150,8 @@ In un grafico:
 
 
 \section{Seconda parte}
-
+Valutiamo ora invece il comportamento del circuito al variare della frequenza in ingresso.
+Notiamo che agisce come un filtro “passa banda”, in quanto tende più facilmente ad attenuare frequenze al di fuori di una certa fascia. Questa situazione è efficacemente mostrata dal seguente grafico:
 
 \begin{sagesilent}
 
