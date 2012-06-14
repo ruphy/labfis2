@@ -159,6 +159,7 @@ plt.plot(xin,yin,'b--')
 plt.ylabel(r"$D.d.p$ $(V)$ ")
 plt.xlabel(r"$Tempo$ $(\mu s)$")
 plt.grid(True)
+
 plt.savefig("grafici/C3/RLtau.png",dpi=300)
 
 \end{sagesilent}
@@ -225,11 +226,17 @@ Frequenza ($Hz$) & $V_{out}/V_{in}$ & $\phi\ (rad))$ & Delta ($\mu s$)\\
 \end{tabular}
 \end{center}
 
-Lasciamo C come parametro da stimare, e interpoliamo i valori raccolti di $V_{out}$ e $V_{in}$ in funzione della frequenza, usando l'equazione:
+Lasciamo C come parametro da stimare, e interpoliamo i valori raccolti di $V_{out}$ e $V_{in}$ in funzione della frequenza, usando l'equazione.
 
-$$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega C)^{-2}}}$$
+$V_{in}$ è il valore del potenziale del circuito letto da una sonda posta prima della resistenza.
+$V_{out}$ è il valore letto dalla sonda posta prima dell'induttanza 
 
-dove $V_{Ro} = V_{out}$ (tensione ai capi della resistenza) e $V_o = V_{in}$.
+$\frac{V_{out }}{V_{in}} = \frac{IR}{V_o - IR_g}$
+
+con $R_g$ resistenza interna del generatore. Da questa si ricava:
+
+$$\frac{V_{out}}{V_{in}} = \frac{R}{\sqrt{R_{eq}^2 - R_g +(\omega C)^{-2}}}$$
+
 
 %Fit DDP per RC
 \begin{sagesilent}
@@ -244,10 +251,14 @@ xerr = 0
 
 var('x,C')
 def funz(x, C):
-    return 727/sqrt(727^2+(x*2*n(pi)*C)^(-2))
+    return 677/sqrt(677^2 +(x*2*n(pi)*C)^(-2))
     
 def func(P,x):
-    return 727/sqrt(727^2+(x*2*n(pi)*P[0])^(-2))
+    return 677/sqrt(677^2 +(x*2*n(pi)*P[0])^(-2))
+    
+
+def fa(x, C):
+    return 677/sqrt(727^2+(x*2*n(pi)*C)^(-2))    
     
 mymod = odr.Model(func)
 mydata = odr.RealData(freq,volt)
@@ -265,9 +276,11 @@ plt.clf()
 
 xin = np.arange(min(freq),1.5*max(freq),10)
 yin = funz(xin,out.beta[0])
+yin2 = fa(xin,out.beta[0])
 plt.semilogx(freq,volt,'ro')
 plt.errorbar(freq,volt,yerr,xerr,fmt=None)
 plt.plot(xin,yin,'b--')
+plt.plot(xin,yin2,'r--')
 plt.ylabel(r"$\frac{V_{out}}{V_{in}}$ ")
 plt.xlabel(r"$\nu$ Frequenza $(Hz)$")
 plt.grid(True)
@@ -379,7 +392,7 @@ Frequenza ($Hz$) & Delta V ($V_{out}/V_{in}$) & $\phi (rad)$ & Delta ($\mu s$) \
 
 Anche questa volta interpoliamo i dati raccolti con la funzione:
 
-$$\frac{V_{Ro}}{V_o} = \frac{R}{\sqrt{R^2+(\omega L)^2}}$$
+$$\frac{V_{out}}{V_{in}} = \frac{R}{\sqrt{R_eq^2 -R_g + (\omega L)^2}}$$
 
 
 %Fit DDP per RL
@@ -430,7 +443,7 @@ lerrorstring = "%.2G" % (myout.sd_beta[0]*1000)
 
 
 
-Otteniamo $L=\sage{lstring}\pm\sage{lerrorstring} \ H$.  Non ha senso calcolare il $\chi^2$, poichè la funzione di fit non è in buon accordo con i nostri dati. Sospettiamo la presenza di impedenze ignote che abbiamo trascurato.
+Otteniamo $L=\sage{lstring}\pm\sage{lerrorstring} \ H$ e $\chi^2 = \sage{round(chiquadrato,3)}$ e p-value: $=\sage{round(chdtrc(ddof,float(chi)),3)}$.
 
 
 La frequenza di taglio viene definita come $\omega_c = R/L$. Usando la L di questo fit, $\omega_c = \sage{round(omega,2)}\ Hz$. 
