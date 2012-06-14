@@ -1,4 +1,4 @@
-﻿\chapter{C3}
+\chapter{C3}
 Oggetto di studio di questa esperienza è l'andamento della differenza di potenziale ai capi della resistenza e della capacità (o induttanza) di circuiti RC o RL in corrente impulsata e in corrente alternata.
 A tal fine costruiamo un circuito con i seguenti elementi:
 
@@ -90,12 +90,12 @@ plt.savefig("grafici/C3/RCtau.png",dpi=300)
 
 \end{sagesilent}
 
-
 \begin{center}
  \includegraphics[scale=0.70]{grafici/C3/RCtau.png}
 \end{center}
 
-Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)}\pm \sage{round(out.sd_beta[1],2)}\ \mu s$.
+
+Il valore stimato dall'interpolazione è $\tau=\sage{round(out.beta[1],2)}\pm \sage{round(out.sd_beta[1],2)}\mu s$.
 Valore atteso: $\tau=RC=266.8\ \mu s$, con R=$727\ \Omega$.
 L'errore è l'incertezza della misura del tempo e del potenziale, letti sul display dell'oscilloscopio. Per quanto riguarda il tempo, l'errore è stata assunto trascurabile poichè abbiamo campionato usando la griglia dell'oscilloscopio; per quanto riguarda il potenziale, abbiamo stimato un'errore percentuale del 8\%, che è circa il rapporto tra l'incertezza dello strumento e il valore della misura. 
 \\

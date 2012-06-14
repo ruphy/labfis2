@@ -6,13 +6,53 @@ import numpy as np
 from scipy import odr
 import matplotlib.pyplot as plt
 
-trasfm = np.recfromcsv("dati/C4-tensione-fase.csv")
-
 #Sottosmorzamento tempo-volt
-#Smorzamento critico tempo-volt
-#Sovrasmorzamento tempo-volt
+
 \end{sagesilent}
 
+
+
+\begin{sagesilent}
+
+#Smorzamento critico tempo-volt
+dati = np.recfromcsv("dati/C4/C4-smorzamento.csv")
+
+
+
+\end{sagesilent}
+
+
+\begin{sagesilent}
+#Sovrasmorzamento tempo-volt
+dati = np.recfromcsv("dati/C4/C4-sovrasmorzamento.csv")
+t = dati['t']
+v = dati['v']
+
+def sottosm(p, x):
+  omega0 = p[1]
+  gamma = p[2]
+  #print gamma
+  #print omega0
+  beta = np.sqrt(gamma**2-omega0**2)
+  #print beta
+  print p
+  deway = p[0]*(omega0**2)*(np.exp((beta-gamma)*x) - np.exp((beta+gamma)*x))/(2*beta+0.1)
+  print deway
+  return deway
+  
+(myout, chiquad, prob) = fit_chiquad(t, v, sottosm, [500,0.031,0.29], v*0.04)
+myout.pprint()
+
+plt.clf()
+plt.errorbar(t, v, v*0.04, fmt="g.")
+plt.xlabel('tempo (s)')
+plt.ylabel('D.d.p (volt)')
+plt.savefig("grafici/C4-sovrasmorzamento.png", dpi=300)
+\end{sagesilent}
+
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C4-sovrasmorzamento.png}
+\end{center}
 
 \begin{sagesilent}
 
