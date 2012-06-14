@@ -187,27 +187,54 @@ plt.savefig("grafici/C4-ris.png", dpi=300)
 #Funzione di trasferimento fase:freq-rad
   
 \end{sagesilent}
+Abbiamo fittato il grafico con la funzione
+$$V(t) = V_0\frac{\omega R/L}{\sqrt{(\omega R/L)^2 + (\omega^2-\omega_0^2)^2}}$$
+ottenendo
+$$R = 2100 \pm 9.2$$
+$$L = 0.0402 \pm 0.003$$
+$$C = 0.27\times 10^{-7} \pm 5.24 \times 10^{-9}$$
+$$\omega = 0.9262\pm 0.0016$$
 
 \begin{center}
 \includegraphics[scale=0.75]{grafici/C4-ris.png}
 \end{center}
 
+Non solo, ma un circuito RLC provoca anche uno sfasamento del segnale, positivo prima della frequenza di risonanza $\omega_0$ e negativo dopo.
+Questo comportamento viene evidenziato perfettamente nella 
 
 
-%Funzione di trasferimento del modulo
-% \begin{sagesilent}
-% 
-% freq = trasfm['frequenza_hz']
-% v = trasfm['v_out_v_in']
-% 
-% #Funzione di trasferimento del modulo
-% 
-% def fu(P,x):
-%     return (P[0]*2*3.14*x*P[1])/( sqrt( (2*3.14*x*P[1])^2+(w*P[2]/R)^2*((2*3.14*x)^2-[1]^2)^2 ) )
-% 
-%   
-% myodr, chi = fit_chiquad(freq, v, fu, ysigma=yerr, param=[mytransm.beta])
-% print "Chi quadro %.4f" % chi
-%   
-% \end{sagesilent}
+\begin{sagesilent}
 
+#Funzione di trasferimento del modulo: freq-volt
+#RLC in corrente alternata
+dati = np.recfromcsv("dati/C4/C4-sfasamento.csv")
+var('x,l,c,v,w')
+r = 300
+def f(x, l, w, v):
+    return (v*2*3.14*x*w)/( sqrt( (2*3.14*x*w)^2+(w*l/r)^2*((2*3.14*x)^2-w^2)^2 ) )
+
+f = dati['freq']
+p = dati['phi']
+
+print fit
+
+plt.clf()
+#xin = np.arange(100, 100000, 10)
+#yin = f(xin, fit[l], fit[w], fit[v])
+#plt.semilogx(xin,yin, 'g--')
+plt.semilogx(f, p, '.r')
+#plt.semilogx(dati['frequenza_hz'], dati['v_out__v_in'], '|b')
+
+plt.xlabel(r"$\omega$ [$rad/s$]")
+plt.ylabel(r"$V(\omega)$ [$rad$]")
+plt.grid(True)
+
+plt.savefig("grafici/C4-sfasamento.png", dpi=300)
+
+#Funzione di trasferimento fase:freq-rad
+  
+\end{sagesilent}
+
+\begin{center}
+\includegraphics[scale=0.75]{grafici/C4-sfasamento.png}
+\end{center}
