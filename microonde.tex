@@ -42,23 +42,18 @@ errlam = 2/n*sigmad
 lmedia = np.average(lam)
 confronto = abs(2.85-lmedia)
 
-dati = ml.rec_append_fields(dati, 'lungonda', lam)
 
 \end{sagesilent}
 
 Se si pongono trasmettitore e ricevitore ad una distanza di $\frac{n \lambda}{2}$, si può osservare che essi generano onde stazionarie. Infatti le antenne delle due apparecchiature riflettono parzialmente le onde che ricevono, e se li si mette in una condizione tale per cui le onde riflesse hanno la stessa fase delle onde incidenti si osservano dei massimi, viceversa, se le fasi sono antagoniste, si avrà una condizione di nodo.
 Ricaviamo la lunghezza d'onda posizionando emettitore e ricevitore ai capi del metro, e muovendo il ricevitore lungo questo osserviamo  il passaggio alterno per massimi e minimi di intensità. Ricaviamo $\lambda$ dalla nota formula per le onde stazionarie:
-\begin{equation}
-d = n\frac{\lambda}{2}
-\label{d}
-\end{equation}
+%\begin{equation}
+%d = n\frac{\lambda}{2}
+%\label{d}
+%\end{equation}
+Otteniamo una lambda media: 
 
-
-\begin{center}
-\sagestr{stampa_dati(dati, r'$d$ (cm) & $n$ (rad) & $\lambda$ (cm)' )}
-\end{center}
-
-Otteniamo una lambda media: $$ \sage{lmedia} \pm \sage{errlam}$$
+$$ \sage{sigmad} \pm \sage{sigmad}$$
 
 %Dal confronto con la $\lambda$ (2.85 cm) teorica otteniamo: $\lambda_{teo} - \lambda_{cal} || = \sage{confronto} < 2 \sigma ( = 2 \sage{errlam} $
 
@@ -187,7 +182,7 @@ $n$ indica l'ordine della diffrazione (tipicamente solo quello per n=1 è apprez
 La formula si spiega in maniera analitica considerando una differenza di cammino ottico pari a $2d\sin(\theta)$.
 
 
-\includegraphics[scale=0.75]{grafici/microonde-bragg.png}
+%\includegraphics[scale=0.75]{grafici/microonde-bragg.png}
 
 \section{Analisi dati}
 
