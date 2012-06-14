@@ -200,9 +200,9 @@ $$\omega = 0.9262\pm 0.0016$$
 \end{center}
 
 Non solo, ma un circuito RLC provoca anche uno sfasamento del segnale, positivo prima della frequenza di risonanza $\omega_0$ e negativo dopo.
-Questo comportamento viene evidenziato perfettamente in questo plot, interpolato con la funzione:
+Questo comportamento viene evidenziato perfettamente nel seguente plot, interpolato con la funzione:
 
-$$\phi=\text{arctan}\Big(\frac{\omega L -1/(\omega C)}{R}\Big)$$
+$$\phi=\frac{\text{arctan}\Big(\omega L -1/(\omega C)\Big)}{R}$$
 
 
 \begin{sagesilent}
@@ -212,6 +212,10 @@ $$\phi=\text{arctan}\Big(\frac{\omega L -1/(\omega C)}{R}\Big)$$
 dati = np.recfromcsv("dati/C4/C4-sfasamento.csv")
 var('x,l,c,v,w')
 r = 300
+
+def ffunc(P, x):
+    return func(x, P[0], P[1], P[2])
+
 def func(x, l, c, r):
     num = -1*x*l-1./(c*x)
     return np.arctan(num/r)
@@ -223,8 +227,12 @@ print fit
 
 plt.clf()
 
+(myout, chiquad, prob) = fit_chiquad(f, p, ffunc, [-7.57289100e+04,   6.46151828e-13, -5.60720967e+08])
+myout.pprint()
+
 xin = np.arange(10, 100000, 10)
-yin = func(xin, 0.176, 66800, 6045)
+#yin = func(xin, 0.176, 66800, 6045)
+yin = ffunc(myout.beta, xin)
 
 plt.semilogx(xin,yin, 'g--')
 plt.semilogx(f, p, '.r')
@@ -246,3 +254,6 @@ e ricaviamo i parametri
 $$L = 0.176\pm 0.05$$
 $$1/R = 1.6\times 10^{-4} \pm 5.39\times 10^{-5}$$
 $$1/C = 1.797\times 10^8\pm4.831\times 10^7$$
+
+Otteniamo dunque una frequenza di risonanza $\omega_0$ pari a
+$$\omega_0 = \frac{1}\sqrt{LC}} = 29200 \pm 6552\text{Hz}$$

@@ -95,7 +95,7 @@ def fit_chiquad(xdata, ydata, yfunc, init_guess, ysigma = ()):
     # Fit!
     mymodel = odr.Model(yfunc)
     mydata = odr.RealData(xdata, ydata)
-    myodr = odr.ODR(mydata, mymodel, beta0=init_guess, maxit=5000)
+    myodr = odr.ODR(mydata, mymodel, beta0=init_guess, maxit=10000)
     myout = myodr.run()
     
     # Chi^2
@@ -134,8 +134,8 @@ def stampa_dati(datiarr, header):
 %\include{c1}
 %\include{c2}
 % \include{c3}
-% \include{c4}
-%\include{spettrometro}
+\include{c4}
+% \include{spettrometro}
 %\include{microonde}
 %\include{em}
 %\include{interferometro}
@@ -143,8 +143,7 @@ def stampa_dati(datiarr, header):
 % \include{c4}
  %\include{c1}
 % \include{c2}
-\include{em}
-% \include{c3}
+% \include{em}
 
 
 \end{document} 
